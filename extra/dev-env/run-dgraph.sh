@@ -1,0 +1,1 @@
+docker-compose -f dgraph.yml up -d
