@@ -15,13 +15,22 @@ import (
 */
 
 const (
-	ConfMongoUrl = "MONGO_URL"
-	ConfMongoDB  = "MONGO_DB"
+	ConfMongoUrl          = "MONGO_URL"
+	ConfMongoDB           = "MONGO_DB"
+	ConfSmsServiceBaseUrl = "SMS_SERVICE_BASE_URL"
+	ConfSmsServiceName    = "SMS_SERVICE_NAME"
+	ConfSmsServiceToken   = "SMS_SERVICE_TOKEN"
 )
 
 func init() {
+	viper.SetEnvPrefix("BLIP")
+	viper.AutomaticEnv()
+
 	pflag.String(ConfMongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(ConfMongoDB, "blip", "")
+	pflag.String(ConfSmsServiceName, "", "")
+	pflag.String(ConfSmsServiceToken, "", "")
+	pflag.String(ConfSmsServiceBaseUrl, "http://api.sabaeco/v2", "")
 	pflag.Parse()
 	_ = viper.BindPFlags(pflag.CommandLine)
 }

@@ -16,3 +16,39 @@ type AccessTokenCreated struct {
 	AccessToken string `json:"access_token"`
 	ExpireOn    int64  `json:"expire_on"`
 }
+
+// easyjson:json
+type SendCodeReq struct {
+	Phone string `json:"phone"`
+}
+
+const CPhoneCodeSent = "PHONE_CODE_SENT"
+
+// easyjson:json
+type PhoneCodeSent struct {
+	PhoneCodeHash string `json:"phone_code_hash"`
+}
+
+// easyjson:json
+type LoginReq struct {
+	PhoneCode     string `json:"phone_code"`
+	PhoneCodeHash string `json:"phone_code_hash"`
+	Phone         string `json:"phone"`
+}
+
+// easyjson:json
+type RegisterReq struct {
+	PhoneCode     string `json:"phone_code"`
+	PhoneCodeHash string `json:"phone_code_hash"`
+	Phone         string `json:"phone"`
+	Username      string `json:"username"`
+}
+
+const CAuthorization = "AUTHORIZATION"
+
+// easyjson:json
+type Authorization struct {
+	UserID   int32  `json:"user_id"`
+	Phone    string `json:"phone"`
+	Username string `json:"username"`
+}

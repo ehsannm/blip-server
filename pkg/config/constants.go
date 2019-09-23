@@ -10,6 +10,6 @@ package config
 */
 
 const (
-	ColAuth	= "auth"
+	ColAuth  = "auth"
 	ColToken = "token"
 )

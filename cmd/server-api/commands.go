@@ -18,7 +18,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 var InitDB = &cobra.Command{
 	Use: "initDB",
 	Run: func(cmd *cobra.Command, args []string) {

@@ -27,7 +27,7 @@ var (
 	_Log log.Logger
 )
 
-func init () {
+func init() {
 	_Log = log.NewConsoleLogger()
 	if mongoClient, err := mongo.Connect(nil, options.Client().ApplyURI("mongodb://localhost:27017")); err != nil {
 		_Log.Fatal("Error On MongoConnect", zap.Error(err))
@@ -36,9 +36,9 @@ func init () {
 	}
 
 	app := iris.New()
-	app.UseGlobal(auth.GetAuthorization)
+	app.UseGlobal(auth.GetAuthorizationHandler)
 	authParty := app.Party("/auth")
-	authParty.Post("/create", auth.MustAdmin, auth.CreateAccessKey)
+	authParty.Post("/create", auth.MustAdminHandler, auth.CreateAccessKeyHandler)
 
 	go func() {
 		_ = app.Run(iris.Addr(":80"), iris.WithOptimizations)

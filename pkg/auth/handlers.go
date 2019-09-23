@@ -20,7 +20,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func GetAuthorization(ctx iris.Context) {
+func GetAuthorizationHandler(ctx iris.Context) {
 	accessKey := ctx.GetHeader(HdrAccessKey)
 	mtxLock.RLock()
 	auth, ok := authCache[accessKey]
@@ -45,31 +45,67 @@ func GetAuthorization(ctx iris.Context) {
 	ctx.Next()
 }
 
-func MustAdmin(ctx iris.Context) {
-	if !HasAdminAccess(ctx) {
+func MustAdminHandler(ctx iris.Context) {
+	if !hasAdminAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
 	}
 	ctx.Next()
 }
+func hasAdminAccess(ctx iris.Context) bool {
+	auth, ok := ctx.Values().Get(CtxAuth).(Auth)
+	if !ok {
+		return false
+	}
+	for _, p := range auth.Permissions {
+		if p == Admin {
+			return true
+		}
+	}
+	return false
+}
 
-func MustWriteAccess(ctx iris.Context) {
-	if !HasWriteAccess(ctx) {
+func MustWriteAccessHandler(ctx iris.Context) {
+	if !hasWriteAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
 	}
 	ctx.Next()
 }
+func hasWriteAccess(ctx iris.Context) bool {
+	auth, ok := ctx.Values().Get(CtxAuth).(Auth)
+	if !ok {
+		return false
+	}
+	for _, p := range auth.Permissions {
+		if p == Write || p == Admin {
+			return true
+		}
+	}
+	return false
+}
 
-func MustReadAccess(ctx iris.Context) {
-	if !HasReadAccess(ctx) {
+func MustReadAccessHandler(ctx iris.Context) {
+	if !hasReadAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
 	}
 	ctx.Next()
 }
+func hasReadAccess(ctx iris.Context) bool {
+	auth, ok := ctx.Values().Get(CtxAuth).(Auth)
+	if !ok {
+		return false
+	}
+	for _, p := range auth.Permissions {
+		if p == Read || p == Admin {
+			return true
+		}
+	}
+	return false
+}
 
-func CreateAccessKey(ctx iris.Context) {
+func CreateAccessKeyHandler(ctx iris.Context) {
 	accessToken := ronak.RandomID(64)
 	authPerms := make([]Permission, 0, 3)
 	perms := ctx.PostValues("Permissions")
@@ -113,3 +149,15 @@ func CreateAccessKey(ctx iris.Context) {
 		ExpireOn:    authExpireOn,
 	})
 }
+
+func SendCodeHandler(ctx iris.Context) {
+
+}
+
+func VerifyCodeHandler(ctx iris.Context) {
+
+}
+
+func LoginHandler(ctx iris.Context) {}
+
+func RegisterHandler(ctx iris.Context) {}

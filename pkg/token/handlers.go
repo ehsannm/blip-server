@@ -24,6 +24,16 @@ func CreateHandler(ctx iris.Context) {
 	phone := ctx.PostValue("Phone")
 	period := ctx.PostValueInt64Default("Period", 0) // Period is the number of days
 
+	if len(phone) < 8 {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		return
+	}
+
+	if period <= 0 {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPeriodNotValid)
+		return
+	}
+
 	tokenStartDate := time.Now().Unix()
 	tokenExpireDate := time.Now().Unix() + period*84600
 	token := ronak.RandomID(64)
@@ -42,6 +52,7 @@ func CreateHandler(ctx iris.Context) {
 	}
 
 	resBytes, _ := json.Marshal(res)
+	ctx.ContentType("application/json")
 	_, _ = ctx.Write(resBytes)
 }
 
@@ -67,7 +78,8 @@ func ValidateHandler(ctx iris.Context) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrAccessTokenExpired)
 		return
 	}
-	remainingDays := int64(time.Now().Sub(time.Unix(token.ExpiredOn, 0)).Hours() / 24)
+
+	remainingDays := daysBetween(time.Unix(token.ExpiredOn, 0), time.Now())
 
 	if token.DeviceID == "" {
 		_, err := tokenCol.UpdateOne(nil, bson.M{"_id": tokenID}, bson.M{"$set": bson.M{"device_id": deviceID}})
@@ -84,4 +96,17 @@ func ValidateHandler(ctx iris.Context) {
 	msg.WriteResponse(ctx, CValidated, Validated{
 		RemainingDays: remainingDays,
 	})
+}
+func daysBetween(a, b time.Time) int64 {
+	if a.After(b) {
+		a, b = b, a
+	}
+
+	days := -a.YearDay()
+	for year := a.Year(); year < b.Year(); year++ {
+		days += time.Date(year, time.December, 31, 0, 0, 0, 0, time.UTC).YearDay()
+	}
+	days += b.YearDay()
+
+	return int64(days)
 }

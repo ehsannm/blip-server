@@ -21,6 +21,8 @@ var (
 	ErrTokenInvalid       Item = "TOKEN_INVALID"
 	ErrTokenExpired       Item = "TOKEN_EXPIRED"
 	ErrPermissionIsNotSet Item = "PERMISSION_NOT_SET"
+	ErrPhoneNotValid      Item = "PHONE_NOT_VALID"
+	ErrPeriodNotValid     Item = "PERIOD_NOT_VALID"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {

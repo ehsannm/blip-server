@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	_Log log.Logger
+	_Log   log.Logger
 	_Mongo *mongo.Client
 )
 
@@ -33,7 +33,6 @@ func init() {
 	}
 }
 
-
 func main() {
 	Root.AddCommand(InitDB)
 	_ = Root.Execute()
@@ -41,16 +40,18 @@ func main() {
 
 var Root = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
-
 		app := iris.New()
-		app.UseGlobal(auth.GetAuthorization)
+		app.UseGlobal(auth.GetAuthorizationHandler)
 
 		tokenParty := app.Party("/token")
-		tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
-		tokenParty.Get("/validate", auth.MustReadAccess, token.ValidateHandler)
+		tokenParty.Post("/create", auth.MustWriteAccessHandler, token.CreateHandler)
+		tokenParty.Post("/validate", auth.MustReadAccessHandler, token.ValidateHandler)
 
 		authParty := app.Party("/auth")
-		authParty.Post("/create", auth.MustAdmin, auth.CreateAccessKey)
+		authParty.Post("/create", auth.MustAdminHandler, auth.CreateAccessKeyHandler)
+		authParty.Post("/send_code", auth.SendCodeHandler)
+		authParty.Post("/login", auth.LoginHandler)
+		authParty.Post("/register", auth.RegisterHandler)
 
 		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
 		if err != nil {

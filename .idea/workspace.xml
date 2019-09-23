@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="" />
+    <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/messages.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/sms.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/status_codes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth_easyjson.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/build-json.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build-json.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/helpers.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/build-json.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/token_easyjson.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/token_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/token_test.go" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +38,9 @@
     </option>
   </component>
   <component name="GOROOT" path="$PROJECT_DIR$/../../../go/go1.12.7" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
@@ -24,8 +48,10 @@
     <option name="directoryName" value="YbTfZgQk" />
   </component>
   <component name="ProjectId" id="1OXMKj2fzC6AZxpRWj89iCW5JgV" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="configurable.Global.GOPATH.is.expanded" value="true" />
     <property name="configurable.Module.GOPATH.is.expanded" value="false" />
@@ -49,6 +75,7 @@
       <recent name="$PROJECT_DIR$/pkg/blip" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/extra/experiments/dgraph" />
     </key>
   </component>
@@ -76,6 +103,19 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
