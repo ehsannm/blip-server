@@ -1,11 +1,27 @@
 version: '2'
 services:
 
+
   # API Server
-  edge:
+  api:
     restart: always
-    image: registry.ronaksoftware.com/river/server/server-api-edge:dev
-#    environment:
+    image: registry.ronaksoftware.com/customers/ronakvision/server-blip/server-api:0.1
+    environment:
+      - BLIP_MONGO_URL=mongo:27017
+    ports:
+      - 80:80
+    networks:
+      - blip
+  # MongoDB Server
+  mongo:
+    restart: always
+    image: registry.ronaksoftware.com/base/mongo:4.0
+    volumes:
+      - ./_hdd/db-mongo:/data/db
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
     networks:
       - blip
 
