@@ -1,0 +1,46 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  PROJECTS_TO_BUILD: ""
+
+
+build:
+  stage: build
+  image: registry.ronaksoftware.com/base/golang:vips
+  script:
+    - cd $CI_PROJECT_DIR
+    - bash ci-build.sh
+  artifacts:
+    untracked: true
+    expire_in: 1 hour
+
+deploy:dev:
+  stage: deploy
+  only:
+    - dev
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    IMAGE_TAG:  "dev"
+  script:
+    - apk add --no-cache bash
+    - cd $CI_PROJECT_DIR
+    - bash ci-deploy.sh
+
+deploy:production:
+  stage: deploy
+  only:
+    - master
+  image: docker:latest
+  services:
+    - docker:dind
+  variables:
+    IMAGE_TAG:  "0.1"
+  script:
+    - apk add --no-cache bash
+    - cd $CI_PROJECT_DIR
+    - bash ci-deploy.sh

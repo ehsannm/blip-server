@@ -2,26 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/messages.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/sms.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/status_codes.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.MD" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ci-build.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ci-deploy.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server-api/Dockerfile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/sms/saba/sms_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/auth_easyjson.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/auth_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/build-json.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build-json.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/helpers.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/build-json.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/token_easyjson.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/token_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/token_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -61,22 +48,22 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pkg/token" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.vgo" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/pkg/token" />
-      <recent name="$PROJECT_DIR$/pkg/msg" />
-      <recent name="$PROJECT_DIR$/extra/dev-env" />
-      <recent name="$PROJECT_DIR$/extra" />
-      <recent name="$PROJECT_DIR$/pkg/blip" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/extra/experiments/dgraph" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmd/server-api" />
+      <recent name="$PROJECT_DIR$/pkg/token" />
+      <recent name="$PROJECT_DIR$/pkg/msg" />
+      <recent name="$PROJECT_DIR$/extra/dev-env" />
     </key>
   </component>
   <component name="RunDashboard">
