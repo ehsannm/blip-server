@@ -9,6 +9,8 @@ package saba
    Copyright Ronak Software Group 2018
 */
 
+var SuccessfulCode = "SC000"
+
 var SabaCodes = map[string]string{
 	"SC000": "successful",
 	"SC001": "service not found",

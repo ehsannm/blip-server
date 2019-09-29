@@ -18,19 +18,20 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func Subscribe(phone string) (string, error) {
+func Subscribe(phone string) (int, error) {
 	c := http.Client{
 		Timeout: time.Second * 3,
 	}
 
-	httpResp, err := c.Get(fmt.Sprintf("%s/v2/sub/%s/%s/%s",
+	url := fmt.Sprintf("%s/v2/sub/%s/%s/%s",
 		viper.GetString(config.ConfSmsServiceBaseUrl),
 		viper.GetString(config.ConfSmsServiceName),
 		viper.GetString(config.ConfSmsServiceToken),
 		phone,
-	))
+	)
+	httpResp, err := c.Get(url)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -39,18 +40,18 @@ func Subscribe(phone string) (string, error) {
 	sResp := new(SubscribeResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	return sResp.OtpID, nil
 }
 
-func Confirm(phone, phoneCode, otpID string) (string, error) {
+func Confirm(phone, phoneCode string, otpID int) (string, error) {
 	c := http.Client{
 		Timeout: time.Second * 3,
 	}
 
-	httpResp, err := c.Get(fmt.Sprintf("%s/v2/confirm/%s/%s/%s/%s?otp_id=%s",
+	httpResp, err := c.Get(fmt.Sprintf("%s/v2/confirm/%s/%s/%s/%s?otp_id=%d",
 		viper.GetString(config.ConfSmsServiceBaseUrl),
 		viper.GetString(config.ConfSmsServiceName),
 		viper.GetString(config.ConfSmsServiceToken),

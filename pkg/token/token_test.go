@@ -43,8 +43,8 @@ func init() {
 	app := iris.New()
 	app.UseGlobal(auth.GetAuthorizationHandler)
 	tokenParty := app.Party("/token")
-	tokenParty.Post("/create", auth.MustWriteAccessHandler, token.CreateHandler)
-	tokenParty.Post("/validate", auth.MustReadAccessHandler, token.ValidateHandler)
+	tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
+	tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)
 
 	go func() {
 		_ = app.Run(iris.Addr(":80"), iris.WithOptimizations)

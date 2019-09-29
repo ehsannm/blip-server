@@ -41,7 +41,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgSmsSaba(in *jlexer.Le
 		case "status_code":
 			out.StatusCode = string(in.String())
 		case "otp_id":
-			out.OtpID = string(in.String())
+			out.OtpID = int(in.Int())
 		case "user_id":
 			out.UserID = int(in.Int())
 		case "operator_response":
@@ -76,7 +76,7 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgSmsSaba(out *jwriter.
 		}
 		out.String(string(in.StatusCode))
 	}
-	if in.OtpID != "" {
+	if in.OtpID != 0 {
 		const prefix string = ",\"otp_id\":"
 		if first {
 			first = false
@@ -84,7 +84,7 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgSmsSaba(out *jwriter.
 		} else {
 			out.RawString(prefix)
 		}
-		out.String(string(in.OtpID))
+		out.Int(int(in.OtpID))
 	}
 	if in.UserID != 0 {
 		const prefix string = ",\"user_id\":"

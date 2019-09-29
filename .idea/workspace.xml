@@ -2,9 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/user/handlers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/user/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose-services.yml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/messages_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/sms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/sms.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/sms_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/sms_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/status_codes.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/status_codes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/token_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/token_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

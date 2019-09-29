@@ -8,6 +8,8 @@ services:
     image: registry.ronaksoftware.com/customers/ronakvision/server-blip/server-api:0.1
     environment:
       - BLIP_MONGO_URL=mongo:27017
+      - BLIP_SMS_SERVICE_NAME=test
+      - BLIP_SMS_SERVICE_TOKEN=stuimxfhyy
     ports:
       - 80:80
     networks:
@@ -24,7 +26,17 @@ services:
       - 27017
     networks:
       - blip
-
+  # Redis
+  redis:
+    restart: always
+    image: registry.ronaksoftware.com/base/redis
+    command: redis-server --requirepass ehsan2374 --save 1 1
+    volumes:
+      - ./_hdd/redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - blip
 networks:
   blip:
     external:

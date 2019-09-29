@@ -1,5 +1,7 @@
 package config
 
+import "time"
+
 /*
    Creation Time: 2019 - Sep - 22
    Created by:  (ehsan)
@@ -10,6 +12,17 @@ package config
 */
 
 const (
-	ColAuth  = "auth"
-	ColToken = "token"
+	ColAuth    = "auth"
+	ColToken   = "token"
+	ColUser    = "user"
+	ColSession = "session"
+)
+
+const (
+	RkPhoneCode 	= "PHONE_CODE"
+)
+
+var (
+	RegionCode = "R01"
+	MongoRequestTimeout = time.Second * 3
 )

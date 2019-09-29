@@ -18,6 +18,8 @@ type AccessTokenCreated struct {
 }
 
 // easyjson:json
+// @RPC
+// @Returns: PhoneCodeSent
 type SendCodeReq struct {
 	Phone string `json:"phone"`
 }
@@ -27,20 +29,27 @@ const CPhoneCodeSent = "PHONE_CODE_SENT"
 // easyjson:json
 type PhoneCodeSent struct {
 	PhoneCodeHash string `json:"phone_code_hash"`
+	OperationID   int    `json:"operation_id"`
 }
 
 // easyjson:json
+// @RPC
+// @Returns: Authorization
 type LoginReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
+	OperationID   int    `json:"operation_id"`
 }
 
 // easyjson:json
+// @RPC
+// @Returns: Authorization
 type RegisterReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
+	OperationID   int    `json:"operation_id"`
 	Username      string `json:"username"`
 }
 
@@ -48,7 +57,8 @@ const CAuthorization = "AUTHORIZATION"
 
 // easyjson:json
 type Authorization struct {
-	UserID   int32  `json:"user_id"`
-	Phone    string `json:"phone"`
-	Username string `json:"username"`
+	UserID    string `json:"user_id"`
+	Phone     string `json:"phone"`
+	Username  string `json:"username"`
+	SessionID string `json:"session_id"`
 }

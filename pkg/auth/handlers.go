@@ -1,9 +1,15 @@
 package auth
 
 import (
+	"fmt"
+	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
+	"git.ronaksoftware.com/blip/server/pkg/session"
+	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
+	"git.ronaksoftware.com/blip/server/pkg/user"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/kataras/iris"
+	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"
@@ -45,7 +51,7 @@ func GetAuthorizationHandler(ctx iris.Context) {
 	ctx.Next()
 }
 
-func MustAdminHandler(ctx iris.Context) {
+func MustAdmin(ctx iris.Context) {
 	if !hasAdminAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
@@ -65,7 +71,7 @@ func hasAdminAccess(ctx iris.Context) bool {
 	return false
 }
 
-func MustWriteAccessHandler(ctx iris.Context) {
+func MustWriteAccess(ctx iris.Context) {
 	if !hasWriteAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
@@ -85,7 +91,7 @@ func hasWriteAccess(ctx iris.Context) bool {
 	return false
 }
 
-func MustReadAccessHandler(ctx iris.Context) {
+func MustReadAccess(ctx iris.Context) {
 	if !hasReadAccess(ctx) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrNoPermission)
 		return
@@ -151,13 +157,138 @@ func CreateAccessKeyHandler(ctx iris.Context) {
 }
 
 func SendCodeHandler(ctx iris.Context) {
+	req := new(SendCodeReq)
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	optID, err := saba.Subscribe(req.Phone)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
+
+	err = redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone), optID))
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
+		return
+	}
+
+	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
+		PhoneCodeHash: ronak.RandomID(12),
+		OperationID:   optID,
+	})
+}
+
+func LoginHandler(ctx iris.Context) {
+	req := new(LoginReq)
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
+
+	if vasCode != saba.SuccessfulCode {
+		errText, _ := saba.SabaCodes[vasCode]
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+		return
+	}
+
+	u, err := user.GetByPhone(req.Phone)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		return
+	}
+
+	sessionID := ronak.RandomID(64)
+	timeNow := time.Now().Unix()
+	err = session.Save(session.Session{
+		ID:         sessionID,
+		UserID:     u.ID,
+		CreatedOn:  timeNow,
+		LastAccess: timeNow,
+	})
+	if err != nil {
+		errText, _ := saba.SabaCodes[vasCode]
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+		return
+	}
+
+	msg.WriteResponse(ctx, CAuthorization, Authorization{
+		UserID:    u.ID,
+		Phone:     u.Phone,
+		Username:  u.Username,
+		SessionID: sessionID,
+	})
 
 }
 
-func VerifyCodeHandler(ctx iris.Context) {
+func RegisterHandler(ctx iris.Context) {
+	req := new(RegisterReq)
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
+
+	if vasCode != saba.SuccessfulCode {
+		errText, _ := saba.SabaCodes[vasCode]
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+		return
+	}
+
+	_, err = user.GetByPhone(req.Phone)
+	if err == nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrAlreadyRegistered)
+		return
+	}
+
+	userID := fmt.Sprintf("U%s", ronak.RandomID(32))
+	timeNow := time.Now().Unix()
+	err = user.Save(user.User{
+		ID:        userID,
+		Username:  req.Username,
+		Phone:     req.Phone,
+		Email:     "",
+		CreatedOn: timeNow,
+		Disabled:  false,
+	})
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
+
+	sessionID := ronak.RandomID(64)
+	err = session.Save(session.Session{
+		ID:         sessionID,
+		UserID:     userID,
+		CreatedOn:  timeNow,
+		LastAccess: timeNow,
+	})
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
+
+	msg.WriteResponse(ctx, CAuthorization, Authorization{
+		UserID:    userID,
+		Phone:     req.Phone,
+		Username:  req.Username,
+		SessionID: sessionID,
+	})
 
 }
-
-func LoginHandler(ctx iris.Context) {}
-
-func RegisterHandler(ctx iris.Context) {}

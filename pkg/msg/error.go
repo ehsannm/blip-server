@@ -14,15 +14,18 @@ import "github.com/kataras/iris"
 type Item string
 
 var (
-	ErrAccessTokenInvalid Item = "ACCESS_KEY_INVALID"
-	ErrAccessTokenExpired Item = "ACCESS_KEY_EXPIRED"
-	ErrNoPermission       Item = "NO_PERMISSION"
-	ErrWriteToDb          Item = "WRITE_TO_DB"
-	ErrTokenInvalid       Item = "TOKEN_INVALID"
-	ErrTokenExpired       Item = "TOKEN_EXPIRED"
-	ErrPermissionIsNotSet Item = "PERMISSION_NOT_SET"
-	ErrPhoneNotValid      Item = "PHONE_NOT_VALID"
-	ErrPeriodNotValid     Item = "PERIOD_NOT_VALID"
+	ErrAccessTokenInvalid     Item = "ACCESS_KEY_INVALID"
+	ErrAccessTokenExpired     Item = "ACCESS_KEY_EXPIRED"
+	ErrNoPermission           Item = "NO_PERMISSION"
+	ErrWriteToDb              Item = "WRITE_TO_DB"
+	ErrTokenInvalid           Item = "TOKEN_INVALID"
+	ErrTokenExpired           Item = "TOKEN_EXPIRED"
+	ErrPermissionIsNotSet     Item = "PERMISSION_NOT_SET"
+	ErrPhoneNotValid          Item = "PHONE_NOT_VALID"
+	ErrPeriodNotValid         Item = "PERIOD_NOT_VALID"
+	ErrWriteToCache           Item = "WRITE_TO_CACHE"
+	ErrCannotUnmarshalRequest Item = "CANNOT_UNMARSHAL_JSON"
+	ErrAlreadyRegistered	 Item = "ALREADY_REGISTERED"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {

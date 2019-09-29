@@ -2,6 +2,7 @@ package auth
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
@@ -17,7 +18,8 @@ import (
 */
 
 var (
-	authCol *mongo.Collection
+	authCol    *mongo.Collection
+	redisCache *ronak.RedisCache
 )
 
 func InitMongo(c *mongo.Client) {

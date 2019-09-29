@@ -44,14 +44,17 @@ var Root = &cobra.Command{
 		app.UseGlobal(auth.GetAuthorizationHandler)
 
 		tokenParty := app.Party("/token")
-		tokenParty.Post("/create", auth.MustWriteAccessHandler, token.CreateHandler)
-		tokenParty.Post("/validate", auth.MustReadAccessHandler, token.ValidateHandler)
+		tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
+		tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)
 
 		authParty := app.Party("/auth")
-		authParty.Post("/create", auth.MustAdminHandler, auth.CreateAccessKeyHandler)
+		authParty.Post("/create", auth.MustAdmin, auth.CreateAccessKeyHandler)
 		authParty.Post("/send_code", auth.SendCodeHandler)
 		authParty.Post("/login", auth.LoginHandler)
 		authParty.Post("/register", auth.RegisterHandler)
+
+		musicParty := app.Party("/music")
+		musicParty.Get("/search", )
 
 		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
 		if err != nil {
