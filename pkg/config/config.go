@@ -28,8 +28,6 @@ const (
 func init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
-	// viper.SetDefault(ConfSmsServiceToken, "stuimxfhyy")
-	// viper.SetDefault(ConfSmsServiceName, "test")
 
 	pflag.String(ConfMongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(ConfMongoDB, "blip", "")

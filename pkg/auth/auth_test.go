@@ -66,5 +66,6 @@ func TestCreateAccessKey(t *testing.T) {
 	r.Value("constructor").Equal(auth.CAccessTokenCreated)
 	payload := r.Value("payload").Object()
 	payload.Value("access_token").String().Length().Equal(64)
-
 }
+
+
