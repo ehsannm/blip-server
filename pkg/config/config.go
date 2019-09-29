@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	"time"
 )
 
 /*
@@ -19,6 +18,8 @@ const (
 	ConfMongoUrl            = "MONGO_URL"
 	ConfMongoDB             = "MONGO_DB"
 	ConfMongoRequestTimeout = "MONGO_REQUEST_TIMEOUT"
+	ConfRedisUrl			= "REDIS_URL"
+	ConfRedisPass			= "REDIS_PASS"
 	ConfSmsServiceBaseUrl   = "SMS_SERVICE_BASE_URL"
 	ConfSmsServiceName      = "SMS_SERVICE_NAME"
 	ConfSmsServiceToken     = "SMS_SERVICE_TOKEN"
@@ -32,7 +33,8 @@ func init() {
 
 	pflag.String(ConfMongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(ConfMongoDB, "blip", "")
-	pflag.Duration(ConfMongoRequestTimeout, time.Second*3, "")
+	pflag.String(ConfRedisUrl, "localhost:6379", "")
+	pflag.String(ConfRedisPass, "ehsan2374", "")
 	pflag.String(ConfSmsServiceName, "test", "")
 	pflag.String(ConfSmsServiceToken, "stuimxfhyy", "")
 	pflag.String(ConfSmsServiceBaseUrl, "http://api.sabaeco.com", "")

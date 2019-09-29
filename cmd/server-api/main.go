@@ -3,7 +3,10 @@ package main
 import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/token"
+	"git.ronaksoftware.com/blip/server/pkg/user"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	log "git.ronaksoftware.com/ronak/toolbox/logger"
 	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
@@ -21,6 +24,7 @@ var (
 func init() {
 	_Log = log.NewConsoleLogger()
 
+	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(
 		nil,
 		options.Client().ApplyURI(viper.GetString(config.ConfMongoUrl)),
@@ -30,7 +34,17 @@ func init() {
 		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
 		token.InitMongo(mongoClient)
+		session.InitMongo(mongoClient)
+		user.InitMongo(mongoClient)
 	}
+
+
+	// Initialize RedisCache
+	redisConfig := ronak.DefaultRedisConfig
+	redisConfig.Host = viper.GetString(config.ConfRedisUrl)
+	redisConfig.Password = viper.GetString(config.ConfRedisPass)
+	redisCache := ronak.NewRedisCache(redisConfig)
+	auth.InitRedisCache(redisCache)
 }
 
 func main() {

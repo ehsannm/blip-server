@@ -26,6 +26,10 @@ func InitMongo(c *mongo.Client) {
 	authCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColAuth)
 }
 
+func InitRedisCache(c *ronak.RedisCache) {
+	redisCache = c
+}
+
 type Permission byte
 
 const (

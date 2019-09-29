@@ -3,20 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build-json.sh" beforeDir="false" afterPath="$PROJECT_DIR$/build-json.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/messages_easyjson.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/envelope.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/envelope.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/msg_easyjson.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/sms/saba/sms_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/sms/saba/sms_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/messages_easyjson.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
