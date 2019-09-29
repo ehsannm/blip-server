@@ -25,7 +25,6 @@ func InitMongo(c *mongo.Client) {
 	userCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColUser)
 }
 
-
 type User struct {
 	ID        string `json:"id" bson:"_id"`
 	Username  string `json:"username" bson:"username"`
@@ -34,7 +33,6 @@ type User struct {
 	CreatedOn int64  `json:"created_on" bson:"created_on"`
 	Disabled  bool   `json:"disabled" bson:"disabled"`
 }
-
 
 func Save(user User) error {
 	_, err := userCol.InsertOne(nil, user)
@@ -60,4 +58,3 @@ func GetByPhone(phone string) (*User, error) {
 	}
 	return user, nil
 }
-

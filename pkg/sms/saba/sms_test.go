@@ -15,14 +15,13 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func TestSubscribe(t *testing.T) {
 	phone := "989122139561"
 	otpID := 0
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
 			var err error
-			otpID, err = saba.Subscribe(phone )
+			otpID, err = saba.Subscribe(phone)
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(otpID)
 		})

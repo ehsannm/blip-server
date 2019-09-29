@@ -29,11 +29,11 @@ func CreateEnvelope(constructor string, payload interface{}) *ResponseEnvelope {
 
 func WriteResponse(ctx iris.Context, constructor string, payload interface{}) {
 	ctx.ContentType("application/json")
-	resBytes, _ := ResponseEnvelope{
+
+	ctx.StatusCode(http.StatusOK)
+	_, _ = ctx.JSON(ResponseEnvelope{
 		Constructor: constructor,
 		Payload:     payload,
-	}.MarshalJSON()
-	ctx.StatusCode(http.StatusOK)
-	_, _ = ctx.Write(resBytes)
+	})
 	ctx.StopExecution()
 }

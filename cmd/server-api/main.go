@@ -54,7 +54,7 @@ var Root = &cobra.Command{
 		authParty.Post("/register", auth.RegisterHandler)
 
 		musicParty := app.Party("/music")
-		musicParty.Get("/search", )
+		musicParty.Get("/search")
 
 		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
 		if err != nil {

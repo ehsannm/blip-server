@@ -28,6 +28,7 @@ require (
 	github.com/kataras/pio v0.0.0-20190103105442-ea782b38602d // indirect
 	github.com/mailru/easyjson v0.7.0
 	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/mediocregopher/radix/v3 v3.3.0
 	github.com/moul/http2curl v1.0.0 // indirect
 	github.com/onsi/ginkgo v1.10.1 // indirect
 	github.com/onsi/gomega v1.7.0 // indirect

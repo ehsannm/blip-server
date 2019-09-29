@@ -25,13 +25,12 @@ var (
 	ErrPeriodNotValid         Item = "PERIOD_NOT_VALID"
 	ErrWriteToCache           Item = "WRITE_TO_CACHE"
 	ErrCannotUnmarshalRequest Item = "CANNOT_UNMARSHAL_JSON"
-	ErrAlreadyRegistered	 Item = "ALREADY_REGISTERED"
+	ErrAlreadyRegistered      Item = "ALREADY_REGISTERED"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
 	ctx.ContentType("application/json")
-	resBytes, _ := CreateEnvelope("err", errItem).MarshalJSON()
-	_, _ = ctx.Write(resBytes)
+	_, _ = ctx.JSON(CreateEnvelope("err", errItem))
 	ctx.StatusCode(httpStatus)
 	ctx.StopExecution()
 }

@@ -32,7 +32,6 @@ type Session struct {
 	LastAccess int64  `json:"last_access" bson:"last_access"`
 }
 
-
 func Save(session Session) error {
 	_, err := sessionCol.InsertOne(nil, session)
 	return err

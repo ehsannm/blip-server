@@ -19,10 +19,10 @@ const (
 )
 
 const (
-	RkPhoneCode 	= "PHONE_CODE"
+	RkPhoneCode = "PHONE_CODE"
 )
 
 var (
-	RegionCode = "R01"
+	RegionCode          = "R01"
 	MongoRequestTimeout = time.Second * 3
 )
