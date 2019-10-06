@@ -39,11 +39,6 @@ func TestSubscribe(t *testing.T) {
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(otpID)
 		})
-		convey.Convey("Confirm", func(c convey.C) {
-			statusCode, err := saba.Confirm(phone, "9675", otpID)
-			c.So(err, convey.ShouldBeNil)
-			_, _ = c.Println(statusCode, otpID)
-		})
 	})
 }
 
@@ -65,14 +60,14 @@ func TestUnsubscribe(t *testing.T) {
 }
 
 func TestConfirm(t *testing.T) {
-	otpID := "15703753095630"
+	otpID := "15703766367991"
 	config.Set(config.ConfSmsServiceName, "musicchi")
 	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
 	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Confirm", func(c convey.C) {
-			statusCode, err := saba.Confirm(phone, "9675", otpID)
+			statusCode, err := saba.Confirm(phone, "6404", otpID)
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(statusCode, otpID)
 		})

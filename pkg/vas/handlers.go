@@ -45,6 +45,7 @@ func MCINotification(ctx iris.Context) {
 				zap.String("Channel", channel),
 				zap.Int("DateTime", dateTime),
 			)
+			return
 		}
 		switch res.StatusCode {
 		case saba.SuccessfulCode:
@@ -66,6 +67,7 @@ func MCINotification(ctx iris.Context) {
 				zap.String("Channel", channel),
 				zap.Int("DateTime", dateTime),
 			)
+			return
 		}
 		switch res.StatusCode {
 		case saba.SuccessfulCode:

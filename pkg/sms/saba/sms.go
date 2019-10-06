@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 )
@@ -110,11 +111,15 @@ func SendMessage(phone, message string) (*SendSmsResponse, error) {
 		Timeout: time.Second * 3,
 	}
 
-	httpResp, err := c.Get(fmt.Sprintf("%s/v2/send/%s/%s/%s?message=%s",
+	v := url.Values{}
+	v.Set("message", message)
+
+
+	httpResp, err := c.Get(fmt.Sprintf("%s/v2/send/%s/%s/%s?%s",
 		viper.GetString(config.ConfSmsServiceBaseUrl),
 		viper.GetString(config.ConfSmsServiceName),
 		viper.GetString(config.ConfSmsServiceToken),
-		phone, message,
+		phone, v.Encode(),
 	))
 	if err != nil {
 		return nil, err
