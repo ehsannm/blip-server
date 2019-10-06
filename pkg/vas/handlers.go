@@ -99,6 +99,7 @@ func MCIMo(ctx iris.Context) {
 				zap.String("ServiceID", serviceID),
 				zap.String("Message", message),
 			)
+			return
 		}
 		switch res.StatusCode {
 		case saba.SuccessfulCode:
@@ -117,6 +118,7 @@ func MCIMo(ctx iris.Context) {
 				zap.String("ServiceID", serviceID),
 				zap.String("Message", message),
 			)
+			return
 		}
 		switch res.StatusCode {
 		case saba.SuccessfulCode:
