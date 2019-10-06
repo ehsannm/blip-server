@@ -51,19 +51,21 @@ func init() {
 
 func initServer() *iris.Application {
 	app := iris.New()
-	app.UseGlobal(auth.GetAuthorizationHandler)
 
 	tokenParty := app.Party("/token")
+	tokenParty.Use(auth.GetAuthorizationHandler)
 	tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
 	tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)
 
 	authParty := app.Party("/auth")
+	authParty.Use(auth.GetAuthorizationHandler)
 	authParty.Post("/create", auth.MustAdmin, auth.CreateAccessKeyHandler)
 	authParty.Post("/send_code", auth.SendCodeHandler)
 	authParty.Post("/login", auth.LoginHandler)
 	authParty.Post("/register", auth.RegisterHandler)
 
 	musicParty := app.Party("/music")
+	musicParty.Use(auth.GetAuthorizationHandler)
 	musicParty.Get("/search", music.Search)
 
 	// Value Added Services

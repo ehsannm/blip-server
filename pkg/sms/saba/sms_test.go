@@ -37,7 +37,7 @@ func TestSubscribe(t *testing.T) {
 		// 	_, _ = c.Println(otpID)
 		// })
 		convey.Convey("Confirm", func(c convey.C) {
-			statusCode, err := saba.Confirm(phone, "2248", otpID)
+			statusCode, err := saba.Confirm(phone, "9675", otpID)
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(statusCode, otpID)
 		})

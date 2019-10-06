@@ -17,6 +17,7 @@ import (
 */
 
 func MCINotification(ctx iris.Context) {
+
 	customerNumber := ctx.URLParam("msisdn")
 	status := ctx.URLParam("status")
 	amount := ctx.URLParamIntDefault("amount", 0)
@@ -30,6 +31,7 @@ func MCINotification(ctx iris.Context) {
 		zap.String("ServiceID", serviceID),
 		zap.String("Channel", channel),
 		zap.Int("DateTime", dateTime),
+		zap.String("ClientIP", ctx.RemoteAddr()),
 	)
 	switch status {
 	case MciNotificationStatusSubscription:
