@@ -13,8 +13,7 @@ package saba
 type SubscribeResponse struct {
 	Status           string `json:"status"`
 	StatusCode       string `json:"status_code"`
-	OtpID            int    `json:"otp_id"`
-	UserID           int    `json:"user_id"`
+	OtpID            string `json:"otp_id"`
 	OperatorResponse struct {
 		StatusInfo struct {
 			ReferenceCode       string `json:"referenceCode"`
@@ -29,7 +28,6 @@ type SubscribeResponse struct {
 type ConfirmResponse struct {
 	Status           string `json:"status"`
 	StatusCode       string `json:"status_code"`
-	UserID           int    `json:"user_id"`
 	OperatorResponse struct {
 		StatusInfo struct {
 			ReferenceCode       string `json:"referenceCode"`

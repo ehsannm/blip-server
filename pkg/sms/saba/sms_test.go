@@ -17,20 +17,25 @@ import (
 */
 
 func TestSubscribe(t *testing.T) {
-	phone := "989122139561"
-	otpID := 0
-	config.Set(config.ConfSmsServiceName, "")
-	config.Set(config.ConfSmsServiceToken, "")
-	config.Set(config.ConfSmsServiceBaseUrl, "")
+	// phone := "989122139561"
+	// phone := "989121228718"
+	phone := "989916695980"
+	otpID := "15703738773269"
+	config.Set(config.ConfSmsServiceName, "musicchi")
+	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
+	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
 	convey.Convey("Test SMS", t, func(c convey.C) {
-		convey.Convey("Subscribe", func(c convey.C) {
-			var err error
-			otpID, err = saba.Subscribe(phone)
-			c.So(err, convey.ShouldBeNil)
-			_, _ = c.Println(otpID)
-		})
+		// convey.Convey("Subscribe", func(c convey.C) {
+		// 	var err error
+		// 	otpID, err = saba.Subscribe(phone)
+		// 	if err != nil {
+		// 		_, _ = c.Println(err)
+		// 	}
+		// 	c.So(err, convey.ShouldBeNil)
+		// 	_, _ = c.Println(otpID)
+		// })
 		convey.Convey("Confirm", func(c convey.C) {
-			statusCode, err := saba.Confirm(phone, "0000", otpID)
+			statusCode, err := saba.Confirm(phone, "2248", otpID)
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(statusCode, otpID)
 		})
