@@ -38,7 +38,7 @@ func TestAuth(t *testing.T) {
 		RequestFactory: httpexpect.DefaultRequestFactory{},
 		Client:         http.DefaultClient,
 		Reporter:       httpexpect.NewAssertReporter(t),
-		Printers: nil ,
+		Printers:       nil,
 	})
 
 	Convey("Auth Tests", t, func() {

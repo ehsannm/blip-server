@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
@@ -12,6 +13,7 @@ import (
 	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"net/http"
 	"strings"
 	"time"
@@ -292,4 +294,19 @@ func RegisterHandler(ctx iris.Context) {
 		SessionID: sessionID,
 	})
 
+}
+
+func VasNotification(ctx iris.Context) {
+	status := ctx.URLParam("status")
+	amount := ctx.URLParamIntDefault("amount", 0)
+	serviceID := ctx.URLParam("serviceId")
+	channel := ctx.URLParam("channel")
+	dateTime := ctx.URLParamIntDefault("datetime", 0)
+	log.Info("VAS NOTIFICATION RECEIVED",
+		zap.String("Status", status),
+		zap.Int("Amount", amount),
+		zap.String("ServiceID", serviceID),
+		zap.String("Channel", channel),
+		zap.Int("DateTime", dateTime),
+	)
 }

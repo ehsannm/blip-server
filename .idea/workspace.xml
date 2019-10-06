@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/extra/experiments/es/agg_user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/experiments/es/cmd_user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/experiments/es/event_user.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/experiments/es/main.go" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/logger/helpers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/logger/level.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/logger/logger.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/logger/sentry.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/user/user_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/user_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -45,22 +52,22 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pkg" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/extra/experiments/dgraph" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pkg" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/cmd/server-api" />
       <recent name="$PROJECT_DIR$/pkg/token" />
       <recent name="$PROJECT_DIR$/pkg/msg" />
-      <recent name="$PROJECT_DIR$/extra/dev-env" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/extra/experiments/dgraph" />
     </key>
   </component>
   <component name="RunDashboard">

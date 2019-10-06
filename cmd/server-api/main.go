@@ -3,12 +3,13 @@ package main
 import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
-	log "git.ronaksoftware.com/ronak/toolbox/logger"
+
 	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -18,19 +19,19 @@ import (
 )
 
 var (
-	_Log   log.Logger
 	_Mongo *mongo.Client
 )
 
 func init() {
-	_Log = log.NewConsoleLogger()
+	log.InitLogger(log.DebugLevel, "")
+
 
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(
 		nil,
 		options.Client().ApplyURI(viper.GetString(config.ConfMongoUrl)),
 	); err != nil {
-		_Log.Fatal("Error On MongoConnect", zap.Error(err))
+		log.Fatal("Error On MongoConnect", zap.Error(err))
 	} else {
 		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
@@ -64,6 +65,12 @@ func initServer() *iris.Application {
 	musicParty := app.Party("/music")
 	musicParty.Get("/search", music.Search)
 
+
+	vasParty := app.Party("/vas")
+	vasParty.Get("/notif", auth.VasNotification)
+
+
+
 	return app
 }
 
@@ -77,7 +84,7 @@ var Root = &cobra.Command{
 		app := initServer()
 		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
 		if err != nil {
-			_Log.Warn(err.Error())
+			log.Warn(err.Error())
 		}
 	},
 }
