@@ -29,7 +29,7 @@ const CPhoneCodeSent = "PHONE_CODE_SENT"
 // easyjson:json
 type PhoneCodeSent struct {
 	PhoneCodeHash string `json:"phone_code_hash"`
-	OperationID   int    `json:"operation_id"`
+	OperationID   string `json:"operation_id"`
 }
 
 // easyjson:json
@@ -39,7 +39,7 @@ type LoginReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
-	OperationID   int    `json:"operation_id"`
+	OperationID   string `json:"operation_id"`
 }
 
 // easyjson:json
@@ -49,7 +49,7 @@ type RegisterReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
-	OperationID   int    `json:"operation_id"`
+	OperationID   string `json:"operation_id"`
 	Username      string `json:"username"`
 }
 

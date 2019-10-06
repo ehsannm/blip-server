@@ -15,7 +15,7 @@ import (
 */
 
 const (
-	ConfLogLevel			= "LOG_LEVEL"
+	ConfLogLevel            = "LOG_LEVEL"
 	ConfMongoUrl            = "MONGO_URL"
 	ConfMongoDB             = "MONGO_DB"
 	ConfMongoRequestTimeout = "MONGO_REQUEST_TIMEOUT"

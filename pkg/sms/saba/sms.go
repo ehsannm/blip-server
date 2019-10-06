@@ -20,8 +20,8 @@ import (
 */
 
 var (
-	baseUrl 	string
-	serviceName string
+	baseUrl      string
+	serviceName  string
 	serviceToken string
 )
 

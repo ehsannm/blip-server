@@ -19,11 +19,13 @@ import (
 func TestSubscribe(t *testing.T) {
 	// phone := "989122139561"
 	// phone := "989121228718"
-	phone := "989916695980"
-	otpID := "15703738773269"
+	// phone := "989916695980"
+	phone := "989124861985"
+	otpID := "15703753095630"
 	config.Set(config.ConfSmsServiceName, "musicchi")
 	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
 	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
+	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		// convey.Convey("Subscribe", func(c convey.C) {
 		// 	var err error
