@@ -3,6 +3,7 @@ package saba
 import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
 	"io/ioutil"
 	"net/http"
@@ -72,6 +73,7 @@ func Unsubscribe(phone string) (string, error) {
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
 	_ = httpResp.Body.Close()
 
+	fmt.Println(ronak.ByteToStr(httpBytes))
 	sResp := new(UnsubscribeResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {

@@ -16,11 +16,14 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+var (
+	// phone = "989122139561"
+	// phone = "989121228718"
+	// phone = "989916695980"
+	phone = "989124861985"
+)
+
 func TestSubscribe(t *testing.T) {
-	// phone := "989122139561"
-	// phone := "989121228718"
-	// phone := "989916695980"
-	phone := "989124861985"
 	otpID := "15703753095630"
 	config.Set(config.ConfSmsServiceName, "musicchi")
 	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
@@ -45,10 +48,6 @@ func TestSubscribe(t *testing.T) {
 }
 
 func TestUnsubscribe(t *testing.T) {
-	// phone := "989122139561"
-	// phone := "989121228718"
-	// phone := "989916695980"
-	phone := "989124861985"
 	config.Set(config.ConfSmsServiceName, "musicchi")
 	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
 	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
@@ -57,10 +56,25 @@ func TestUnsubscribe(t *testing.T) {
 		convey.Convey("Subscribe", func(c convey.C) {
 			statusCode, err := saba.Unsubscribe(phone)
 			if err != nil {
-				_, _ = c.Println(err)
+				_, _ = c.Println("Error", err)
 			}
 			c.So(err, convey.ShouldBeNil)
-			_, _ = c.Println(statusCode)
+			_, _ = c.Println("statusCode", statusCode)
+		})
+	})
+}
+
+func TestConfirm(t *testing.T) {
+	otpID := "15703753095630"
+	config.Set(config.ConfSmsServiceName, "musicchi")
+	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
+	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
+	saba.Init()
+	convey.Convey("Test SMS", t, func(c convey.C) {
+		convey.Convey("Confirm", func(c convey.C) {
+			statusCode, err := saba.Confirm(phone, "9675", otpID)
+			c.So(err, convey.ShouldBeNil)
+			_, _ = c.Println(statusCode, otpID)
 		})
 	})
 }
