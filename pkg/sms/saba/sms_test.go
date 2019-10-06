@@ -1,6 +1,7 @@
 package saba_test
 
 import (
+	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
 	"github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -18,6 +19,9 @@ import (
 func TestSubscribe(t *testing.T) {
 	phone := "989122139561"
 	otpID := 0
+	config.Set(config.ConfSmsServiceName, "")
+	config.Set(config.ConfSmsServiceToken, "")
+	config.Set(config.ConfSmsServiceBaseUrl, "")
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
 			var err error

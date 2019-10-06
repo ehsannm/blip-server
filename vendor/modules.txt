@@ -37,6 +37,8 @@ github.com/fsnotify/fsnotify
 github.com/gavv/monotime
 # github.com/getsentry/raven-go v0.2.0
 github.com/getsentry/raven-go
+# github.com/getsentry/sentry-go v0.3.0
+github.com/getsentry/sentry-go
 # github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 github.com/globalsign/mgo
 github.com/globalsign/mgo/bson
@@ -149,9 +151,9 @@ github.com/mediocregopher/radix/v3/trace
 github.com/microcosm-cc/bluemonday
 # github.com/mitchellh/mapstructure v1.1.2
 github.com/mitchellh/mapstructure
-# github.com/modern-go/concurrent v0.0.0-20180228061459-e0a39a4cb421
+# github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
-# github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742
+# github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
 # github.com/moul/http2curl v1.0.0
 github.com/moul/http2curl
@@ -205,7 +207,7 @@ github.com/spf13/jwalterweatherman
 github.com/spf13/pflag
 # github.com/spf13/viper v1.3.2
 github.com/spf13/viper
-# github.com/stretchr/testify v1.3.0
+# github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
@@ -269,7 +271,7 @@ go.uber.org/zap/internal/exit
 golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/acme
 golang.org/x/crypto/pbkdf2
-# golang.org/x/net v0.0.0-20190404232315-eb5bcb51f2a3
+# golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
 golang.org/x/net/trace
 golang.org/x/net/publicsuffix
 golang.org/x/net/internal/timeseries
@@ -281,7 +283,7 @@ golang.org/x/net/http/httpguts
 golang.org/x/net/html/atom
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
 golang.org/x/sync/semaphore
-# golang.org/x/sys v0.0.0-20190626221950-04f50cda93cb
+# golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.0
 golang.org/x/text/transform

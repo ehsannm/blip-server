@@ -8,6 +8,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
+	"git.ronaksoftware.com/blip/server/pkg/vas"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 
 	"github.com/kataras/iris"
@@ -24,7 +25,6 @@ var (
 
 func init() {
 	log.InitLogger(log.DebugLevel, "")
-
 
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(
@@ -65,11 +65,10 @@ func initServer() *iris.Application {
 	musicParty := app.Party("/music")
 	musicParty.Get("/search", music.Search)
 
-
+	// Value Added Services
 	vasParty := app.Party("/vas")
-	vasParty.Get("/notif", auth.VasNotification)
-
-
+	vasParty.Get("/mci/notify", vas.MCINotification)
+	vasParty.Get("/mci/mo", vas.MCIMo)
 
 	return app
 }

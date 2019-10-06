@@ -72,3 +72,31 @@ func Confirm(phone, phoneCode string, otpID int) (string, error) {
 
 	return sResp.StatusCode, nil
 }
+
+func SendMessage(phone, message string) (*SendSmsResponse, error) {
+	c := http.Client{
+		Timeout: time.Second * 3,
+	}
+
+	httpResp, err := c.Get(fmt.Sprintf("%s/v2/send/%s/%s/%s?message=%s",
+		viper.GetString(config.ConfSmsServiceBaseUrl),
+		viper.GetString(config.ConfSmsServiceName),
+		viper.GetString(config.ConfSmsServiceToken),
+		phone, message,
+	))
+	if err != nil {
+		return nil, err
+	}
+
+	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
+	_ = httpResp.Body.Close()
+
+	sResp := new(SendSmsResponse)
+	err = sResp.UnmarshalJSON(httpBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return sResp, nil
+
+}
