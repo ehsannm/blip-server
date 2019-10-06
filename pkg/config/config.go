@@ -15,6 +15,7 @@ import (
 */
 
 const (
+	ConfLogLevel			= "LOG_LEVEL"
 	ConfMongoUrl            = "MONGO_URL"
 	ConfMongoDB             = "MONGO_DB"
 	ConfMongoRequestTimeout = "MONGO_REQUEST_TIMEOUT"
@@ -29,6 +30,7 @@ func init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
+	pflag.Int(ConfLogLevel, 0, "")
 	pflag.String(ConfMongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(ConfMongoDB, "blip", "")
 	pflag.String(ConfRedisUrl, "localhost:6379", "")

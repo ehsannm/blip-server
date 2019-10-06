@@ -10,6 +10,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
+	"go.uber.org/zap/zapcore"
 
 	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
@@ -24,7 +25,7 @@ var (
 )
 
 func init() {
-	log.InitLogger(log.DebugLevel, "")
+	log.InitLogger(zapcore.Level(config.GetInt(config.ConfLogLevel)), "")
 
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(
