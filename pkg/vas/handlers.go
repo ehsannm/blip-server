@@ -17,7 +17,6 @@ import (
 */
 
 func MCINotification(ctx iris.Context) {
-
 	customerNumber := ctx.URLParam("msisdn")
 	status := ctx.URLParam("status")
 	amount := ctx.URLParamIntDefault("amount", 0)

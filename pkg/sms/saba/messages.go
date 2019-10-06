@@ -25,6 +25,23 @@ type SubscribeResponse struct {
 }
 
 // easyjson:json
+type UnsubscribeResponse struct {
+	Status           string `json:"status"`
+	StatusCode       string `json:"status_code"`
+	OperatorResponse struct {
+		StatusInfo struct {
+			ReferenceCode       string `json:"referenceCode"`
+			StatusCode          string `json:"statusCode"`
+			ServerReferenceCode string `json:"serverReferenceCode"`
+			ErrorInfo           struct {
+				Code        string `json:"errorCode"`
+				Description string `json:"errorDescription"`
+			} `json:"errorInfo"`
+		} `json:"statusInfo"`
+	} `json:"operator_response"`
+}
+
+// easyjson:json
 type ConfirmResponse struct {
 	Status           string `json:"status"`
 	StatusCode       string `json:"status_code"`

@@ -56,6 +56,31 @@ func Subscribe(phone string) (string, error) {
 	return sResp.OtpID, nil
 }
 
+func Unsubscribe(phone string) (string, error) {
+	c := http.Client{
+		Timeout: time.Second * 3,
+	}
+
+	url := fmt.Sprintf("%s/v2/unsub/%s/%s/%s",
+		baseUrl, serviceName, serviceToken, phone,
+	)
+	httpResp, err := c.Get(url)
+	if err != nil {
+		return "", err
+	}
+
+	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
+	_ = httpResp.Body.Close()
+
+	sResp := new(UnsubscribeResponse)
+	err = sResp.UnmarshalJSON(httpBytes)
+	if err != nil {
+		return "", err
+	}
+
+	return sResp.StatusCode, nil
+}
+
 func Confirm(phone, phoneCode string, otpID string) (string, error) {
 	c := http.Client{
 		Timeout: time.Second * 3,
