@@ -245,11 +245,12 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-	if vasCode != saba.SuccessfulCode {
-		errText, _ := saba.SabaCodes[vasCode]
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
-		return
-	}
+	_ = vasCode
+	// if vasCode != saba.SuccessfulCode {
+	// 	errText, _ := saba.SabaCodes[vasCode]
+	// 	msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+	// 	return
+	// }
 
 	_, err = user.GetByPhone(req.Phone)
 	if err == nil {
