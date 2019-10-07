@@ -114,7 +114,6 @@ func SendMessage(phone, message string) (*SendSmsResponse, error) {
 	v := url.Values{}
 	v.Set("message", message)
 
-
 	httpResp, err := c.Get(fmt.Sprintf("%s/v2/send/%s/%s/%s?%s",
 		viper.GetString(config.ConfSmsServiceBaseUrl),
 		viper.GetString(config.ConfSmsServiceName),

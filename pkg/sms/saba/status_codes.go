@@ -9,15 +9,19 @@ package saba
    Copyright Ronak Software Group 2018
 */
 
-var SuccessfulCode = "SC000"
+const (
+	SuccessfulCode = "SC000"
 
-var SabaCodes = map[string]string{
+)
+
+
+var Codes = map[string]string{
 	"SC000": "successful",
 	"SC001": "service not found",
 	"SC002": "service token is invalid",
 	"SC003": "operator not found",
 	"SC004": "cellphone is blocked",
-	"SC005": "transaction_id is invald",
+	"SC005": "transaction_id is invalid",
 	"SC006": "authentication failed",
 	"SC007": "phone number is invalid",
 	"SC008": "authorization failed",

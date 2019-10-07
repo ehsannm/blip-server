@@ -197,7 +197,7 @@ func LoginHandler(ctx iris.Context) {
 	}
 
 	if vasCode != saba.SuccessfulCode {
-		errText, _ := saba.SabaCodes[vasCode]
+		errText, _ := saba.Codes[vasCode]
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
 		return
 	}
@@ -217,7 +217,7 @@ func LoginHandler(ctx iris.Context) {
 		LastAccess: timeNow,
 	})
 	if err != nil {
-		errText, _ := saba.SabaCodes[vasCode]
+		errText, _ := saba.Codes[vasCode]
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
 		return
 	}
@@ -245,16 +245,22 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-	_ = vasCode
-	// if vasCode != saba.SuccessfulCode {
-	// 	errText, _ := saba.SabaCodes[vasCode]
-	// 	msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
-	// 	return
-	// }
+	if vasCode != saba.SuccessfulCode {
+		errText, _ := saba.Codes[vasCode]
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+		return
+	}
 
 	_, err = user.GetByPhone(req.Phone)
 	if err == nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrAlreadyRegistered)
+		return
+	}
+
+	if req.Username == "" {
+		req.Username = fmt.Sprintf("USER%s", strings.ToUpper(ronak.RandomID(12)))
+	} else if !usernameREGX.Match(ronak.StrToByte(req.Username)) {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrUsernameFormat)
 		return
 	}
 
