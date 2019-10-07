@@ -6,6 +6,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
+	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
@@ -47,6 +48,8 @@ func init() {
 	redisConfig.Password = viper.GetString(config.ConfRedisPass)
 	redisCache := ronak.NewRedisCache(redisConfig)
 	auth.InitRedisCache(redisCache)
+
+	saba.Init()
 }
 
 func initServer() *iris.Application {
