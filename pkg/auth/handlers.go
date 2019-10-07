@@ -3,6 +3,7 @@ package auth
 import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
@@ -12,6 +13,7 @@ import (
 	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"net/http"
 	"strings"
 	"time"
@@ -34,6 +36,10 @@ func GetAuthorizationHandler(ctx iris.Context) {
 	if !ok {
 		res := authCol.FindOne(nil, bson.M{"_id": accessKey}, options.FindOne())
 		if err := res.Decode(&auth); err != nil {
+			log.Debug("Error On GetAuthorization",
+				zap.Error(err),
+				zap.String("AccessKey", accessKey),
+			)
 			msg.Error(ctx, http.StatusForbidden, msg.ErrAccessTokenInvalid)
 			return
 		}
