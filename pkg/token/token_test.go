@@ -41,7 +41,7 @@ func init() {
 	}
 
 	app := iris.New()
-	app.UseGlobal(auth.GetAuthorizationHandler)
+	app.UseGlobal(auth.MustHaveAccessKey)
 	tokenParty := app.Party("/token")
 	tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
 	tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)

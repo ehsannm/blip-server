@@ -49,6 +49,7 @@ func init() {
 	redisConfig.Password = viper.GetString(config.ConfRedisPass)
 	redisCache := ronak.NewRedisCache(redisConfig)
 	auth.InitRedisCache(redisCache)
+	user.InitRedisCache(redisCache)
 
 	saba.Init()
 }
@@ -57,20 +58,20 @@ func initServer() *iris.Application {
 	app := iris.New()
 
 	tokenParty := app.Party("/token")
-	tokenParty.Use(auth.GetAuthorizationHandler)
+	tokenParty.Use(auth.MustHaveAccessKey)
 	tokenParty.Post("/create", auth.MustWriteAccess, token.CreateHandler)
 	tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)
 
 	authParty := app.Party("/auth")
-	authParty.Use(auth.GetAuthorizationHandler)
+	authParty.Use(auth.MustHaveAccessKey)
 	authParty.Post("/create", auth.MustAdmin, auth.CreateAccessKeyHandler)
 	authParty.Post("/send_code", auth.SendCodeHandler)
 	authParty.Post("/login", auth.LoginHandler)
 	authParty.Post("/register", auth.RegisterHandler)
 
 	musicParty := app.Party("/music")
-	musicParty.Use(auth.GetAuthorizationHandler)
-	musicParty.Get("/search", music.Search)
+	musicParty.Use(auth.MustHaveAccessKey)
+	musicParty.Get("/search", session.MustHaveSession, music.Search)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")

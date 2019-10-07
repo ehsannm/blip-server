@@ -28,6 +28,7 @@ var (
 	ErrAlreadyRegistered      Item = "ALREADY_REGISTERED"
 	ErrUsernameFormat         Item = "USERNAME_FORMAT"
 	ErrUnsupportedCarrier     Item = "UNSUPPORTED_CARRIER"
+	ErrSessionInvalid         Item = "SESSION_INVALID"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {

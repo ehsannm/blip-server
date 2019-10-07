@@ -28,7 +28,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func GetAuthorizationHandler(ctx iris.Context) {
+func MustHaveAccessKey(ctx iris.Context) {
 	accessKey := ctx.GetHeader(HdrAccessKey)
 	mtxLock.RLock()
 	auth, ok := authCache[accessKey]

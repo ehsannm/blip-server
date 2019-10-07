@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"sync"
 )
 
 /*
@@ -45,4 +46,12 @@ func Get(sessionID string) (*Session, error) {
 		return nil, err
 	}
 	return session, nil
+}
+
+
+var sessionCache map[string]Session
+var mtxLock sync.RWMutex
+
+func init() {
+	sessionCache = make(map[string]Session, 100000)
 }

@@ -1,7 +1,9 @@
 package user
 
 import (
+	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,13 +20,19 @@ import (
 */
 
 var (
-	userCol *mongo.Collection
+	userCol    *mongo.Collection
+	redisCache *ronak.RedisCache
 )
 
 func InitMongo(c *mongo.Client) {
 	userCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColUser)
 }
 
+func InitRedisCache(c *ronak.RedisCache) {
+	redisCache = c
+}
+
+// easyjson:json
 type User struct {
 	ID        string `json:"id" bson:"_id"`
 	Username  string `json:"username" bson:"username"`
@@ -32,6 +40,7 @@ type User struct {
 	Email     string `json:"email" bson:"email"`
 	CreatedOn int64  `json:"created_on" bson:"created_on"`
 	Disabled  bool   `json:"disabled" bson:"disabled"`
+	Premium   bool   `json:"premium" bson:"premium"`
 }
 
 func Save(user User) error {
@@ -39,7 +48,31 @@ func Save(user User) error {
 	return err
 }
 
-func Get(userID string) (*User, error) {
+func readFromCache(userID string) (*User, error) {
+	keyID := fmt.Sprintf("%s.%s", RkUser, userID)
+	userBytes, err := redisCache.GetBytes(keyID)
+	if err != nil || userBytes == nil {
+		user, err := readFromDb(userID)
+		if err != nil {
+			return nil, err
+		}
+		userBytes, err = user.MarshalJSON()
+		if err != nil {
+			return nil, err
+		}
+		_, _ = redisCache.Set(keyID, userBytes)
+		return user, nil
+	}
+
+	user := new(User)
+	err = user.UnmarshalJSON(userBytes)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func readFromDb(userID string) (*User, error) {
 	user := new(User)
 	res := userCol.FindOne(nil, bson.M{"_id": userID}, options.FindOne().SetMaxTime(config.MongoRequestTimeout))
 	err := res.Decode(user)
@@ -47,6 +80,10 @@ func Get(userID string) (*User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func Get(userID string) (*User, error) {
+	return readFromCache(userID)
 }
 
 func GetByPhone(phone string) (*User, error) {
