@@ -2,7 +2,7 @@ package dev
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
-	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
+	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/kataras/iris"
 	"net/http"
 )

@@ -2,7 +2,7 @@ package saba_test
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
+	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/smartystreets/goconvey/convey"
 	"testing"
 )
@@ -25,9 +25,9 @@ var (
 
 func TestSubscribe(t *testing.T) {
 	otpID := "15703753095630"
-	config.Set(config.ConfSmsServiceName, "musicchi")
-	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
-	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
+	config.Set(config.ConfVasSabaServiceName, "musicchi")
+	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
+	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
@@ -43,9 +43,9 @@ func TestSubscribe(t *testing.T) {
 }
 
 func TestUnsubscribe(t *testing.T) {
-	config.Set(config.ConfSmsServiceName, "musicchi")
-	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
-	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
+	config.Set(config.ConfVasSabaServiceName, "musicchi")
+	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
+	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
@@ -61,9 +61,9 @@ func TestUnsubscribe(t *testing.T) {
 
 func TestConfirm(t *testing.T) {
 	otpID := "15703766367991"
-	config.Set(config.ConfSmsServiceName, "musicchi")
-	config.Set(config.ConfSmsServiceToken, "65rejoptjb")
-	config.Set(config.ConfSmsServiceBaseUrl, "http://api.sabaeco.com")
+	config.Set(config.ConfVasSabaServiceName, "musicchi")
+	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
+	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Confirm", func(c convey.C) {

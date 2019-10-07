@@ -21,9 +21,11 @@ const (
 	ConfMongoRequestTimeout = "MONGO_REQUEST_TIMEOUT"
 	ConfRedisUrl            = "REDIS_URL"
 	ConfRedisPass           = "REDIS_PASS"
-	ConfSmsServiceBaseUrl   = "SMS_SERVICE_BASE_URL"
-	ConfSmsServiceName      = "SMS_SERVICE_NAME"
-	ConfSmsServiceToken     = "SMS_SERVICE_TOKEN"
+
+	// VAS Saba Configs
+	ConfVasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
+	ConfVasSabaServiceName    = "VAS_SABA_SERVICE_NAME"
+	ConfVasSabaServiceToken   = "VAS_SABA_SERVICE_TOKEN"
 
 	// ACR Configs
 	ConfACRAccessKey    = "ACR_ACCESS_KEY"
@@ -40,9 +42,9 @@ func init() {
 	pflag.String(ConfMongoDB, "blip", "")
 	pflag.String(ConfRedisUrl, "localhost:6379", "")
 	pflag.String(ConfRedisPass, "ehsan2374", "")
-	pflag.String(ConfSmsServiceName, "test", "")
-	pflag.String(ConfSmsServiceToken, "stuimxfhyy", "")
-	pflag.String(ConfSmsServiceBaseUrl, "http://api.sabaeco.com", "")
+	pflag.String(ConfVasSabaServiceName, "test", "")
+	pflag.String(ConfVasSabaServiceToken, "stuimxfhyy", "")
+	pflag.String(ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com", "")
 
 	pflag.String(ConfACRBaseUrl, "http://identify-eu-west-1.acrcloud.com", "")
 	pflag.String(ConfACRAccessKey, "7f808c9dcbb700bf7018ffc92c49ff93", "")

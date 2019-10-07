@@ -2,7 +2,7 @@ package vas
 
 import (
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	"git.ronaksoftware.com/blip/server/pkg/sms/saba"
+	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
 )
