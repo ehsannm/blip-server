@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
@@ -43,14 +42,14 @@ type User struct {
 	Premium   bool   `json:"premium" bson:"premium"`
 }
 
-func Save(user User) error {
+func Save(user *User) error {
 	_, err := userCol.InsertOne(nil, user)
+	deleteFromCache(user.ID)
 	return err
 }
 
 func readFromCache(userID string) (*User, error) {
-	keyID := fmt.Sprintf("%s.%s", RkUser, userID)
-	userBytes, err := redisCache.GetBytes(keyID)
+	userBytes, err := redisCache.GetBytes(userID)
 	if err != nil || userBytes == nil {
 		user, err := readFromDb(userID)
 		if err != nil {
@@ -60,7 +59,7 @@ func readFromCache(userID string) (*User, error) {
 		if err != nil {
 			return nil, err
 		}
-		_, _ = redisCache.Set(keyID, userBytes)
+		_, _ = redisCache.Set(userID, userBytes)
 		return user, nil
 	}
 
@@ -80,6 +79,10 @@ func readFromDb(userID string) (*User, error) {
 		return nil, err
 	}
 	return user, nil
+}
+
+func deleteFromCache(userID string) {
+	_, _ = redisCache.Del(userID)
 }
 
 func Get(userID string) (*User, error) {

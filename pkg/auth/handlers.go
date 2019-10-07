@@ -284,7 +284,7 @@ func RegisterHandler(ctx iris.Context) {
 
 	userID := fmt.Sprintf("U%s", ronak.RandomID(32))
 	timeNow := time.Now().Unix()
-	err = user.Save(user.User{
+	err = user.Save(&user.User{
 		ID:        userID,
 		Username:  req.Username,
 		Phone:     req.Phone,

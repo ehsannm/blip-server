@@ -2,6 +2,7 @@ package vas
 
 import (
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
@@ -34,6 +35,15 @@ func MCINotification(ctx iris.Context) {
 	)
 	switch status {
 	case MciNotificationStatusSubscription:
+		u, err := user.GetByPhone(customerNumber)
+		if err != nil {
+			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+		}
+		u.Premium = true
+		err = user.Save(u)
+		if err != nil {
+			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+		}
 		res, err := saba.SendMessage(customerNumber, WelcomeMessage)
 		if err != nil {
 			log.Warn("Error On SendMessage (Subsription)",
@@ -56,6 +66,15 @@ func MCINotification(ctx iris.Context) {
 			)
 		}
 	case MciNotificationStatusUnsubscription:
+		u, err := user.GetByPhone(customerNumber)
+		if err != nil {
+			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+		}
+		u.Premium = false
+		err = user.Save(u)
+		if err != nil {
+			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+		}
 		res, err := saba.SendMessage(customerNumber, GoodbyeMessage)
 		if err != nil {
 			log.Warn("Error On SendMessage (UnSubscription)",
