@@ -3,6 +3,7 @@ package main
 import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"git.ronaksoftware.com/blip/server/pkg/dev"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -76,9 +77,8 @@ func initServer() *iris.Application {
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
-
 	devParty := app.Party("/dev")
-	devParty.Post("/unsubscribe", )
+	devParty.Post("/unsubscribe", dev.Unsubscribe)
 	return app
 }
 

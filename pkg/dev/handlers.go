@@ -16,7 +16,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func Unsubscribe(ctx iris.Context) {
 	phone := ctx.PostValue("phone")
 	res, err := saba.Unsubscribe(phone)
