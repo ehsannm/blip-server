@@ -11,9 +11,7 @@ package saba
 
 const (
 	SuccessfulCode = "SC000"
-
 )
-
 
 var Codes = map[string]string{
 	"SC000": "successful",

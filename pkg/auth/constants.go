@@ -12,13 +12,13 @@ import "regexp"
 */
 
 const (
-	HdrAccessKey = "AccessKey"
-	CtxAuth      = "Auth"
+	HdrAccessKey  = "AccessKey"
+	CtxAuth       = "Auth"
 	UsernameRegex = "/^[a-zA-Z0-9]+[a-zA-Z0-9_]{3,12}$/"
 )
 
 var (
-	usernameREGX	*regexp.Regexp
+	usernameREGX *regexp.Regexp
 )
 
 func init() {

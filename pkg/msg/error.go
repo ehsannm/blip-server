@@ -26,7 +26,7 @@ var (
 	ErrWriteToCache           Item = "WRITE_TO_CACHE"
 	ErrCannotUnmarshalRequest Item = "CANNOT_UNMARSHAL_JSON"
 	ErrAlreadyRegistered      Item = "ALREADY_REGISTERED"
-	ErrUsernameFormat		  Item = "USERNAME_FORMAT"
+	ErrUsernameFormat         Item = "USERNAME_FORMAT"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
