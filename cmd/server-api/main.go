@@ -76,6 +76,9 @@ func initServer() *iris.Application {
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
+
+	devParty := app.Party("/dev")
+	devParty.Post("/unsubscribe", )
 	return app
 }
 

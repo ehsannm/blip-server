@@ -176,9 +176,16 @@ func SendCodeHandler(ctx iris.Context) {
 		return
 	}
 
+	registered := false
+	u, _ := user.GetByPhone(req.Phone)
+	if u != nil {
+		registered = true
+	}
+
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 		PhoneCodeHash: ronak.RandomID(12),
 		OperationID:   optID,
+		Registered:    registered,
 	})
 }
 
