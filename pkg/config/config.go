@@ -24,6 +24,11 @@ const (
 	ConfSmsServiceBaseUrl   = "SMS_SERVICE_BASE_URL"
 	ConfSmsServiceName      = "SMS_SERVICE_NAME"
 	ConfSmsServiceToken     = "SMS_SERVICE_TOKEN"
+
+	// ACR Configs
+	ConfACRAccessKey    = "ACR_ACCESS_KEY"
+	ConfACRAccessSecret = "ACR_ACCESS_SECRET"
+	ConfACRBaseUrl		= "ACR_BASE_URL"
 )
 
 func init() {
@@ -38,6 +43,11 @@ func init() {
 	pflag.String(ConfSmsServiceName, "test", "")
 	pflag.String(ConfSmsServiceToken, "stuimxfhyy", "")
 	pflag.String(ConfSmsServiceBaseUrl, "http://api.sabaeco.com", "")
+
+	pflag.String(ConfACRBaseUrl, "http://identify-eu-west-1.acrcloud.com", "")
+	pflag.String(ConfACRAccessKey, "7f808c9dcbb700bf7018ffc92c49ff93", "")
+	pflag.String(ConfACRAccessSecret, "EpbFGBwZcFtDUH4OSxPMj6247nb5WIy6yaTbIOiq", "")
+
 	pflag.Parse()
 	_ = viper.BindPFlags(pflag.CommandLine)
 }

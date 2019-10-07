@@ -10,6 +10,7 @@ require (
 	github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce
 	github.com/json-iterator/go v1.1.7 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
+	github.com/kr/pretty v0.1.0
 	github.com/mailru/easyjson v0.7.0
 	github.com/mediocregopher/radix/v3 v3.3.0
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337

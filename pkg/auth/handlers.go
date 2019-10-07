@@ -170,6 +170,11 @@ func SendCodeHandler(ctx iris.Context) {
 		return
 	}
 
+	if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
+		msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
+		return
+	}
+
 	optID, err := saba.Subscribe(req.Phone)
 	if err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))

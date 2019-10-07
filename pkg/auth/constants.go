@@ -24,3 +24,19 @@ var (
 func init() {
 	usernameREGX, _ = regexp.Compile(UsernameRegex)
 }
+
+var supportedCarriers = map[string]bool{
+	"98910": true,
+	"98911": true,
+	"98912": true,
+	"98913": true,
+	"98914": true,
+	"98915": true,
+	"98916": true,
+	"98917": true,
+	"98918": true,
+	"98919": true,
+	"98990": true,
+	"98991": true,
+	"98992": true,
+}

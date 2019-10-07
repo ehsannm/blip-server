@@ -27,6 +27,7 @@ var (
 	ErrCannotUnmarshalRequest Item = "CANNOT_UNMARSHAL_JSON"
 	ErrAlreadyRegistered      Item = "ALREADY_REGISTERED"
 	ErrUsernameFormat         Item = "USERNAME_FORMAT"
+	ErrUnsupportedCarrier     Item = "UNSUPPORTED_CARRIER"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
