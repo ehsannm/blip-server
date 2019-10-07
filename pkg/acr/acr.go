@@ -29,7 +29,7 @@ import (
 */
 
 var (
-	baseUrl string
+	baseUrl      string
 	accessKey    string
 	accessSecret string
 )
@@ -43,21 +43,20 @@ func Init() {
 func IdentifyByFile(fileAddr string) (*Music, error) {
 	f, err := os.Open(fileAddr)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 	fileBytes, err := ioutil.ReadAll(f)
 	if err != nil {
 		log.Warn("Error On IdentifyByFile", zap.Error(err), zap.String("Path", fileAddr))
-		return nil ,err
+		return nil, err
 	}
 
 	t := time.Now().Unix() * 1000
 	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\naudio\n1\n%d", accessKey, t)
 
-	hm := hmac.New(func() hash.Hash { return sha1.New() },ronak.StrToByte(accessSecret))
+	hm := hmac.New(func() hash.Hash { return sha1.New() }, ronak.StrToByte(accessSecret))
 	hm.Write(ronak.StrToByte(stringToSign))
 	signature := base64.StdEncoding.EncodeToString(hm.Sum(nil))
-
 
 	c := http.Client{
 		Timeout: time.Second * 3,
@@ -72,23 +71,23 @@ func IdentifyByFile(fileAddr string) (*Music, error) {
 	values.Set("timestamp", fmt.Sprintf("%d", t))
 	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/v1/identify", baseUrl), strings.NewReader(values.Encode()))
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	resp, err := c.Do(req)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 
 	resBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 
 	music := new(Music)
 	err = json.Unmarshal(resBytes, music)
 	if err != nil {
-		return nil ,err
+		return nil, err
 	}
 
 	return music, nil

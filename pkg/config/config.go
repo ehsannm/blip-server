@@ -28,7 +28,7 @@ const (
 	// ACR Configs
 	ConfACRAccessKey    = "ACR_ACCESS_KEY"
 	ConfACRAccessSecret = "ACR_ACCESS_SECRET"
-	ConfACRBaseUrl		= "ACR_BASE_URL"
+	ConfACRBaseUrl      = "ACR_BASE_URL"
 )
 
 func init() {
