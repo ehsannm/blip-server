@@ -14,5 +14,5 @@ const (
 	HdrSessionID = "SessionID"
 
 	// Context Constants
-	CtxSession   = "Session"
+	CtxSession = "Session"
 )

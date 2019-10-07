@@ -11,5 +11,5 @@ package user
 
 const (
 	// Redis Constants
-	RkUser	= "U-OBJ"
+	RkUser = "U-OBJ"
 )

@@ -48,7 +48,6 @@ func Get(sessionID string) (*Session, error) {
 	return session, nil
 }
 
-
 var sessionCache map[string]Session
 var mtxLock sync.RWMutex
 
