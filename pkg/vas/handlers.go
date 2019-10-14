@@ -38,11 +38,13 @@ func MCINotification(ctx iris.Context) {
 		u, err := user.GetByPhone(customerNumber)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+			return
 		}
 		u.Premium = true
 		err = user.Save(u)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+			return
 		}
 		res, err := saba.SendMessage(customerNumber, WelcomeMessage)
 		if err != nil {
@@ -69,11 +71,13 @@ func MCINotification(ctx iris.Context) {
 		u, err := user.GetByPhone(customerNumber)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+			return
 		}
 		u.Premium = false
 		err = user.Save(u)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
+			return
 		}
 		res, err := saba.SendMessage(customerNumber, GoodbyeMessage)
 		if err != nil {

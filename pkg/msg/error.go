@@ -29,6 +29,7 @@ var (
 	ErrUsernameFormat         Item = "USERNAME_FORMAT"
 	ErrUnsupportedCarrier     Item = "UNSUPPORTED_CARRIER"
 	ErrSessionInvalid         Item = "SESSION_INVALID"
+	ErrBadSoundFile           Item = "BAD_SOUND_FILE"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {

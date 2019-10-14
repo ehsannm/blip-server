@@ -1,6 +1,7 @@
 package main
 
 import (
+	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/dev"
@@ -38,8 +39,8 @@ func init() {
 	} else {
 		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
-		token.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
+		token.InitMongo(mongoClient)
 		user.InitMongo(mongoClient)
 	}
 
@@ -51,7 +52,11 @@ func init() {
 	auth.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
 
+	// Initialize VAS Saba Service
 	saba.Init()
+
+	// Initialize ACR Sound Identification Service
+	acr.Init()
 }
 
 func initServer() *iris.Application {
@@ -71,7 +76,7 @@ func initServer() *iris.Application {
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
-	musicParty.Get("/search", session.MustHaveSession, music.Search)
+	musicParty.Get("/search_by_sound", session.MustHaveSession, music.SearchBySound)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")

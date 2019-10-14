@@ -92,3 +92,46 @@ func IdentifyByFile(fileAddr string) (*Music, error) {
 
 	return music, nil
 }
+
+func IdentifyByByteString(fileBytes []byte) (*Music, error) {
+	t := time.Now().Unix() * 1000
+	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\naudio\n1\n%d", accessKey, t)
+
+	hm := hmac.New(func() hash.Hash { return sha1.New() }, ronak.StrToByte(accessSecret))
+	hm.Write(ronak.StrToByte(stringToSign))
+	signature := base64.StdEncoding.EncodeToString(hm.Sum(nil))
+
+	c := http.Client{
+		Timeout: time.Second * 3,
+	}
+	values := url.Values{}
+	values.Set("access_key", accessKey)
+	values.Set("data_type", "audio")
+	values.Set("sample_bytes", fmt.Sprintf("%d", len(fileBytes)))
+	values.Set("sample", base64.StdEncoding.EncodeToString(fileBytes))
+	values.Set("signature_version", "1")
+	values.Set("signature", signature)
+	values.Set("timestamp", fmt.Sprintf("%d", t))
+	req, err := http.NewRequest(http.MethodPost, fmt.Sprintf("%s/v1/identify", baseUrl), strings.NewReader(values.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	resp, err := c.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	resBytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	music := new(Music)
+	err = json.Unmarshal(resBytes, music)
+	if err != nil {
+		return nil, err
+	}
+
+	return music, nil
+}

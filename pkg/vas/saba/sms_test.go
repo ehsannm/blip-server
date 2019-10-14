@@ -18,17 +18,20 @@ import (
 
 var (
 	// phone = "989122139561"
-	// phone = "989121228718"
+	phone = "989121228718"
 	// phone = "989916695980"
-	phone = "989124861985"
+	// phone = "989124861985"
 )
 
-func TestSubscribe(t *testing.T) {
-	otpID := "15703753095630"
+func init() {
 	config.Set(config.ConfVasSabaServiceName, "musicchi")
 	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
 	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
+}
+
+func TestSubscribe(t *testing.T) {
+	var otpID string
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
 			var err error
@@ -43,10 +46,6 @@ func TestSubscribe(t *testing.T) {
 }
 
 func TestUnsubscribe(t *testing.T) {
-	config.Set(config.ConfVasSabaServiceName, "musicchi")
-	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
-	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
-	saba.Init()
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
 			statusCode, err := saba.Unsubscribe(phone)
@@ -60,14 +59,10 @@ func TestUnsubscribe(t *testing.T) {
 }
 
 func TestConfirm(t *testing.T) {
-	otpID := "15703766367991"
-	config.Set(config.ConfVasSabaServiceName, "musicchi")
-	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
-	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
-	saba.Init()
+	otpID := "15710572349449"
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Confirm", func(c convey.C) {
-			statusCode, err := saba.Confirm(phone, "6404", otpID)
+			statusCode, err := saba.Confirm(phone, "4995", otpID)
 			c.So(err, convey.ShouldBeNil)
 			_, _ = c.Println(statusCode, otpID)
 		})
