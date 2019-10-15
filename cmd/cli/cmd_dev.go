@@ -30,7 +30,7 @@ var UnsubscribeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		v := url.Values{}
 		v.Set("phone", cmd.Flag(FlagPhone).Value.String())
-		_, err := sendHttp(http.MethodPost, "dev/unsubscribe",
+		_, err := sendHttp(http.MethodPost, "dev/unsubscribe", ContentTypeForm,
 			strings.NewReader(v.Encode()),
 			true,
 		)

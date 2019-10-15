@@ -60,8 +60,11 @@ func Subscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
+			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
+			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
 		)
 	}
+
 	return sResp.OtpID, nil
 }
 
@@ -88,6 +91,8 @@ func Unsubscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
+			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
+			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
 		)
 	}
 
@@ -118,6 +123,8 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
+			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
+			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
 		)
 	}
 

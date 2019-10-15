@@ -23,7 +23,11 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func sendHttp(method, urlSuffix string, reader io.Reader,  print bool) (*msg.ResponseEnvelope, error) {
+const (
+	ContentTypeJSON = "application/json"
+	ContentTypeForm = "application/x-www-form-urlencoded"
+)
+func sendHttp(method, urlSuffix string, contentType string, reader io.Reader,  print bool) (*msg.ResponseEnvelope, error) {
 	c := http.Client{
 		Timeout: 3 * time.Second,
 	}
@@ -33,6 +37,7 @@ func sendHttp(method, urlSuffix string, reader io.Reader,  print bool) (*msg.Res
 		return nil, errors.New(fmt.Sprintf("Error In Request: %v", err))
 	}
 	req.Header.Set(auth.HdrAccessKey, "ROOT")
+	req.Header.Set("Content-Type", contentType)
 	res, err := c.Do(req)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Error In Response: %v", err))
@@ -57,3 +62,5 @@ func sendHttp(method, urlSuffix string, reader io.Reader,  print bool) (*msg.Res
 
 	return &x, nil
 }
+
+
