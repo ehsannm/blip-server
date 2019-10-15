@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -83,6 +84,7 @@ func Unsubscribe(phone string) (string, error) {
 	sResp := new(UnsubscribeResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
+		log.Warn("Error On Unsubscribe Response", zap.String("Res", ronak.ByteToStr(httpBytes)))
 		return "", errors.Wrap(err, "Error In Unmarshal Response")
 	}
 	if ce := log.Check(log.DebugLevel, "Saba SMS Unsubscribe Response"); ce != nil {
