@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 /*
@@ -27,10 +28,10 @@ var DevCmd = &cobra.Command{
 var UnsubscribeCmd = &cobra.Command{
 	Use: "Unsubscribe",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodPost, "dev/unsubscribe", nil,
-			url.Values{
-				"phone": []string{cmd.Flag(FlagPhone).Value.String()},
-			},
+		v := url.Values{}
+		v.Set("phone", cmd.Flag(FlagPhone).Value.String())
+		_, err := sendHttp(http.MethodPost, "dev/unsubscribe",
+			strings.NewReader(v.Encode()),
 			true,
 		)
 		if err != nil {

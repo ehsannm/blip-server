@@ -18,13 +18,12 @@ import (
 
 func Unsubscribe(ctx iris.Context) {
 	phone := ctx.FormValue("phone")
-	res, err := saba.Unsubscribe(phone)
-
 	if len(phone) < 5 {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
 
+	res, err := saba.Unsubscribe(phone)
 	if err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 		return
