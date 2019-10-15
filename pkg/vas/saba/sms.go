@@ -3,7 +3,9 @@ package saba
 import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -54,6 +56,12 @@ func Subscribe(phone string) (string, error) {
 		return "", err
 	}
 
+	if ce := log.Check(log.DebugLevel, "Saba SMS Subscribe Response"); ce != nil {
+		ce.Write(
+			zap.String("Code", sResp.StatusCode),
+			zap.String("Status", sResp.Status),
+		)
+	}
 	return sResp.OtpID, nil
 }
 
@@ -78,6 +86,12 @@ func Unsubscribe(phone string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+	if ce := log.Check(log.DebugLevel, "Saba SMS Unsubscribe Response"); ce != nil {
+		ce.Write(
+			zap.String("Code", sResp.StatusCode),
+			zap.String("Status", sResp.Status),
+		)
+	}
 
 	return sResp.StatusCode, nil
 }
@@ -101,6 +115,12 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
 		return "", err
+	}
+	if ce := log.Check(log.DebugLevel, "Saba SMS Confirm Response"); ce != nil {
+		ce.Write(
+			zap.String("Code", sResp.StatusCode),
+			zap.String("Status", sResp.Status),
+		)
 	}
 
 	return sResp.StatusCode, nil

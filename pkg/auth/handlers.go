@@ -181,6 +181,10 @@ func SendCodeHandler(ctx iris.Context) {
 		return
 	}
 
+	if optID == "" {
+		// If we are here, then it means VAS did not send the sms
+	}
+
 	err = redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone), optID))
 	if err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)

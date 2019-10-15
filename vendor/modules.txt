@@ -12,10 +12,12 @@ github.com/ajg/form
 # github.com/aymerick/raymond v2.0.2+incompatible
 github.com/aymerick/raymond
 github.com/aymerick/raymond/ast
-github.com/aymerick/raymond/parser
 github.com/aymerick/raymond/lexer
+github.com/aymerick/raymond/parser
 # github.com/beorn7/perks v1.0.0
 github.com/beorn7/perks/quantile
+# github.com/c-bata/go-prompt v0.2.3
+github.com/c-bata/go-prompt
 # github.com/certifi/gocertifi v0.0.0-20190506164543-d2eda7129713
 github.com/certifi/gocertifi
 # github.com/davecgh/go-spew v1.1.1
@@ -42,9 +44,9 @@ github.com/getsentry/sentry-go
 # github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8
 github.com/globalsign/mgo
 github.com/globalsign/mgo/bson
+github.com/globalsign/mgo/internal/json
 github.com/globalsign/mgo/internal/sasl
 github.com/globalsign/mgo/internal/scram
-github.com/globalsign/mgo/internal/json
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
 # github.com/gocql/gocql v0.0.0-20190629212933-1335d3dd7fe2
@@ -70,13 +72,13 @@ github.com/gorilla/schema
 github.com/hailocab/go-hostpool
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
-github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/ast
 github.com/hashicorp/hcl/hcl/parser
-github.com/hashicorp/hcl/hcl/token
-github.com/hashicorp/hcl/json/parser
+github.com/hashicorp/hcl/hcl/printer
 github.com/hashicorp/hcl/hcl/scanner
 github.com/hashicorp/hcl/hcl/strconv
+github.com/hashicorp/hcl/hcl/token
+github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/imkira/go-interpol v1.1.0
@@ -102,43 +104,55 @@ github.com/kataras/golog
 # github.com/kataras/iris v11.1.1+incompatible
 github.com/kataras/iris
 github.com/kataras/iris/cache
-github.com/kataras/iris/context
-github.com/kataras/iris/core/errors
-github.com/kataras/iris/core/handlerconv
-github.com/kataras/iris/core/host
-github.com/kataras/iris/core/netutil
-github.com/kataras/iris/core/router
-github.com/kataras/iris/middleware/logger
-github.com/kataras/iris/middleware/recover
-github.com/kataras/iris/view
-github.com/kataras/iris/cache/client
-github.com/kataras/iris/core/memstore
-github.com/kataras/iris/macro
-github.com/kataras/iris/macro/handler
-github.com/kataras/iris/macro/interpreter/ast
-github.com/kataras/iris/macro/interpreter/lexer
 github.com/kataras/iris/cache/cfg
+github.com/kataras/iris/cache/client
 github.com/kataras/iris/cache/client/rule
 github.com/kataras/iris/cache/entry
 github.com/kataras/iris/cache/ruleset
 github.com/kataras/iris/cache/uri
+github.com/kataras/iris/context
+github.com/kataras/iris/core/errors
+github.com/kataras/iris/core/handlerconv
+github.com/kataras/iris/core/host
+github.com/kataras/iris/core/memstore
+github.com/kataras/iris/core/netutil
+github.com/kataras/iris/core/router
+github.com/kataras/iris/macro
+github.com/kataras/iris/macro/handler
+github.com/kataras/iris/macro/interpreter/ast
+github.com/kataras/iris/macro/interpreter/lexer
 github.com/kataras/iris/macro/interpreter/parser
 github.com/kataras/iris/macro/interpreter/token
+github.com/kataras/iris/middleware/logger
+github.com/kataras/iris/middleware/recover
+github.com/kataras/iris/view
 # github.com/kataras/pio v0.0.0-20190103105442-ea782b38602d
 github.com/kataras/pio
 github.com/kataras/pio/terminal
 # github.com/klauspost/compress v1.7.1
-github.com/klauspost/compress/gzip
 github.com/klauspost/compress/flate
+github.com/klauspost/compress/gzip
 # github.com/klauspost/cpuid v1.2.1
 github.com/klauspost/cpuid
+# github.com/kr/pretty v0.1.0
+github.com/kr/pretty
+# github.com/kr/text v0.1.0
+github.com/kr/text
 # github.com/magiconair/properties v1.8.0
 github.com/magiconair/properties
 # github.com/mailru/easyjson v0.7.0
 github.com/mailru/easyjson
+github.com/mailru/easyjson/buffer
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
-github.com/mailru/easyjson/buffer
+# github.com/mattn/go-colorable v0.1.2
+github.com/mattn/go-colorable
+# github.com/mattn/go-isatty v0.0.9
+github.com/mattn/go-isatty
+# github.com/mattn/go-runewidth v0.0.4
+github.com/mattn/go-runewidth
+# github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859
+github.com/mattn/go-tty
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mediocregopher/radix/v3 v3.3.0
@@ -161,18 +175,20 @@ github.com/moul/http2curl
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
+# github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942
+github.com/pkg/term/termios
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
 # github.com/prometheus/client_golang v0.9.3
 github.com/prometheus/client_golang/prometheus
-github.com/prometheus/client_golang/prometheus/promhttp
 github.com/prometheus/client_golang/prometheus/internal
+github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.4.1
 github.com/prometheus/common/expfmt
-github.com/prometheus/common/model
 github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
+github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.2
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
@@ -192,8 +208,8 @@ github.com/smartystreets/assertions/internal/go-render/render
 github.com/smartystreets/assertions/internal/oglematchers
 # github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
 github.com/smartystreets/goconvey/convey
-github.com/smartystreets/goconvey/convey/reporting
 github.com/smartystreets/goconvey/convey/gotest
+github.com/smartystreets/goconvey/convey/reporting
 # github.com/spf13/afero v1.1.2
 github.com/spf13/afero
 github.com/spf13/afero/mem
@@ -228,79 +244,80 @@ github.com/yudai/gojsondiff/formatter
 # github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82
 github.com/yudai/golcs
 # go.mongodb.org/mongo-driver v1.1.1
-go.mongodb.org/mongo-driver/mongo
-go.mongodb.org/mongo-driver/mongo/options
 go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/bson/bsoncodec
+go.mongodb.org/mongo-driver/bson/bsonrw
 go.mongodb.org/mongo-driver/bson/bsontype
 go.mongodb.org/mongo-driver/bson/primitive
 go.mongodb.org/mongo-driver/event
+go.mongodb.org/mongo-driver/internal
+go.mongodb.org/mongo-driver/mongo
+go.mongodb.org/mongo-driver/mongo/options
 go.mongodb.org/mongo-driver/mongo/readconcern
 go.mongodb.org/mongo-driver/mongo/readpref
 go.mongodb.org/mongo-driver/mongo/writeconcern
+go.mongodb.org/mongo-driver/tag
+go.mongodb.org/mongo-driver/version
 go.mongodb.org/mongo-driver/x/bsonx
 go.mongodb.org/mongo-driver/x/bsonx/bsoncore
 go.mongodb.org/mongo-driver/x/mongo/driver
+go.mongodb.org/mongo-driver/x/mongo/driver/address
 go.mongodb.org/mongo-driver/x/mongo/driver/auth
+go.mongodb.org/mongo-driver/x/mongo/driver/auth/internal/gssapi
 go.mongodb.org/mongo-driver/x/mongo/driver/connstring
 go.mongodb.org/mongo-driver/x/mongo/driver/description
+go.mongodb.org/mongo-driver/x/mongo/driver/dns
 go.mongodb.org/mongo-driver/x/mongo/driver/operation
 go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
 go.mongodb.org/mongo-driver/x/mongo/driver/uuid
-go.mongodb.org/mongo-driver/tag
-go.mongodb.org/mongo-driver/bson/bsonrw
-go.mongodb.org/mongo-driver/x/mongo/driver/address
 go.mongodb.org/mongo-driver/x/mongo/driver/wiremessage
-go.mongodb.org/mongo-driver/x/mongo/driver/auth/internal/gssapi
-go.mongodb.org/mongo-driver/internal
-go.mongodb.org/mongo-driver/x/mongo/driver/dns
-go.mongodb.org/mongo-driver/version
 # go.uber.org/atomic v1.3.2
 go.uber.org/atomic
 # go.uber.org/multierr v1.1.0
 go.uber.org/multierr
 # go.uber.org/zap v1.10.0
 go.uber.org/zap
-go.uber.org/zap/zapcore
-go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/buffer
+go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
+go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.0.0-20190701094942-4def268fd1a4
-golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/acme
+golang.org/x/crypto/acme/autocert
 golang.org/x/crypto/pbkdf2
 # golang.org/x/net v0.0.0-20190503192946-f4e77d36d62c
-golang.org/x/net/trace
-golang.org/x/net/publicsuffix
-golang.org/x/net/internal/timeseries
+golang.org/x/net/html
+golang.org/x/net/html/atom
+golang.org/x/net/http/httpguts
 golang.org/x/net/http2
 golang.org/x/net/http2/hpack
-golang.org/x/net/html
 golang.org/x/net/idna
-golang.org/x/net/http/httpguts
-golang.org/x/net/html/atom
+golang.org/x/net/internal/timeseries
+golang.org/x/net/publicsuffix
+golang.org/x/net/trace
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.0
-golang.org/x/text/transform
-golang.org/x/text/unicode/norm
 golang.org/x/text/secure/bidirule
+golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
+golang.org/x/text/unicode/norm
 # google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8
 google.golang.org/genproto/googleapis/rpc/status
 # google.golang.org/grpc v1.22.1
 google.golang.org/grpc
-google.golang.org/grpc/codes
-google.golang.org/grpc/metadata
-google.golang.org/grpc/status
 google.golang.org/grpc/balancer
+google.golang.org/grpc/balancer/base
 google.golang.org/grpc/balancer/roundrobin
+google.golang.org/grpc/binarylog/grpc_binarylog_v1
+google.golang.org/grpc/codes
 google.golang.org/grpc/connectivity
 google.golang.org/grpc/credentials
+google.golang.org/grpc/credentials/internal
 google.golang.org/grpc/encoding
 google.golang.org/grpc/encoding/proto
 google.golang.org/grpc/grpclog
@@ -312,8 +329,10 @@ google.golang.org/grpc/internal/channelz
 google.golang.org/grpc/internal/envconfig
 google.golang.org/grpc/internal/grpcrand
 google.golang.org/grpc/internal/grpcsync
+google.golang.org/grpc/internal/syscall
 google.golang.org/grpc/internal/transport
 google.golang.org/grpc/keepalive
+google.golang.org/grpc/metadata
 google.golang.org/grpc/naming
 google.golang.org/grpc/peer
 google.golang.org/grpc/resolver
@@ -321,11 +340,8 @@ google.golang.org/grpc/resolver/dns
 google.golang.org/grpc/resolver/passthrough
 google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
+google.golang.org/grpc/status
 google.golang.org/grpc/tap
-google.golang.org/grpc/balancer/base
-google.golang.org/grpc/credentials/internal
-google.golang.org/grpc/binarylog/grpc_binarylog_v1
-google.golang.org/grpc/internal/syscall
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
 # gopkg.in/yaml.v2 v2.2.2

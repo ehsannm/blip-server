@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	git.ronaksoftware.com/ronak/toolbox v1.1.3
+	github.com/c-bata/go-prompt v0.2.3
 	github.com/dgraph-io/dgo v0.0.0-20190719212137-f244ef658cc5
 	github.com/getsentry/sentry-go v0.3.0
 	github.com/golang/protobuf v1.3.2 // indirect
@@ -12,7 +13,10 @@ require (
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/kr/pretty v0.1.0
 	github.com/mailru/easyjson v0.7.0
+	github.com/mattn/go-runewidth v0.0.4 // indirect
+	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859 // indirect
 	github.com/mediocregopher/radix/v3 v3.3.0
+	github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.3
