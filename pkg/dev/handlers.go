@@ -23,5 +23,11 @@ func Unsubscribe(ctx iris.Context) {
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 		return
 	}
-	ctx.WriteString(res)
+
+
+	msg.WriteResponse(ctx, CUnsubscribed, Unsubscribed{
+		Phone: phone,
+		StatusCode: res,
+	})
+
 }

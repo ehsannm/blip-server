@@ -19,10 +19,14 @@ func init() {
 
 	// markFlagRequired(LoginCmd, FlagPhone, FlagPhoneCode, FlagPhoneCodeHash, FlagOtpID)
 
-	RootCmd.AddCommand(SendCodeCmd, LoginCmd)
-	SendCodeCmd.AddCommand(Sub1Cmd)
+	RootCmd.AddCommand(AuthCmd)
+	AuthCmd.AddCommand(SendCodeCmd, LoginCmd)
+
 }
 
+var AuthCmd = &cobra.Command{
+	Use: "Auth",
+}
 
 var SendCodeCmd = &cobra.Command{
 	Use:   "SendCodeCmd",
@@ -33,12 +37,11 @@ var SendCodeCmd = &cobra.Command{
 			Phone: cmd.Flag(FlagPhone).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		res, err := sendHttp(http.MethodPost, "auth/send_code", bytes.NewBuffer(reqBytes))
+		_, err := sendHttp(http.MethodPost, "auth/send_code", bytes.NewBuffer(reqBytes), true)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(res)
 	},
 }
 
@@ -51,10 +54,3 @@ var LoginCmd = &cobra.Command{
 }
 
 
-var Sub1Cmd = &cobra.Command{
-	Use: "Sub1",
-	Run: func(cmd *cobra.Command, args []string) {
-
-	},
-	
-}

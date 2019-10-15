@@ -7,6 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
+	"github.com/kr/pretty"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -23,7 +24,7 @@ import (
 */
 
 
-func sendHttp(method, urlSuffix string, reader io.Reader) (*msg.ResponseEnvelope, error) {
+func sendHttp(method, urlSuffix string, reader io.Reader, print bool) (*msg.ResponseEnvelope, error) {
 	c := http.Client{
 		Timeout: 3 * time.Second,
 	}
@@ -47,6 +48,10 @@ func sendHttp(method, urlSuffix string, reader io.Reader) (*msg.ResponseEnvelope
 	if err != nil {
 		fmt.Println(ronak.ByteToStr(bodyBytes))
 		return nil, errors.New(fmt.Sprintf("Error In Unmarshal Response: %v", err))
+	}
+
+	if print {
+		_, _ = pretty.Println(x.Payload)
 	}
 	return &x, nil
 }
