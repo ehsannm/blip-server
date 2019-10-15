@@ -65,8 +65,6 @@ func completer(d prompt.Document) []prompt.Suggest {
 	return suggests
 }
 
-
-
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {

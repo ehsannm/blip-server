@@ -38,7 +38,7 @@ var SendCodeCmd = &cobra.Command{
 }
 
 var LoginCmd = &cobra.Command{
-	Use: "Login",
+	Use:   "Login",
 	Short: "if user has been already registered, then just login to server",
 	Run: func(cmd *cobra.Command, args []string) {
 		req := auth.LoginReq{
@@ -48,7 +48,7 @@ var LoginCmd = &cobra.Command{
 			OperationID:   cmd.Flag(FlagOtpID).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "auth/login", bytes.NewBuffer(reqBytes), nil,  true)
+		_, err := sendHttp(http.MethodPost, "auth/login", bytes.NewBuffer(reqBytes), nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -57,7 +57,7 @@ var LoginCmd = &cobra.Command{
 }
 
 var RegisterCmd = &cobra.Command{
-	Use: "Register",
+	Use:   "Register",
 	Short: "if user is a new one, then it registers users in the server",
 	Run: func(cmd *cobra.Command, args []string) {
 		req := auth.RegisterReq{
@@ -72,7 +72,7 @@ var RegisterCmd = &cobra.Command{
 		}
 
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "auth/register", bytes.NewBuffer(reqBytes), nil,  true)
+		_, err := sendHttp(http.MethodPost, "auth/register", bytes.NewBuffer(reqBytes), nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
