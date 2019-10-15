@@ -19,22 +19,21 @@ import (
 
 func init() {
 	RootCmd.AddCommand(DevCmd)
-	DevCmd.AddCommand(Unsubscribe)
+	DevCmd.AddCommand(UnsubscribeCmd)
 }
 
 var DevCmd = &cobra.Command{
 	Use: "Dev",
 }
 
-var Unsubscribe = &cobra.Command{
+var UnsubscribeCmd = &cobra.Command{
 	Use: "Unsubscribe",
 	Run: func(cmd *cobra.Command, args []string) {
-
 		_, err := sendHttp(http.MethodPost, "dev/unsubscribe", strings.NewReader(url.Values{
 			"phone": []string{cmd.Flag(FlagPhone).Value.String()},
 		}.Encode()), true)
 		if err != nil {
-			fmt.Println(err)
+			fmt.Println("HERE", err)
 			return
 		}
 	},

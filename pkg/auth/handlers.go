@@ -169,6 +169,10 @@ func SendCodeHandler(ctx iris.Context) {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
+	if len(req.Phone) < 5 {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		return
+	}
 
 	if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
 		msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)

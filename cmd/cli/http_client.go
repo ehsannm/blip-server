@@ -23,7 +23,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func sendHttp(method, urlSuffix string, reader io.Reader, print bool) (*msg.ResponseEnvelope, error) {
 	c := http.Client{
 		Timeout: 3 * time.Second,
@@ -46,8 +45,7 @@ func sendHttp(method, urlSuffix string, reader io.Reader, print bool) (*msg.Resp
 	x := msg.ResponseEnvelope{}
 	err = json.Unmarshal(bodyBytes, &x)
 	if err != nil {
-		fmt.Println(ronak.ByteToStr(bodyBytes))
-		return nil, errors.New(fmt.Sprintf("Error In Unmarshal Response: %v", err))
+		return nil, errors.New(fmt.Sprintf("Error In Unmarshal Response: %v, %s", err, ronak.ByteToStr(bodyBytes)))
 	}
 
 	if print {

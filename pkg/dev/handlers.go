@@ -24,9 +24,8 @@ func Unsubscribe(ctx iris.Context) {
 		return
 	}
 
-
 	msg.WriteResponse(ctx, CUnsubscribed, Unsubscribed{
-		Phone: phone,
+		Phone:      phone,
 		StatusCode: res,
 	})
 

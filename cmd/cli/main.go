@@ -5,7 +5,6 @@ import (
 	"github.com/c-bata/go-prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
-	"os"
 	"strings"
 )
 
@@ -66,19 +65,11 @@ func completer(d prompt.Document) []prompt.Suggest {
 	return suggests
 }
 
-func markFlagRequired(cmd *cobra.Command, flagNames ...string) error {
-	for _, fn := range flagNames {
-		err := cmd.MarkFlagRequired(fn)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
 
 var RootCmd = &cobra.Command{
 	Use: "Root",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(os.Args)
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+
 	},
+	Run: func(cmd *cobra.Command, args []string) {},
 }
