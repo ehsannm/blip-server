@@ -17,7 +17,7 @@ import (
 */
 
 func Unsubscribe(ctx iris.Context) {
-	phone := ctx.PostValue("phone")
+	phone := ctx.FormValue("phone")
 	res, err := saba.Unsubscribe(phone)
 	if err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))

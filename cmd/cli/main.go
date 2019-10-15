@@ -66,10 +66,19 @@ func completer(d prompt.Document) []prompt.Suggest {
 }
 
 
+
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 
 	},
 	Run: func(cmd *cobra.Command, args []string) {},
+}
+
+func init() {
+	fs := RootCmd.PersistentFlags()
+	fs.String(FlagPhone, "", "")
+	fs.String(FlagPhoneCode, "", "")
+	fs.String(FlagPhoneCodeHash, "", "")
+	fs.String(FlagOtpID, "", "")
 }

@@ -5,10 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cli/cmd_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/cmd_auth.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cli/cmd_dev.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/cmd_dev.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/constants.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cli/http_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/http_client.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cli/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/dev/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/handlers.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />

@@ -10,14 +10,7 @@ import (
 )
 
 func init() {
-	fs := RootCmd.PersistentFlags()
-	fs.String(FlagPhone, "", "")
-	fs.String(FlagPhoneCode, "", "")
-	fs.String(FlagPhoneCodeHash, "", "")
-	fs.String(FlagOtpID, "", "")
-
 	RegisterCmd.Flags().String(FlagUsername, "", "")
-
 	RootCmd.AddCommand(AuthCmd)
 	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd)
 
@@ -36,7 +29,7 @@ var SendCodeCmd = &cobra.Command{
 			Phone: cmd.Flag(FlagPhone).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "auth/send_code", bytes.NewBuffer(reqBytes), true)
+		_, err := sendHttp(http.MethodPost, "auth/send_code", bytes.NewBuffer(reqBytes), nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -55,7 +48,7 @@ var LoginCmd = &cobra.Command{
 			OperationID:   cmd.Flag(FlagOtpID).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "auth/login", bytes.NewBuffer(reqBytes), true)
+		_, err := sendHttp(http.MethodPost, "auth/login", bytes.NewBuffer(reqBytes), nil,  true)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -79,7 +72,7 @@ var RegisterCmd = &cobra.Command{
 		}
 
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "auth/register", bytes.NewBuffer(reqBytes), true)
+		_, err := sendHttp(http.MethodPost, "auth/register", bytes.NewBuffer(reqBytes), nil,  true)
 		if err != nil {
 			fmt.Println(err)
 			return
