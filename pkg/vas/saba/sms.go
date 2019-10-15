@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -60,8 +61,7 @@ func Subscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
-			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
+			zap.String("Res", ronak.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -91,8 +91,7 @@ func Unsubscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
-			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
+			zap.String("Res", ronak.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -123,8 +122,7 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("OperationStatus", sResp.OperatorResponse.StatusInfo.StatusCode),
-			zap.String("ServerRefCode", sResp.OperatorResponse.StatusInfo.ServerReferenceCode),
+			zap.String("Res", ronak.ByteToStr(httpBytes)),
 		)
 	}
 
