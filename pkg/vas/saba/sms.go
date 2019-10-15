@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -39,12 +40,11 @@ func Subscribe(phone string) (string, error) {
 		Timeout: time.Second * 3,
 	}
 
-	url := fmt.Sprintf("%s/v2/sub/%s/%s/%s",
+	httpResp, err := c.Get(fmt.Sprintf("%s/v2/sub/%s/%s/%s",
 		baseUrl, serviceName, serviceToken, phone,
-	)
-	httpResp, err := c.Get(url)
+	))
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Error In Response")
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -70,12 +70,12 @@ func Unsubscribe(phone string) (string, error) {
 		Timeout: time.Second * 3,
 	}
 
-	url := fmt.Sprintf("%s/v2/unsub/%s/%s/%s",
+
+	httpResp, err := c.Get(fmt.Sprintf("%s/v2/unsub/%s/%s/%s",
 		baseUrl, serviceName, serviceToken, phone,
-	)
-	httpResp, err := c.Get(url)
+	))
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Error In Response")
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -84,7 +84,7 @@ func Unsubscribe(phone string) (string, error) {
 	sResp := new(UnsubscribeResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Error In Unmarshal Response")
 	}
 	if ce := log.Check(log.DebugLevel, "Saba SMS Unsubscribe Response"); ce != nil {
 		ce.Write(
@@ -105,7 +105,7 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 		baseUrl, serviceName, serviceToken, phone, phoneCode, otpID,
 	))
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Error In Response")
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -114,7 +114,7 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 	sResp := new(ConfirmResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "Error In Unmarshal Response")
 	}
 	if ce := log.Check(log.DebugLevel, "Saba SMS Confirm Response"); ce != nil {
 		ce.Write(
@@ -141,7 +141,7 @@ func SendMessage(phone, message string) (*SendSmsResponse, error) {
 		phone, v.Encode(),
 	))
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Error In Response")
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -150,7 +150,7 @@ func SendMessage(phone, message string) (*SendSmsResponse, error) {
 	sResp := new(SendSmsResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "Error In Unmarshal Response")
 	}
 
 	return sResp, nil
