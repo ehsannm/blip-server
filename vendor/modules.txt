@@ -49,6 +49,10 @@ github.com/globalsign/mgo/internal/sasl
 github.com/globalsign/mgo/internal/scram
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
+# github.com/gobwas/pool v0.2.0
+github.com/gobwas/pool
+github.com/gobwas/pool/internal/pmath
+github.com/gobwas/pool/pbytes
 # github.com/gocql/gocql v0.0.0-20190629212933-1335d3dd7fe2
 github.com/gocql/gocql
 github.com/gocql/gocql/internal/lru

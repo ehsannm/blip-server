@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/cli/cmd_settings.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli/http_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/http_client.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
