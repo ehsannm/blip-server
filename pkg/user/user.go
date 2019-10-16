@@ -42,9 +42,16 @@ type User struct {
 	VasPaid   bool   `json:"vas_paid" bson:"vas_paid"`
 }
 
-func Save(user *User) error {
-	_, err := userCol.UpdateOne(nil, bson.M{"_id": user.ID}, user, options.Update().SetUpsert(true))
-	deleteFromCache(user.ID)
+func Save(u *User) error {
+	_, err := userCol.UpdateOne(nil, bson.M{"_id": u.ID}, bson.M{"$set": bson.M{
+		"username":   u.Username,
+		"phone":      u.Phone,
+		"email":      u.Email,
+		"created_on": u.CreatedOn,
+		"disabled":   u.Disabled,
+		"vas_paid":   u.VasPaid,
+	}}, options.Update().SetUpsert(true))
+	deleteFromCache(u.ID)
 	return err
 }
 

@@ -33,8 +33,12 @@ type Session struct {
 	LastAccess int64  `json:"last_access" bson:"last_access"`
 }
 
-func Save(session Session) error {
-	_, err := sessionCol.InsertOne(nil, session)
+func Save(s Session) error {
+	_, err := sessionCol.UpdateOne(nil, bson.M{"_id": s.ID}, bson.M{"$set": bson.M{
+		"user_id":     s.UserID,
+		"created_on":  s.CreatedOn,
+		"last_access": s.LastAccess,
+	}}, options.Update().SetUpsert(true))
 	return err
 }
 
