@@ -30,6 +30,7 @@ var (
 	ErrUnsupportedCarrier     Item = "UNSUPPORTED_CARRIER"
 	ErrSessionInvalid         Item = "SESSION_INVALID"
 	ErrBadSoundFile           Item = "BAD_SOUND_FILE"
+	ErrNoResponseFromVAS      Item = "NO_RESPONSE_FROM_VAS"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
