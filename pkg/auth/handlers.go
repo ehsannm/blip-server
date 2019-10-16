@@ -199,6 +199,7 @@ func SendCodeHandler(ctx iris.Context) {
 		if req.Phone == "989121228718" {
 			phoneCodeHash = ronak.RandomID(12)
 			phoneCode = ronak.RandomDigit(4)
+
 		} else {
 			if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
 				msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
@@ -225,6 +226,7 @@ func SendCodeHandler(ctx iris.Context) {
 		fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
 	)
 	if err != nil {
+		log.Warn("Error On WriteToCache", zap.Error(err))
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
 		return
 	}
@@ -246,6 +248,7 @@ func LoginHandler(ctx iris.Context) {
 
 	var otpID, phoneCode, phoneCodeHash string
 	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
+		log.Warn("Error On ReadFromCache", zap.Error(err))
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
 		return
 	} else {
@@ -311,6 +314,7 @@ func RegisterHandler(ctx iris.Context) {
 
 	var otpID, phoneCode, phoneCodeHash string
 	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
+		log.Warn("Error On ReadFromCache", zap.Error(err))
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
 		return
 	} else {
