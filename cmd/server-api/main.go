@@ -76,8 +76,8 @@ func initServer() *iris.Application {
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
-	musicParty.Post("/search_by_proxy", session.MustHaveSession, music.SearchByProxy)
-	musicParty.Post("/search_by_sound", session.MustHaveSession, music.SearchBySound)
+	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)
+	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")
@@ -86,6 +86,9 @@ func initServer() *iris.Application {
 
 	devParty := app.Party("/dev")
 	devParty.Post("/unsubscribe", dev.Unsubscribe)
+
+	shopParty := app.Party("/shop")
+	shopParty.Post("/sep/")
 	return app
 }
 

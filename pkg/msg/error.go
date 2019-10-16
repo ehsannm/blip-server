@@ -34,6 +34,7 @@ var (
 	ErrBadSoundFile            Item = "BAD_SOUND_FILE"
 	ErrNoResponseFromVAS       Item = "NO_RESPONSE_FROM_VAS"
 	ErrNoResponseFromSmsServer Item = "NO_RESPONSE_FROM_SMS_PANEL"
+	ErrVasIsNotEnabled         Item = "VAS_IS_DISABLED"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
