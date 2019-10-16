@@ -87,8 +87,8 @@ func initServer() *iris.Application {
 	devParty := app.Party("/dev")
 	devParty.Post("/unsubscribe", dev.Unsubscribe)
 
-	shopParty := app.Party("/shop")
-	shopParty.Post("/sep/")
+	// shopParty := app.Party("/shop")
+	// shopParty.Post("/sep/")
 	return app
 }
 
