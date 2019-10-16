@@ -23,6 +23,10 @@ import (
 	"go.uber.org/zap"
 )
 
+var (
+	_Mongo *mongo.Client
+)
+
 func init() {
 	log.InitLogger(zapcore.Level(config.GetInt(config.ConfLogLevel)), "")
 
@@ -33,6 +37,7 @@ func init() {
 	); err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
 	} else {
+		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
 		token.InitMongo(mongoClient)

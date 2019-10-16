@@ -16,6 +16,7 @@ require (
 	github.com/mailru/easyjson v0.7.0
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859 // indirect
+	github.com/mediocregopher/radix/v3 v3.3.0
 	github.com/pkg/errors v0.8.1
 	github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942 // indirect
 	github.com/smartystreets/goconvey v0.0.0-20190731233626-505e41936337
