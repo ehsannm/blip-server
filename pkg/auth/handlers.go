@@ -10,6 +10,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/kataras/iris"
+	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -188,6 +189,7 @@ func SendCodeHandler(ctx iris.Context) {
 	if registered {
 		phoneCodeHash = ronak.RandomID(12)
 		phoneCode = ronak.RandomDigit(4)
+
 		// User our internal sms provider
 		_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
 		if err != nil {
@@ -199,6 +201,12 @@ func SendCodeHandler(ctx iris.Context) {
 		if req.Phone == "989121228718" {
 			phoneCodeHash = ronak.RandomID(12)
 			phoneCode = ronak.RandomDigit(4)
+			// User our internal sms provider
+			_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
+			if err != nil {
+				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
+				return
+			}
 
 		} else {
 			if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
@@ -220,11 +228,11 @@ func SendCodeHandler(ctx iris.Context) {
 		}
 	}
 
-	_, err = redisCache.SetEx(
+	err = redisCache.Do(radix.FlatCmd(nil, "SETEX",
 		fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
 		360,
 		fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
-	)
+	))
 	if err != nil {
 		log.Warn("Error On WriteToCache", zap.Error(err))
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
