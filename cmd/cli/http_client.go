@@ -24,7 +24,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 var (
 	accessToken string
 	sessionID   string

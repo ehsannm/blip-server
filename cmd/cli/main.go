@@ -10,7 +10,6 @@ import (
 	"strings"
 )
 
-
 func main() {
 	p := prompt.New(executor, completer)
 	p.Run()

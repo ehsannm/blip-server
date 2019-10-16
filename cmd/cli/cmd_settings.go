@@ -16,7 +16,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func init() {
 	RootCmd.AddCommand(SettingsCmd)
 
@@ -29,9 +28,8 @@ var SettingsCmd = &cobra.Command{
 	Use: "Settings",
 }
 
-
 var SetAccessTokenCmd = &cobra.Command{
-	Use:                        "SetAccessToken",
+	Use: "SetAccessToken",
 	Run: func(cmd *cobra.Command, args []string) {
 		_ = ioutil.WriteFile(".blip-accessToken", ronak.StrToByte(cmd.Flag(FlagAccessToken).Value.String()), os.ModePerm)
 	},
