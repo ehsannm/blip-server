@@ -39,7 +39,7 @@ type User struct {
 	Email     string `json:"email" bson:"email"`
 	CreatedOn int64  `json:"created_on" bson:"created_on"`
 	Disabled  bool   `json:"disabled" bson:"disabled"`
-	Premium   bool   `json:"premium" bson:"premium"`
+	VasPaid   bool   `json:"vas_paid" bson:"vas_paid"`
 }
 
 func Save(user *User) error {

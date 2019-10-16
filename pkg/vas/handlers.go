@@ -40,7 +40,7 @@ func MCINotification(ctx iris.Context) {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
 			return
 		}
-		u.Premium = true
+		u.VasPaid = true
 		err = user.Save(u)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
@@ -73,7 +73,7 @@ func MCINotification(ctx iris.Context) {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
 			return
 		}
-		u.Premium = false
+		u.VasPaid = false
 		err = user.Save(u)
 		if err != nil {
 			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
@@ -130,7 +130,7 @@ func MCIMo(ctx iris.Context) {
 			)
 			return
 		}
-		u.Premium = false
+		u.VasPaid = false
 		err = user.Save(u)
 		if err != nil {
 			log.Error("Could not save user", zap.String("UserID", u.ID))
