@@ -74,9 +74,10 @@ var RootCmd = &cobra.Command{
 		if err == nil {
 			accessToken = ronak.ByteToStr(accessTokenBytes)
 		}
-	},
-	Run: func(cmd *cobra.Command, args []string) {
-
+		sessionIDBytes, err := ioutil.ReadFile(".blip-session")
+		if err == nil {
+			sessionID = ronak.ByteToStr(sessionIDBytes)
+		}
 	},
 }
 

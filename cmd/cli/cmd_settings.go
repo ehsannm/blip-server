@@ -20,8 +20,9 @@ func init() {
 	RootCmd.AddCommand(SettingsCmd)
 
 	SetAccessTokenCmd.Flags().String(FlagAccessToken, "", "")
+	SetSessionIDCmd.Flags().String(FlagSessionID, "", "")
 
-	SettingsCmd.AddCommand(SetAccessTokenCmd)
+	SettingsCmd.AddCommand(SetAccessTokenCmd, SetSessionIDCmd)
 }
 
 var SettingsCmd = &cobra.Command{
@@ -32,5 +33,12 @@ var SetAccessTokenCmd = &cobra.Command{
 	Use: "SetAccessToken",
 	Run: func(cmd *cobra.Command, args []string) {
 		_ = ioutil.WriteFile(".blip-accessToken", ronak.StrToByte(cmd.Flag(FlagAccessToken).Value.String()), os.ModePerm)
+	},
+}
+
+var SetSessionIDCmd = &cobra.Command{
+	Use: "SetSessionID",
+	Run: func(cmd *cobra.Command, args []string) {
+		_ = ioutil.WriteFile(".blip-session", ronak.StrToByte(cmd.Flag(FlagSessionID).Value.String()), os.ModePerm)
 	},
 }
