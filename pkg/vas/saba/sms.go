@@ -36,7 +36,7 @@ func Init() {
 	serviceToken = config.GetString(config.ConfVasSabaServiceToken)
 }
 
-func Subscribe(phone string) (string, error) {
+func Subscribe(phone string) (*SubscribeResponse, error) {
 	c := http.Client{
 		Timeout: time.Second * 3,
 	}
@@ -45,7 +45,7 @@ func Subscribe(phone string) (string, error) {
 		baseUrl, serviceName, serviceToken, phone,
 	))
 	if err != nil {
-		return "", errors.Wrap(err, "Error In Response")
+		return nil, errors.Wrap(err, "Error In Response")
 	}
 
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
@@ -54,7 +54,7 @@ func Subscribe(phone string) (string, error) {
 	sResp := new(SubscribeResponse)
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	if ce := log.Check(log.DebugLevel, "Saba SMS Subscribe Response"); ce != nil {
@@ -65,7 +65,7 @@ func Subscribe(phone string) (string, error) {
 		)
 	}
 
-	return sResp.OtpID, nil
+	return sResp, nil
 }
 
 func Unsubscribe(phone string) (string, error) {

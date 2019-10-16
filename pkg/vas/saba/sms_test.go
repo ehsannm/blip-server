@@ -31,16 +31,14 @@ func init() {
 }
 
 func TestSubscribe(t *testing.T) {
-	var otpID string
 	convey.Convey("Test SMS", t, func(c convey.C) {
 		convey.Convey("Subscribe", func(c convey.C) {
-			var err error
-			otpID, err = saba.Subscribe(phone)
+			subscribeRes, err := saba.Subscribe(phone)
 			if err != nil {
 				_, _ = c.Println(err)
 			}
 			c.So(err, convey.ShouldBeNil)
-			_, _ = c.Println(otpID)
+			_, _ = c.Println(subscribeRes.OtpID)
 		})
 	})
 }

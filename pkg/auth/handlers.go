@@ -214,16 +214,17 @@ func SendCodeHandler(ctx iris.Context) {
 				return
 			}
 
-			otpID, err = saba.Subscribe(req.Phone)
+			res, err := saba.Subscribe(req.Phone)
 			if err != nil {
 				msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 				return
 			}
-
-			if otpID == "" {
+			otpID = res.OtpID
+			switch res.StatusCode {
+			case "SC111", "SC000":
+			default:
 				// If we are here, then it means VAS did not send the sms
 				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
-				return
 			}
 		}
 	}

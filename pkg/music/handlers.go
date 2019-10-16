@@ -1,7 +1,10 @@
 package music
 
 import (
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/session"
 	"github.com/kataras/iris"
+	"go.uber.org/zap"
 )
 
 /*
@@ -14,6 +17,12 @@ import (
 */
 
 func SearchByProxy(ctx iris.Context) {
+	if ce := log.Check(log.DebugLevel, "SearchByProxy"); ce != nil {
+		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
+		if ok {
+			ce.Write(zap.String("UserID", s.UserID))
+		}
+	}
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
 }
 
