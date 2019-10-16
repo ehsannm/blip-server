@@ -10,7 +10,6 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/kataras/iris"
-	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -179,38 +178,55 @@ func SendCodeHandler(ctx iris.Context) {
 		return
 	}
 
-	if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
-		msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
-		return
-	}
-
-	optID, err := saba.Subscribe(req.Phone)
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-		return
-	}
-
-	if optID == "" {
-		// If we are here, then it means VAS did not send the sms
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
-		return
-	}
-
-	err = redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone), optID))
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
-		return
-	}
-
 	registered := false
 	u, _ := user.GetByPhone(req.Phone)
 	if u != nil {
 		registered = true
 	}
 
+	var phoneCodeHash, otpID, phoneCode string
+	if registered {
+		phoneCodeHash = ronak.RandomID(12)
+		phoneCode = ronak.RandomDigit(4)
+		// User our internal sms provider
+		_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
+			return
+		}
+	} else {
+		if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
+			msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
+			return
+		}
+
+		otpID, err = saba.Subscribe(req.Phone)
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			return
+		}
+
+		if otpID == "" {
+			// If we are here, then it means VAS did not send the sms
+			msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
+			return
+		}
+
+	}
+
+	_, err = redisCache.SetEx(
+		fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
+		360,
+		fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
+	)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
+		return
+	}
+
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
-		PhoneCodeHash: ronak.RandomID(12),
-		OperationID:   optID,
+		PhoneCodeHash: phoneCodeHash,
+		OperationID:   otpID,
 		Registered:    registered,
 	})
 }
@@ -223,16 +239,33 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
-	vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+	var otpID, phoneCode, phoneCodeHash string
+	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
 		return
+	} else {
+		verifyParams := strings.Split(v, "|")
+		phoneCodeHash = verifyParams[0]
+		otpID = verifyParams[1]
+		phoneCode = verifyParams[2]
 	}
 
-	if vasCode != saba.SuccessfulCode {
-		errText, _ := saba.Codes[vasCode]
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
-		return
+	if otpID != "" {
+		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			return
+		}
+		if vasCode != saba.SuccessfulCode {
+			errText, _ := saba.Codes[vasCode]
+			msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+			return
+		}
+	} else {
+		if req.PhoneCodeHash != phoneCodeHash || req.PhoneCode != phoneCode {
+			msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
+			return
+		}
 	}
 
 	u, err := user.GetByPhone(req.Phone)
@@ -250,8 +283,7 @@ func LoginHandler(ctx iris.Context) {
 		LastAccess: timeNow,
 	})
 	if err != nil {
-		errText, _ := saba.Codes[vasCode]
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 		return
 	}
 
@@ -272,16 +304,34 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-	vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+
+	var otpID, phoneCode, phoneCodeHash string
+	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
 		return
+	} else {
+		verifyParams := strings.Split(v, "|")
+		phoneCodeHash = verifyParams[0]
+		otpID = verifyParams[1]
+		phoneCode = verifyParams[2]
 	}
 
-	if vasCode != saba.SuccessfulCode {
-		errText, _ := saba.Codes[vasCode]
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
-		return
+	if otpID != "" {
+		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			return
+		}
+		if vasCode != saba.SuccessfulCode {
+			errText, _ := saba.Codes[vasCode]
+			msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
+			return
+		}
+	} else {
+		if req.PhoneCodeHash != phoneCodeHash || req.PhoneCode != phoneCode {
+			msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
+			return
+		}
 	}
 
 	_, err = user.GetByPhone(req.Phone)

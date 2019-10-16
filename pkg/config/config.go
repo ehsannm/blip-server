@@ -31,6 +31,13 @@ const (
 	ConfACRAccessKey    = "ACR_ACCESS_KEY"
 	ConfACRAccessSecret = "ACR_ACCESS_SECRET"
 	ConfACRBaseUrl      = "ACR_BASE_URL"
+
+
+	// Sms Configs
+	SmsADPUrl	= "SMS_ADP_URL"
+	SmsAdpUser  = "SMS_ADP_USER"
+	SmsAdpPass  = "SMS_ADP_PASS"
+	SmsAdpPhone = "SMS_ADP_PHONE"
 )
 
 func init() {
@@ -49,6 +56,11 @@ func init() {
 	pflag.String(ConfACRBaseUrl, "http://identify-eu-west-1.acrcloud.com", "")
 	pflag.String(ConfACRAccessKey, "7f808c9dcbb700bf7018ffc92c49ff93", "")
 	pflag.String(ConfACRAccessSecret, "EpbFGBwZcFtDUH4OSxPMj6247nb5WIy6yaTbIOiq", "")
+
+	pflag.String(SmsADPUrl, "https://ws.adpdigital.com/url/send", "")
+	pflag.String(SmsAdpUser, "ronak", "")
+	pflag.String(SmsAdpPass, "E2e2374k19743", "")
+	pflag.String(SmsAdpPhone, "98200049112", "")
 
 	pflag.Parse()
 	_ = viper.BindPFlags(pflag.CommandLine)
