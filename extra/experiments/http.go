@@ -25,7 +25,7 @@ func main() {
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.PostForm = v
-	req.Form =  v
+	req.Form = v
 	err = req.ParseForm()
 	if err != nil {
 		panic(err)

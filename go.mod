@@ -7,6 +7,7 @@ require (
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/dgraph-io/dgo v0.0.0-20190719212137-f244ef658cc5
 	github.com/getsentry/sentry-go v0.3.0
+	github.com/gobwas/pool v0.2.0
 	github.com/golang/protobuf v1.3.2 // indirect
 	github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce
 	github.com/json-iterator/go v1.1.7 // indirect

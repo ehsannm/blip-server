@@ -76,6 +76,7 @@ func initServer() *iris.Application {
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
+	musicParty.Get("/search_by_proxy", session.MustHaveSession, music.SearchByProxy)
 	musicParty.Get("/search_by_sound", session.MustHaveSession, music.SearchBySound)
 
 	// Value Added Services

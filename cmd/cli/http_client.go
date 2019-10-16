@@ -27,7 +27,8 @@ const (
 	ContentTypeJSON = "application/json"
 	ContentTypeForm = "application/x-www-form-urlencoded"
 )
-func sendHttp(method, urlSuffix string, contentType string, reader io.Reader,  print bool) (*msg.ResponseEnvelope, error) {
+
+func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, print bool) (*msg.ResponseEnvelope, error) {
 	c := http.Client{
 		Timeout: 3 * time.Second,
 	}
@@ -62,5 +63,3 @@ func sendHttp(method, urlSuffix string, contentType string, reader io.Reader,  p
 
 	return &x, nil
 }
-
-

@@ -13,6 +13,10 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+func SearchByProxy(ctx iris.Context) {
+	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
+}
+
 func SearchBySound(ctx iris.Context) {
 	// sound := ctx.PostValue("sound")
 	// soundBytes, err := base64.StdEncoding.DecodeString(sound)
