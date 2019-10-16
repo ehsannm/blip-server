@@ -304,7 +304,6 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-
 	var otpID, phoneCode, phoneCodeHash string
 	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)

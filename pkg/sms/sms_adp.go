@@ -1,7 +1,8 @@
 package sms
 
 import (
-	log "git.ronaksoftware.com/river/pkg/logger"
+	"errors"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io"
@@ -51,7 +52,7 @@ func (adp *ADP) SendInBackground(phoneNumber string, txt string) (int, error) {
 	}:
 		return len(adp.jobsChannel), nil
 	default:
-		return len(adp.jobsChannel), ErrSmsQueueFull
+		return len(adp.jobsChannel), errors.New("sms queue is full")
 	}
 }
 

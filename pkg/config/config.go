@@ -32,9 +32,8 @@ const (
 	ConfACRAccessSecret = "ACR_ACCESS_SECRET"
 	ConfACRBaseUrl      = "ACR_BASE_URL"
 
-
 	// Sms Configs
-	SmsADPUrl	= "SMS_ADP_URL"
+	SmsADPUrl   = "SMS_ADP_URL"
 	SmsAdpUser  = "SMS_ADP_USER"
 	SmsAdpPass  = "SMS_ADP_PASS"
 	SmsAdpPhone = "SMS_ADP_PHONE"
