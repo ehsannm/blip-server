@@ -198,7 +198,7 @@ func SendCodeHandler(ctx iris.Context) {
 		}
 	} else {
 		// TODO:: Remove after test
-		if req.Phone == "989121228718" {
+		if req.Phone == "98912332" {
 			phoneCodeHash = ronak.RandomID(12)
 			phoneCode = ronak.RandomDigit(4)
 			// User our internal sms provider
