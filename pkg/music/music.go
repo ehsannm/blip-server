@@ -21,7 +21,7 @@ var reverseProxy = &httputil.ReverseProxy{
 	Director: func(req *http.Request) {
 		req.URL.Scheme = "http"
 		req.URL.Host = "ws.blipapi.xyz"
-		req.URL.Path = "blip-v2/music_chi/voice/upload"
+		req.URL.Path = "/blip-v2/music_chi/voice/upload"
 		// req.URL.RawQuery = ""
 		if _, ok := req.Header["User-Agent"]; !ok {
 			// explicitly disable User-Agent so it's not set to default value
