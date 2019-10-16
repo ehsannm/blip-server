@@ -195,23 +195,28 @@ func SendCodeHandler(ctx iris.Context) {
 			return
 		}
 	} else {
-		if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
-			msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
-			return
-		}
+		// TODO:: Remove after test
+		if req.Phone == "989121228718" {
+			phoneCodeHash = ronak.RandomID(12)
+			phoneCode = ronak.RandomDigit(4)
+		} else {
+			if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
+				msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
+				return
+			}
 
-		otpID, err = saba.Subscribe(req.Phone)
-		if err != nil {
-			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-			return
-		}
+			otpID, err = saba.Subscribe(req.Phone)
+			if err != nil {
+				msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+				return
+			}
 
-		if otpID == "" {
-			// If we are here, then it means VAS did not send the sms
-			msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
-			return
+			if otpID == "" {
+				// If we are here, then it means VAS did not send the sms
+				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
+				return
+			}
 		}
-
 	}
 
 	_, err = redisCache.SetEx(
