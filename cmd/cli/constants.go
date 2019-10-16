@@ -26,4 +26,5 @@ const (
 	FlagPeriod        = "period"
 	FlagAccessToken   = "accessToken"
 	FlagSessionID     = "sessionID"
+	FlagFilePath      = "filePath"
 )

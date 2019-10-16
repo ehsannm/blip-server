@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"net/http"
 	"net/url"
@@ -35,6 +36,7 @@ var UnsubscribeCmd = &cobra.Command{
 			true,
 		)
 		if err != nil {
+			fmt.Println(err)
 			return
 		}
 	},
