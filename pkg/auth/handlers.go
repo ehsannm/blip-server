@@ -36,7 +36,7 @@ func MustHaveAccessKey(ctx iris.Context) {
 	if !ok {
 		res := authCol.FindOne(nil, bson.M{"_id": accessKey}, options.FindOne())
 		if err := res.Decode(&auth); err != nil {
-			log.Debug("Error On GetAuthorization",
+			log.Debug("Error On GetAccessKey",
 				zap.Error(err),
 				zap.String("AccessKey", accessKey),
 			)
@@ -54,6 +54,7 @@ func MustHaveAccessKey(ctx iris.Context) {
 	mtxLock.Unlock()
 
 	ctx.Values().Save(CtxAuth, auth, true)
+	ctx.Values().Save(CtxClientName, auth.AppName, true)
 	ctx.Next()
 }
 
@@ -155,6 +156,7 @@ func CreateAccessKeyHandler(ctx iris.Context) {
 		Permissions: authPerms,
 		CreatedOn:   authCreatedOn,
 		ExpiredOn:   authExpireOn,
+		AppName:     req.AppName,
 	})
 	if err != nil {
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
@@ -184,36 +186,26 @@ func SendCodeHandler(ctx iris.Context) {
 	if u != nil {
 		registered = true
 	}
-
 	var phoneCodeHash, otpID, phoneCode string
-	if registered && u != nil && u.VasPaid {
-		phoneCodeHash = ronak.RandomID(12)
-		phoneCode = ronak.RandomDigit(4)
 
-		// User our internal sms provider
-		_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
-		if err != nil {
-			msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
-			return
-		}
-	} else {
-		// TODO:: Remove after test
-		if req.Phone == "98912332" {
+	switch ctx.Values().GetString(CtxClientName) {
+	case AppNameMahyar:
+	case AppNameMusicChi:
+		if registered && u != nil && u.VasPaid {
 			phoneCodeHash = ronak.RandomID(12)
 			phoneCode = ronak.RandomDigit(4)
+
 			// User our internal sms provider
 			_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
 			if err != nil {
 				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
 				return
 			}
-
 		} else {
 			if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
 				msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
 				return
 			}
-
 			res, err := saba.Subscribe(req.Phone)
 			if err != nil {
 				msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
@@ -227,17 +219,17 @@ func SendCodeHandler(ctx iris.Context) {
 				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
 			}
 		}
-	}
 
-	err = redisCache.Do(radix.FlatCmd(nil, "SETEX",
-		fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
-		360,
-		fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
-	))
-	if err != nil {
-		log.Warn("Error On WriteToCache", zap.Error(err))
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
-		return
+		err = redisCache.Do(radix.FlatCmd(nil, "SETEX",
+			fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
+			360,
+			fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
+		))
+		if err != nil {
+			log.Warn("Error On WriteToCache", zap.Error(err))
+			msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
+			return
+		}
 	}
 
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{

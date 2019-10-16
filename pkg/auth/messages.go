@@ -13,6 +13,7 @@ package auth
 type CreateAccessToken struct {
 	Permissions []string `json:"permissions"`
 	Period      int64    `json:"period"`
+	AppName     string   `json:"app_name"`
 }
 
 const CAccessTokenCreated = "ACCESS_TOKEN_CREATED"

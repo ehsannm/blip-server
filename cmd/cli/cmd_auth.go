@@ -18,9 +18,9 @@ func init() {
 	CreateAccessKeyCmd.Flags().Bool(FlagPermWrite, false, "")
 	CreateAccessKeyCmd.Flags().Bool(FlagPermAdmin, false, "")
 	CreateAccessKeyCmd.Flags().Int64(FlagPeriod, 0, "")
+	CreateAccessKeyCmd.Flags().String(FlagAppName, "", "")
 
 	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd, CreateAccessKeyCmd)
-
 }
 
 var AuthCmd = &cobra.Command{
@@ -32,7 +32,8 @@ var CreateAccessKeyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		req := auth.CreateAccessToken{
-			Period: ronak.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
+			Period:  ronak.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
+			AppName: cmd.Flag(FlagAppName).Value.String(),
 		}
 		if b, _ := cmd.Flags().GetBool(FlagPermRead); b {
 			req.Permissions = append(req.Permissions, "read")

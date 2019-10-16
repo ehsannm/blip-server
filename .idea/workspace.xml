@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/ehsan.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/ehsan.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/cmd_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/cmd_auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/constants.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

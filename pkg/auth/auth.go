@@ -46,6 +46,7 @@ type Auth struct {
 	Permissions []Permission `bson:"perm"`
 	CreatedOn   int64        `bson:"created_on"`
 	ExpiredOn   int64        `bson:"expired_on"`
+	AppName     string       `bson:"app_name"`
 }
 
 var authCache map[string]Auth

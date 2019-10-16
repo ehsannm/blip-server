@@ -12,8 +12,18 @@ import "regexp"
 */
 
 const (
-	HdrAccessKey  = "AccessKey"
+	// Header
+	HdrAccessKey = "AccessKey"
+
+	// Context
 	CtxAuth       = "Auth"
+	CtxClientName = "ClientName"
+
+	// Apps
+	AppNameAdmin    = "Admin"
+	AppNameMusicChi = "MusicChi"
+	AppNameMahyar   = "Mahyar"
+
 	UsernameRegex = "/^[a-zA-Z0-9]+[a-zA-Z0-9_]{3,12}$/"
 )
 
