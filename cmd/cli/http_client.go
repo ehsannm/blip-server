@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
+	"git.ronaksoftware.com/blip/server/pkg/session"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/kr/pretty"
 	"io"
@@ -23,6 +24,12 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+
+var (
+	accessToken string
+	sessionID   string
+)
+
 const (
 	ContentTypeJSON = "application/json"
 	ContentTypeForm = "application/x-www-form-urlencoded"
@@ -37,7 +44,8 @@ func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, pr
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("Error In Request: %v", err))
 	}
-	req.Header.Set(auth.HdrAccessKey, "ROOT")
+	req.Header.Set(auth.HdrAccessKey, accessToken)
+	req.Header.Set(session.HdrSessionID, sessionID)
 	req.Header.Set("Content-Type", contentType)
 	res, err := c.Do(req)
 	if err != nil {

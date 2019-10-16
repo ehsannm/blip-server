@@ -2,11 +2,14 @@ package main
 
 import (
 	"fmt"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/c-bata/go-prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"io/ioutil"
 	"strings"
 )
+
 
 func main() {
 	p := prompt.New(executor, completer)
@@ -68,9 +71,14 @@ func completer(d prompt.Document) []prompt.Suggest {
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		accessTokenBytes, err := ioutil.ReadFile(".blip-accessToken")
+		if err == nil {
+			accessToken = ronak.ByteToStr(accessTokenBytes)
+		}
+	},
+	Run: func(cmd *cobra.Command, args []string) {
 
 	},
-	Run: func(cmd *cobra.Command, args []string) {},
 }
 
 func init() {

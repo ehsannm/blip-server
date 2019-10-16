@@ -24,4 +24,5 @@ const (
 	FlagPermWrite     = "permWrite"
 	FlagPermAdmin     = "permAdmin"
 	FlagPeriod        = "period"
+	FlagAccessToken	 = "accessToken"
 )
