@@ -186,7 +186,7 @@ func SendCodeHandler(ctx iris.Context) {
 	}
 
 	var phoneCodeHash, otpID, phoneCode string
-	if registered {
+	if registered && u != nil && u.Premium {
 		phoneCodeHash = ronak.RandomID(12)
 		phoneCode = ronak.RandomDigit(4)
 
