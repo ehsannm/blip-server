@@ -5,14 +5,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/cobra"
 	"net/http"
 )
 
 func init() {
-	RegisterCmd.Flags().String(FlagUsername, "", "")
 	RootCmd.AddCommand(AuthCmd)
-	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd)
+
+	RegisterCmd.Flags().String(FlagUsername, "", "")
+	CreateAccessKeyCmd.Flags().Bool(FlagPermRead, true, "")
+	CreateAccessKeyCmd.Flags().Bool(FlagPermWrite, false, "")
+	CreateAccessKeyCmd.Flags().Bool(FlagPermAdmin, false, "")
+	CreateAccessKeyCmd.Flags().Int64(FlagPeriod, 0, "")
+
+	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd, CreateAccessKeyCmd)
 
 }
 
@@ -20,6 +27,31 @@ var AuthCmd = &cobra.Command{
 	Use: "Auth",
 }
 
+var CreateAccessKeyCmd = &cobra.Command{
+	Use: "CreateAccessKey",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		req := auth.CreateAccessToken{
+			Period: ronak.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
+		}
+		if b, _ := cmd.Flags().GetBool(FlagPermRead); b {
+			req.Permissions = append(req.Permissions, "read")
+		}
+		if b, _ := cmd.Flags().GetBool(FlagPermWrite); b {
+			req.Permissions = append(req.Permissions, "write")
+		}
+		if b, _ := cmd.Flags().GetBool(FlagPermAdmin); b {
+			req.Permissions = append(req.Permissions, "admin")
+		}
+
+		reqBytes, _ := json.Marshal(req)
+		_, err := sendHttp(http.MethodPost, "auth/create", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
 var SendCodeCmd = &cobra.Command{
 	Use:   "SendCode",
 	Short: "send sms code request",

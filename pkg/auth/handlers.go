@@ -119,11 +119,16 @@ func hasReadAccess(ctx iris.Context) bool {
 
 func CreateAccessKeyHandler(ctx iris.Context) {
 	accessToken := ronak.RandomID(64)
-	authPerms := make([]Permission, 0, 3)
-	perms := ctx.PostValues("Permissions")
-	period := ctx.PostValueInt64Default("Period", 0)
 
-	for _, p := range perms {
+	req := new(CreateAccessToken)
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+	authPerms := make([]Permission, 0, 3)
+
+	for _, p := range req.Permissions {
 		switch strings.ToLower(p) {
 		case "admin":
 			authPerms = append(authPerms, Admin)
@@ -141,11 +146,11 @@ func CreateAccessKeyHandler(ctx iris.Context) {
 
 	authCreatedOn := time.Now().Unix()
 	authExpireOn := int64(0)
-	if period > 0 {
-		authExpireOn = authCreatedOn + period*86400
+	if req.Period > 0 {
+		authExpireOn = authCreatedOn + req.Period*86400
 	}
 
-	_, err := authCol.InsertOne(nil, Auth{
+	_, err = authCol.InsertOne(nil, Auth{
 		ID:          accessToken,
 		Permissions: authPerms,
 		CreatedOn:   authCreatedOn,

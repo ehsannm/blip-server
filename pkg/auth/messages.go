@@ -9,6 +9,12 @@ package auth
    Copyright Ronak Software Group 2018
 */
 
+// easyjson:json
+type CreateAccessToken struct {
+	Permissions []string `json:"permissions"`
+	Period      int64    `json:"period"`
+}
+
 const CAccessTokenCreated = "ACCESS_TOKEN_CREATED"
 
 // easyjson:json

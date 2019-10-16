@@ -20,4 +20,8 @@ const (
 	FlagPhoneCodeHash = "phoneCodeHash"
 	FlagOtpID         = "otpID"
 	FlagUsername      = "username"
+	FlagPermRead      = "permRead"
+	FlagPermWrite     = "permWrite"
+	FlagPermAdmin     = "permAdmin"
+	FlagPeriod        = "period"
 )
