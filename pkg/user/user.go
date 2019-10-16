@@ -43,7 +43,7 @@ type User struct {
 }
 
 func Save(user *User) error {
-	_, err := userCol.InsertOne(nil, user)
+	_, err := userCol.UpdateOne(nil, bson.M{"_id": user.ID}, user, options.Update().SetUpsert(true))
 	deleteFromCache(user.ID)
 	return err
 }
