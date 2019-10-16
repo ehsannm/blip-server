@@ -113,6 +113,35 @@ func MCIMo(ctx iris.Context) {
 	message := ctx.URLParam("message")
 
 	switch message {
+	case "off", "1", "۱", "خاموش":
+		u, err := user.GetByPhone(customerNumber)
+		if err != nil {
+			log.Warn("Unsubscribe received but no user exists", zap.String("Phone", customerNumber))
+			return
+		}
+
+		res, err := saba.Unsubscribe(customerNumber)
+		if err != nil {
+			log.Warn("Error On SendMessage (Off Request)",
+				zap.Error(err),
+				zap.String("Number", customerNumber),
+				zap.String("ServiceID", serviceID),
+				zap.String("Message", message),
+			)
+			return
+		}
+		u.Premium = false
+		err = user.Save(u)
+		if err != nil {
+			log.Error("Could not save user", zap.String("UserID", u.ID))
+			return
+		}
+		log.Info("User Unsubscribed",
+			zap.String("Status", res),
+			zap.String("UserID", u.ID),
+			zap.String("Phone", u.Phone),
+		)
+
 	case "":
 		res, err := saba.SendMessage(customerNumber, EmptyMessage)
 		if err != nil {
