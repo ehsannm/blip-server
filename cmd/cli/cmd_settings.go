@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/cobra"
 	"io/ioutil"
@@ -22,7 +23,7 @@ func init() {
 	SetAccessTokenCmd.Flags().String(FlagAccessToken, "", "")
 	SetSessionIDCmd.Flags().String(FlagSessionID, "", "")
 
-	SettingsCmd.AddCommand(SetAccessTokenCmd, SetSessionIDCmd)
+	SettingsCmd.AddCommand(SetAccessTokenCmd, SetSessionIDCmd, GetAccessTokenCmd, GetSessionIDCmd)
 }
 
 var SettingsCmd = &cobra.Command{
@@ -36,9 +37,25 @@ var SetAccessTokenCmd = &cobra.Command{
 	},
 }
 
+var GetAccessTokenCmd = &cobra.Command{
+	Use: "GetAccessToken",
+	Run: func(cmd *cobra.Command, args []string) {
+		tokenBytes, _ := ioutil.ReadFile(".blip-accessToken")
+		fmt.Println(ronak.ByteToStr(tokenBytes))
+	},
+}
+
 var SetSessionIDCmd = &cobra.Command{
 	Use: "SetSessionID",
 	Run: func(cmd *cobra.Command, args []string) {
 		_ = ioutil.WriteFile(".blip-session", ronak.StrToByte(cmd.Flag(FlagSessionID).Value.String()), os.ModePerm)
+	},
+}
+
+var GetSessionIDCmd = &cobra.Command{
+	Use: "GetSessionID",
+	Run: func(cmd *cobra.Command, args []string) {
+		id, _ := ioutil.ReadFile(".blip-session")
+		fmt.Println(ronak.ByteToStr(id))
 	},
 }
