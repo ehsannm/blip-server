@@ -42,6 +42,22 @@ func Save(s Session) error {
 	return err
 }
 
+func RemoveAll(userID string) error {
+	session := &Session{}
+	res := sessionCol.FindOneAndDelete(nil, bson.M{"user_id": userID})
+	if res.Err() == mongo.ErrNoDocuments {
+		return nil
+	}
+	err := res.Decode(session)
+	if err != nil {
+		return err
+	}
+	mtxLock.Lock()
+	delete(sessionCache, session.ID)
+	mtxLock.Unlock()
+	return err
+}
+
 func Get(sessionID string) (*Session, error) {
 	session := new(Session)
 	res := sessionCol.FindOne(nil, bson.M{"_id": sessionID}, options.FindOne().SetMaxTime(config.MongoRequestTimeout))

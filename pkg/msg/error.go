@@ -26,6 +26,7 @@ var (
 	ErrPeriodNotValid          Item = "PERIOD_NOT_VALID"
 	ErrWriteToCache            Item = "WRITE_TO_CACHE"
 	ErrReadFromCache           Item = "READ_FROM_CACHE"
+	ErrReadFromDb              Item = "READ_FROM_DB"
 	ErrCannotUnmarshalRequest  Item = "CANNOT_UNMARSHAL_JSON"
 	ErrAlreadyRegistered       Item = "ALREADY_REGISTERED"
 	ErrUsernameFormat          Item = "USERNAME_FORMAT"

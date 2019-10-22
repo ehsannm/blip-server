@@ -282,7 +282,11 @@ func LoginHandler(ctx iris.Context) {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
-
+	err = session.RemoveAll(u.ID)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
 	sessionID := ronak.RandomID(64)
 	timeNow := time.Now().Unix()
 	err = session.Save(session.Session{
