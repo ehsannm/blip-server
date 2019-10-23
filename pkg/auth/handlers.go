@@ -355,9 +355,8 @@ func RegisterHandler(ctx iris.Context) {
 			return
 		}
 	} else if req.PhoneCode != phoneCode {
-			msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
-			return
-		}
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
+		return
 	}
 
 	_, err = user.GetByPhone(req.Phone)

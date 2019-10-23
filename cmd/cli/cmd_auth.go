@@ -78,7 +78,6 @@ var LoginCmd = &cobra.Command{
 			PhoneCode:     cmd.Flag(FlagPhoneCode).Value.String(),
 			PhoneCodeHash: cmd.Flag(FlagPhoneCodeHash).Value.String(),
 			Phone:         cmd.Flag(FlagPhone).Value.String(),
-			OperationID:   cmd.Flag(FlagOtpID).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
 		_, err := sendHttp(http.MethodPost, "auth/login", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
@@ -97,7 +96,6 @@ var RegisterCmd = &cobra.Command{
 			PhoneCode:     cmd.Flag(FlagPhoneCode).Value.String(),
 			PhoneCodeHash: cmd.Flag(FlagPhoneCodeHash).Value.String(),
 			Phone:         cmd.Flag(FlagPhone).Value.String(),
-			OperationID:   cmd.Flag(FlagOtpID).Value.String(),
 		}
 
 		if cmd.Flag(FlagUsername) != nil {

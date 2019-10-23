@@ -70,7 +70,6 @@ func TestAuth(t *testing.T) {
 				PhoneCode:     "0",
 				PhoneCodeHash: "",
 				Phone:         "989121228718",
-				OperationID:   "",
 				Username:      "ehsan",
 			})
 			r := e.POST("/auth/register").
