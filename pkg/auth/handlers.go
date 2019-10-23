@@ -285,39 +285,37 @@ func LoginHandler(ctx iris.Context) {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
 		return
 	}
-}
 
+	u, err := user.GetByPhone(req.Phone)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		return
+	}
+	err = session.RemoveAll(u.ID)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
+	sessionID := ronak.RandomID(64)
+	timeNow := time.Now().Unix()
+	err = session.Save(session.Session{
+		ID:         sessionID,
+		UserID:     u.ID,
+		CreatedOn:  timeNow,
+		LastAccess: timeNow,
+	})
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+		return
+	}
 
-u, err := user.GetByPhone(req.Phone)
-if err != nil {
-msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
-return
-}
-err = session.RemoveAll(u.ID)
-if err != nil {
-msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-return
-}
-sessionID := ronak.RandomID(64)
-timeNow := time.Now().Unix()
-err = session.Save(session.Session{
-ID:         sessionID,
-UserID:     u.ID,
-CreatedOn:  timeNow,
-LastAccess: timeNow,
-})
-if err != nil {
-msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-return
-}
-
-_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
-msg.WriteResponse(ctx, CAuthorization, Authorization{
-UserID:    u.ID,
-Phone:     u.Phone,
-Username:  u.Username,
-SessionID: sessionID,
-})
+	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+	msg.WriteResponse(ctx, CAuthorization, Authorization{
+		UserID:    u.ID,
+		Phone:     u.Phone,
+		Username:  u.Username,
+		SessionID: sessionID,
+	})
 
 }
 
