@@ -240,7 +240,6 @@ func SendCodeHandler(ctx iris.Context) {
 		}
 	}
 
-
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 		PhoneCodeHash: phoneCodeHash,
 		Registered:    registered,
@@ -267,6 +266,10 @@ func LoginHandler(ctx iris.Context) {
 		phoneCode = verifyParams[2]
 	}
 
+	if req.PhoneCodeHash != phoneCodeHash {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeHashNotValid)
+		return
+	}
 	if otpID != "" {
 		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
 		if err != nil {
@@ -278,44 +281,43 @@ func LoginHandler(ctx iris.Context) {
 			msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
 			return
 		}
-	} else {
-		if req.PhoneCodeHash != phoneCodeHash || req.PhoneCode != phoneCode {
-			msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
-			return
-		}
-	}
-
-
-	u, err := user.GetByPhone(req.Phone)
-	if err != nil {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+	} else if req.PhoneCode != phoneCode {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
 		return
 	}
-	err = session.RemoveAll(u.ID)
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-		return
-	}
-	sessionID := ronak.RandomID(64)
-	timeNow := time.Now().Unix()
-	err = session.Save(session.Session{
-		ID:         sessionID,
-		UserID:     u.ID,
-		CreatedOn:  timeNow,
-		LastAccess: timeNow,
-	})
-	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-		return
-	}
+}
 
-	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
-	msg.WriteResponse(ctx, CAuthorization, Authorization{
-		UserID:    u.ID,
-		Phone:     u.Phone,
-		Username:  u.Username,
-		SessionID: sessionID,
-	})
+
+u, err := user.GetByPhone(req.Phone)
+if err != nil {
+msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+return
+}
+err = session.RemoveAll(u.ID)
+if err != nil {
+msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+return
+}
+sessionID := ronak.RandomID(64)
+timeNow := time.Now().Unix()
+err = session.Save(session.Session{
+ID:         sessionID,
+UserID:     u.ID,
+CreatedOn:  timeNow,
+LastAccess: timeNow,
+})
+if err != nil {
+msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+return
+}
+
+_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+msg.WriteResponse(ctx, CAuthorization, Authorization{
+UserID:    u.ID,
+Phone:     u.Phone,
+Username:  u.Username,
+SessionID: sessionID,
+})
 
 }
 

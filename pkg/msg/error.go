@@ -23,6 +23,7 @@ var (
 	ErrPermissionIsNotSet      Item = "PERMISSION_NOT_SET"
 	ErrPhoneNotValid           Item = "PHONE_NOT_VALID"
 	ErrPhoneCodeNotValid       Item = "PHONE_CODE_NOT_VALID"
+	ErrPhoneCodeHashNotValid   Item = "PHONE_CODE_HASH_NOT_VALID"
 	ErrPeriodNotValid          Item = "PERIOD_NOT_VALID"
 	ErrWriteToCache            Item = "WRITE_TO_CACHE"
 	ErrReadFromCache           Item = "READ_FROM_CACHE"
