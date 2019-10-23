@@ -32,4 +32,5 @@ func MustVasEnabled(ctx iris.Context) {
 		msg.Error(ctx, http.StatusForbidden, msg.ErrVasIsNotEnabled)
 		return
 	}
+	ctx.Next()
 }

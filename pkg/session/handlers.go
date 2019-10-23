@@ -41,7 +41,7 @@ func MustHaveSession(ctx iris.Context) {
 	mtxLock.Lock()
 	sessionCache[sessionID] = session
 	mtxLock.Unlock()
-
+	log.Debug("Session Detected", zap.String("UserID", session.UserID))
 	ctx.Values().Save(CtxSession, session, true)
 	ctx.Next()
 }
