@@ -38,9 +38,9 @@ const (
 	SmsAdpPass  = "SMS_ADP_PASS"
 	SmsAdpPhone = "SMS_ADP_PHONE"
 
-	SmsPayamakUrl = "SMS_PAYAMAK_URL"
-	SmsPayamakUser = "SMS_PAYAMAK_USER"
-	SmsPayamakPass = "SMS_PAYAMAK_PASS"
+	SmsPayamakUrl   = "SMS_PAYAMAK_URL"
+	SmsPayamakUser  = "SMS_PAYAMAK_USER"
+	SmsPayamakPass  = "SMS_PAYAMAK_PASS"
 	SmsPayamakPhone = "SMS_PAYAMAK_PHONE"
 )
 

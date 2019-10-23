@@ -22,12 +22,11 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 type Payamak struct {
-	url string
-	username string
-	password string
-	srcNumber string
+	url         string
+	username    string
+	password    string
+	srcNumber   string
 	jobsChannel chan Job
 }
 
