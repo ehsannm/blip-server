@@ -46,7 +46,6 @@ type LoginReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
-	OperationID   string `json:"operation_id"`
 }
 
 // easyjson:json
@@ -56,7 +55,6 @@ type RegisterReq struct {
 	PhoneCode     string `json:"phone_code"`
 	PhoneCodeHash string `json:"phone_code_hash"`
 	Phone         string `json:"phone"`
-	OperationID   string `json:"operation_id"`
 	Username      string `json:"username"`
 }
 

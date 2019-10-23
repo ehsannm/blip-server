@@ -271,7 +271,7 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 	if otpID != "" {
-		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, otpID)
 		if err != nil {
 			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
@@ -339,8 +339,12 @@ func RegisterHandler(ctx iris.Context) {
 		phoneCode = verifyParams[2]
 	}
 
+	if req.PhoneCodeHash != phoneCodeHash {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeHashNotValid)
+		return
+	}
 	if otpID != "" {
-		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, req.OperationID)
+		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, otpID)
 		if err != nil {
 			msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
@@ -350,8 +354,7 @@ func RegisterHandler(ctx iris.Context) {
 			msg.Error(ctx, http.StatusInternalServerError, msg.Item(errText))
 			return
 		}
-	} else {
-		if req.PhoneCodeHash != phoneCodeHash || req.PhoneCode != phoneCode {
+	} else if req.PhoneCode != phoneCode {
 			msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneCodeNotValid)
 			return
 		}
