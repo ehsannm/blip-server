@@ -187,54 +187,62 @@ func SendCodeHandler(ctx iris.Context) {
 		registered = true
 	}
 	var phoneCodeHash, otpID, phoneCode string
+	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
+		log.Warn("Error On ReadFromCache", zap.Error(err))
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
+		return
+	} else if v != "" {
+		verifyParams := strings.Split(v, "|")
+		phoneCodeHash = verifyParams[0]
+		otpID = verifyParams[1]
+	} else {
+		phoneCodeHash = ronak.RandomID(12)
+		switch ctx.Values().GetString(CtxClientName) {
+		case AppNameMahyar:
+		case AppNameMusicChi:
+			if registered && u != nil && u.VasPaid {
+				phoneCode = ronak.RandomDigit(4)
+				// User our internal sms provider
+				_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
+				if err != nil {
+					msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
+					return
+				}
+			} else {
+				if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
+					msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
+					return
+				}
+				res, err := saba.Subscribe(req.Phone)
+				if err != nil {
+					msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+					return
+				}
+				otpID = res.OtpID
+				switch res.StatusCode {
+				case "SC111", "SC000":
+				default:
+					// If we are here, then it means VAS did not send the sms
+					msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
+				}
+			}
 
-	switch ctx.Values().GetString(CtxClientName) {
-	case AppNameMahyar:
-	case AppNameMusicChi:
-		if registered && u != nil && u.VasPaid {
-			phoneCodeHash = ronak.RandomID(12)
-			phoneCode = ronak.RandomDigit(4)
-
-			// User our internal sms provider
-			_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
+			err = redisCache.Do(radix.FlatCmd(nil, "SETEX",
+				fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
+				600,
+				fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
+			))
 			if err != nil {
-				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
+				log.Warn("Error On WriteToCache", zap.Error(err))
+				msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
 				return
 			}
-		} else {
-			if _, ok := supportedCarriers[req.Phone[:5]]; !ok {
-				msg.Error(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
-				return
-			}
-			res, err := saba.Subscribe(req.Phone)
-			if err != nil {
-				msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-				return
-			}
-			otpID = res.OtpID
-			switch res.StatusCode {
-			case "SC111", "SC000":
-			default:
-				// If we are here, then it means VAS did not send the sms
-				msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
-			}
-		}
-
-		err = redisCache.Do(radix.FlatCmd(nil, "SETEX",
-			fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone),
-			360,
-			fmt.Sprintf("%s|%s|%s", phoneCodeHash, otpID, phoneCode),
-		))
-		if err != nil {
-			log.Warn("Error On WriteToCache", zap.Error(err))
-			msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
-			return
 		}
 	}
 
+
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 		PhoneCodeHash: phoneCodeHash,
-		OperationID:   otpID,
 		Registered:    registered,
 	})
 }
@@ -277,6 +285,7 @@ func LoginHandler(ctx iris.Context) {
 		}
 	}
 
+
 	u, err := user.GetByPhone(req.Phone)
 	if err != nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
@@ -300,6 +309,7 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
+	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    u.ID,
 		Phone:     u.Phone,
@@ -387,6 +397,7 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
+	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    userID,
 		Phone:     req.Phone,
