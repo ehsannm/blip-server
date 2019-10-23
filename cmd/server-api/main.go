@@ -4,7 +4,6 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"git.ronaksoftware.com/blip/server/pkg/dev"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -73,6 +72,7 @@ func initServer() *iris.Application {
 	authParty.Post("/send_code", auth.SendCodeHandler)
 	authParty.Post("/login", auth.LoginHandler)
 	authParty.Post("/register", auth.RegisterHandler)
+	authParty.Post("/logout", session.MustHaveSession, auth.LogoutHandler)
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
@@ -84,8 +84,8 @@ func initServer() *iris.Application {
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
-	devParty := app.Party("/dev")
-	devParty.Post("/unsubscribe", dev.Unsubscribe)
+	// devParty := app.Party("/dev")
+	// devParty.Post("/unsubscribe", dev.Unsubscribe)
 
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")

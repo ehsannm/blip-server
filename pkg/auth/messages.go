@@ -70,3 +70,17 @@ type Authorization struct {
 	Username  string `json:"username"`
 	SessionID string `json:"session_id"`
 }
+
+// easyjson:json
+// @RPC
+// @Returns:
+type LogoutReq struct {
+	Unsubscribe bool `json:"unsubscribe"`
+}
+
+const CBool = "BOOL"
+
+// easyjson:json
+type Bool struct {
+	Success bool `json:"success"`
+}

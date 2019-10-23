@@ -70,7 +70,7 @@ func Subscribe(phone string) (*SubscribeResponse, error) {
 
 func Unsubscribe(phone string) (string, error) {
 	c := http.Client{
-		Timeout: time.Second * 3,
+		Timeout: time.Second * 30,
 	}
 	httpResp, err := c.Get(fmt.Sprintf("%s/v2/unsub/%s/%s/%s",
 		baseUrl, serviceName, serviceToken, phone,

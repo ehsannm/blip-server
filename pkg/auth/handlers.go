@@ -395,3 +395,38 @@ func RegisterHandler(ctx iris.Context) {
 	})
 
 }
+
+func LogoutHandler(ctx iris.Context) {
+	req := new(LogoutReq)
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+	s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
+	if !ok {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrSessionInvalid)
+		return
+	}
+	if req.Unsubscribe {
+		u, err := user.Get(s.UserID)
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.ErrUserNotFound)
+			return
+		}
+		_, err = saba.Unsubscribe(u.Phone)
+		if err != nil {
+			msg.Error(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
+			return
+		}
+	}
+	err = session.RemoveAll(s.UserID)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+
+	msg.WriteResponse(ctx, CBool, Bool{
+		Success: true,
+	})
+}
