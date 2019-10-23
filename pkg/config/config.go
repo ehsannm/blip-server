@@ -37,6 +37,11 @@ const (
 	SmsAdpUser  = "SMS_ADP_USER"
 	SmsAdpPass  = "SMS_ADP_PASS"
 	SmsAdpPhone = "SMS_ADP_PHONE"
+
+	SmsPayamakUrl = "SMS_PAYAMAK_URL"
+	SmsPayamakUser = "SMS_PAYAMAK_USER"
+	SmsPayamakPass = "SMS_PAYAMAK_PASS"
+	SmsPayamakPhone = "SMS_PAYAMAK_PHONE"
 )
 
 func init() {
@@ -60,6 +65,11 @@ func init() {
 	pflag.String(SmsAdpUser, "ronak", "")
 	pflag.String(SmsAdpPass, "E2e2374k19743", "")
 	pflag.String(SmsAdpPhone, "98200049112", "")
+
+	pflag.String(SmsPayamakUrl, "http://37.228.138.118/post/sendsms.ashx", "")
+	pflag.String(SmsPayamakUser, "9122139561", "")
+	pflag.String(SmsPayamakPass, "2607", "")
+	pflag.String(SmsPayamakPhone, "50001060010920", "")
 
 	pflag.Parse()
 	_ = viper.BindPFlags(pflag.CommandLine)

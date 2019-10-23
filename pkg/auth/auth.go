@@ -54,11 +54,18 @@ var mtxLock sync.RWMutex
 
 func init() {
 	authCache = make(map[string]Auth, 100000)
-	smsProvider = sms.NewADP(
-		config.GetString(config.SmsAdpUser),
-		config.GetString(config.SmsAdpPass),
-		config.GetString(config.SmsADPUrl),
-		config.GetString(config.SmsAdpPhone),
+	// smsProvider = sms.NewADP(
+	// 	config.GetString(config.SmsAdpUser),
+	// 	config.GetString(config.SmsAdpPass),
+	// 	config.GetString(config.SmsADPUrl),
+	// 	config.GetString(config.SmsAdpPhone),
+	// 	10,
+	// )
+	smsProvider = sms.NewPayamak(
+		config.GetString(config.SmsPayamakUser),
+		config.GetString(config.SmsPayamakPass),
+		config.GetString(config.SmsPayamakUrl),
+		config.GetString(config.SmsPayamakPhone),
 		10,
 	)
 }
