@@ -36,7 +36,6 @@ const CPhoneCodeSent = "PHONE_CODE_SENT"
 // easyjson:json
 type PhoneCodeSent struct {
 	PhoneCodeHash string `json:"phone_code_hash"`
-	OperationID   string `json:"operation_id"`
 	Registered    bool   `json:"registered"`
 }
 
