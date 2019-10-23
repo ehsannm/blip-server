@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

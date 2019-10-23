@@ -38,7 +38,7 @@ func Init() {
 
 func Subscribe(phone string) (*SubscribeResponse, error) {
 	c := http.Client{
-		Timeout: time.Second * 3,
+		Timeout: time.Second * 30,
 	}
 
 	httpResp, err := c.Get(fmt.Sprintf("%s/v2/sub/%s/%s/%s",
