@@ -21,7 +21,10 @@ func SearchByProxy(ctx iris.Context) {
 		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
 		if ok {
 			ce.Write(zap.String("UserID", s.UserID))
+		} else {
+			ce.Write(zap.String("UserID", "Not Set"))
 		}
+
 	}
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
 }
