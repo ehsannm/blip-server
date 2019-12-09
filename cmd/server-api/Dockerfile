@@ -1,4 +1,4 @@
-FROM registry.ronaksoftware.com/base/ubuntu:18.04
+FROM registry.ronaksoftware.com/base/docker/ubuntu:18.04
 MAINTAINER Ehsan N. Moosa <ehsan@ronaksoft.com>
 
 # Add contents from root directory to the docker
