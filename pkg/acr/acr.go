@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/shared"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"go.uber.org/zap"
 	"hash"
@@ -59,7 +60,7 @@ func IdentifyByFile(fileAddr string) (*Music, error) {
 	signature := base64.StdEncoding.EncodeToString(hm.Sum(nil))
 
 	c := http.Client{
-		Timeout: time.Second * 3,
+		Timeout: shared.HttpRequestTimeout,
 	}
 	values := url.Values{}
 	values.Set("access_key", accessKey)

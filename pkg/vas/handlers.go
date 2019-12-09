@@ -1,11 +1,15 @@
 package vas
 
 import (
+	"fmt"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
+	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
+	"strings"
+	"time"
 )
 
 /*
@@ -17,95 +21,122 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+type mciNotificationParams struct {
+	CustomerNumber string
+	Status         string
+	Amount         int
+	ServiceID      string
+	Channel        string
+	DateTime       int
+}
+
 func MCINotification(ctx iris.Context) {
-	customerNumber := ctx.URLParam("msisdn")
-	status := ctx.URLParam("status")
-	amount := ctx.URLParamIntDefault("amount", 0)
-	serviceID := ctx.URLParam("serviceId")
-	channel := ctx.URLParam("channel")
-	dateTime := ctx.URLParamIntDefault("datetime", 0)
+	params := &mciNotificationParams{
+		CustomerNumber: ctx.URLParam("msisdn"),
+		Status:         ctx.URLParam("status"),
+		Amount:         ctx.URLParamIntDefault("amount", 0),
+		ServiceID:      ctx.URLParam("serviceId"),
+		Channel:        ctx.URLParam("channel"),
+		DateTime:       ctx.URLParamIntDefault("datetime", 0),
+	}
+
 	log.Info("VAS NOTIFICATION RECEIVED",
-		zap.String("Number", customerNumber),
-		zap.String("Status", status),
-		zap.Int("Amount", amount),
-		zap.String("ServiceID", serviceID),
-		zap.String("Channel", channel),
-		zap.Int("DateTime", dateTime),
+		zap.String("Number", params.CustomerNumber),
+		zap.String("Status", params.Status),
+		zap.Int("Amount", params.Amount),
+		zap.String("ServiceID", params.ServiceID),
+		zap.String("Channel", params.Channel),
+		zap.Int("DateTime", params.DateTime),
 		zap.String("ClientIP", ctx.RemoteAddr()),
 	)
-	switch status {
+	switch params.Status {
 	case MciNotificationStatusSubscription:
-		u, err := user.GetByPhone(customerNumber)
-		if err != nil {
-			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
-			return
-		}
-		u.VasPaid = true
-		err = user.Save(u)
-		if err != nil {
-			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
-			return
-		}
-		res, err := saba.SendMessage(customerNumber, WelcomeMessage)
-		if err != nil {
-			log.Warn("Error On SendMessage (Subsription)",
-				zap.Error(err),
-				zap.String("Number", customerNumber),
-				zap.String("Status", status),
-				zap.Int("Amount", amount),
-				zap.String("ServiceID", serviceID),
-				zap.String("Channel", channel),
-				zap.Int("DateTime", dateTime),
-			)
-			return
-		}
-		switch res.StatusCode {
-		case saba.SuccessfulCode:
-		default:
-			log.Info("SendMessage Status",
-				zap.String("Status", res.Status),
-				zap.String("StatusCode", res.StatusCode),
-			)
-		}
+		subscribe(params)
 	case MciNotificationStatusUnsubscription:
-		u, err := user.GetByPhone(customerNumber)
-		if err != nil {
-			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
-			return
-		}
-		u.VasPaid = false
-		err = user.Save(u)
-		if err != nil {
-			log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", customerNumber))
-			return
-		}
-		res, err := saba.SendMessage(customerNumber, GoodbyeMessage)
-		if err != nil {
-			log.Warn("Error On SendMessage (UnSubscription)",
-				zap.Error(err),
-				zap.String("Number", customerNumber),
-				zap.String("Status", status),
-				zap.Int("Amount", amount),
-				zap.String("ServiceID", serviceID),
-				zap.String("Channel", channel),
-				zap.Int("DateTime", dateTime),
-			)
-			return
-		}
-		switch res.StatusCode {
-		case saba.SuccessfulCode:
-		default:
-			log.Info("SendMessage Status ",
-				zap.String("Status", res.Status),
-				zap.String("StatusCode", res.StatusCode),
-			)
-		}
+		unsubscribe(params)
 	case MciNotificationStatusActive:
 	case MciNotificationStatusDeleted:
 	case MciNotificationStatusFailed:
 	case MciNotificationStatusPosPaid:
 	}
 }
+func subscribe(params *mciNotificationParams) {
+	u, err := user.GetByPhone(params.CustomerNumber)
+	if err != nil {
+		userID := fmt.Sprintf("U%s", ronak.RandomID(32))
+		timeNow := time.Now().Unix()
+		u = &user.User{
+			ID:        userID,
+			Username:  fmt.Sprintf("USER%s", strings.ToUpper(ronak.RandomID(12))),
+			Phone:     params.CustomerNumber,
+			Email:     "",
+			CreatedOn: timeNow,
+			Disabled:  false,
+		}
+	}
+	u.VasPaid = true
+	err = user.Save(u)
+	if err != nil {
+		log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", params.CustomerNumber))
+		return
+	}
+	res, err := saba.SendMessage(params.CustomerNumber, WelcomeMessage)
+	if err != nil {
+		log.Warn("Error On SendMessage (Subsription)",
+			zap.Error(err),
+			zap.String("Number", params.CustomerNumber),
+			zap.String("Status", params.Status),
+			zap.Int("Amount", params.Amount),
+			zap.String("ServiceID", params.ServiceID),
+			zap.String("Channel", params.Channel),
+			zap.Int("DateTime", params.DateTime),
+		)
+		return
+	}
+	switch res.StatusCode {
+	case saba.SuccessfulCode:
+	default:
+		log.Info("SendMessage Status",
+			zap.String("Status", res.Status),
+			zap.String("StatusCode", res.StatusCode),
+		)
+	}
+}
+func unsubscribe(params *mciNotificationParams) {
+	u, err := user.GetByPhone(params.CustomerNumber)
+	if err != nil {
+		log.Error("Error On Unsubscription", zap.Error(err), zap.String("Phone", params.CustomerNumber))
+		return
+	}
+	u.VasPaid = false
+	err = user.Save(u)
+	if err != nil {
+		log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", params.CustomerNumber))
+		return
+	}
+	res, err := saba.SendMessage(params.CustomerNumber, GoodbyeMessage)
+	if err != nil {
+		log.Warn("Error On SendMessage (Unsubscription)",
+			zap.Error(err),
+			zap.String("Number", params.CustomerNumber),
+			zap.String("Status", params.Status),
+			zap.Int("Amount", params.Amount),
+			zap.String("ServiceID", params.ServiceID),
+			zap.String("Channel", params.Channel),
+			zap.Int("DateTime", params.DateTime),
+		)
+		return
+	}
+	switch res.StatusCode {
+	case saba.SuccessfulCode:
+	default:
+		log.Info("SendMessage Status ",
+			zap.String("Status", res.Status),
+			zap.String("StatusCode", res.StatusCode),
+		)
+	}
+}
+
 
 func MCIMo(ctx iris.Context) {
 	customerNumber := ctx.URLParam("msisdn")

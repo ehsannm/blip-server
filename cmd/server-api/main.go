@@ -4,6 +4,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -78,14 +79,15 @@ func initServer() *iris.Application {
 	musicParty.Use(auth.MustHaveAccessKey)
 	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)
 	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
+	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByText)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
-	// devParty := app.Party("/dev")
-	// devParty.Post("/unsubscribe", dev.Unsubscribe)
+	crawlerParty := app.Party("/crawler")
+	crawlerParty.Post("/search_result", crawler.SearchResult)
 
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")

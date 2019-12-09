@@ -1,10 +1,14 @@
 package music
 
 import (
+	"encoding/base64"
+	"git.ronaksoftware.com/blip/server/pkg/acr"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 /*
@@ -29,20 +33,28 @@ func SearchByProxy(ctx iris.Context) {
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
 }
 
-func SearchBySound(ctx iris.Context) {
-	// sound := ctx.PostValue("sound")
-	// soundBytes, err := base64.StdEncoding.DecodeString(sound)
-	// if err != nil {
-	// 	msg.Error(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
-	// 	return
-	// }
-
-	// music, err := acr.IdentifyByByteString(soundBytes)
-	// if err != nil {
-	// 	msg.Error(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
-	// 	return
-	// }
-
-	// music.Status.Code
-
+func SearchByText(ctx iris.Context) {
+	// TODO:: implement it
 }
+
+func SearchBySound(ctx iris.Context) {
+	sound := ctx.PostValue("sound")
+	soundBytes, err := base64.StdEncoding.DecodeString(sound)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
+		return
+	}
+
+	foundMusic, err := acr.IdentifyByByteString(soundBytes)
+	if err != nil {
+		msg.Error(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
+		return
+	}
+
+	for _, m := range foundMusic.Metadata.Music {
+		_ = m
+	}
+
+	// TODO:: complete this
+}
+
