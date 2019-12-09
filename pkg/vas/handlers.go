@@ -137,7 +137,6 @@ func unsubscribe(params *mciNotificationParams) {
 	}
 }
 
-
 func MCIMo(ctx iris.Context) {
 	customerNumber := ctx.URLParam("msisdn")
 	serviceID := ctx.URLParam("serviceId")

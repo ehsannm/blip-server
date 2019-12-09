@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/shared"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
-	"github.com/mediocregopher/radix/v3"
-	"net/http"
 )
 
 /*
@@ -29,14 +27,14 @@ func getNextRequestID() string {
 }
 
 type searchRequest struct {
-	Keyword 	string
+	Keyword string
 }
 
 func SendSearchRequest(keyword string) {
-	c := http.Client{
-		Timeout: shared.HttpRequestTimeout,
-	}
-	reqID := getNextRequestID()
-	redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("CR-%s", getNextRequestID())))
+	// c := http.Client{
+	// 	Timeout: shared.HttpRequestTimeout,
+	// }
+	// reqID := getNextRequestID()
+	// redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("CR-%s", getNextRequestID())))
 
 }

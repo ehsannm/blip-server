@@ -9,7 +9,6 @@ package shared
    Copyright Ronak Software Group 2018
 */
 
-
 var (
-	ServerID	= "BLIP-01"
+	ServerID = "BLIP-01"
 )

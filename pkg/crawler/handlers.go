@@ -11,7 +11,6 @@ import "github.com/kataras/iris"
    Copyright Ronak Software Group 2018
 */
 
-
 func SearchResult(ctx iris.Context) {
 	// TODO :: implement it
 }
