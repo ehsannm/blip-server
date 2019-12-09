@@ -9,7 +9,7 @@ variables:
 
 build:
   stage: build
-  image: registry.ronaksoftware.com/base/golang
+  image: registry.ronaksoftware.com/base/docker/golang
   script:
     - cd $CI_PROJECT_DIR
     - bash ci-build.sh

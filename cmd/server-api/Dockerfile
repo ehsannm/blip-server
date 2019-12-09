@@ -1,4 +1,4 @@
-FROM registry.ronaksoftware.com/base/vips
+FROM registry.ronaksoftware.com/base/docker/ubuntu
 MAINTAINER Ehsan N. Moosa <ehsan@ronaksoft.com>
 
 # Add contents from root directory to the docker
