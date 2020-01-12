@@ -3,6 +3,7 @@ package vas
 import (
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
@@ -111,7 +112,12 @@ func unsubscribe(params *mciNotificationParams) {
 	u.VasPaid = false
 	err = user.Save(u)
 	if err != nil {
-		log.Error("Error On Subscription", zap.Error(err), zap.String("Phone", params.CustomerNumber))
+		log.Error("Error On Subscription (Update User)", zap.Error(err), zap.String("Phone", params.CustomerNumber))
+		return
+	}
+	err = session.RemoveAll(u.ID)
+	if err != nil {
+		log.Error("Error On Subscription (Remove Sessions)", zap.Error(err), zap.String("Phone", params.CustomerNumber))
 		return
 	}
 	res, err := saba.SendMessage(params.CustomerNumber, GoodbyeMessage)
