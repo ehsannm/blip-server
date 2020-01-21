@@ -68,7 +68,7 @@ func init() {
 
 	pflag.String(SmsPayamakUrl, "http://37.228.138.118/post/sendsms.ashx", "")
 	pflag.String(SmsPayamakUser, "9122139561", "")
-	pflag.String(SmsPayamakPass, "2607", "")
+	pflag.String(SmsPayamakPass, "539ma6", "")
 	pflag.String(SmsPayamakPhone, "50001060010920", "")
 
 	pflag.Parse()
