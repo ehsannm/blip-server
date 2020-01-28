@@ -36,7 +36,6 @@ func Init() {
 	}
 	crawler.InitMongo(mongoClient)
 
-
 	// Initialize RedisCache
 	redisConfig := ronak.DefaultRedisConfig
 	redisConfig.Host = viper.GetString(config.RedisUrl)

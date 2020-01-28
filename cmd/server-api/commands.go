@@ -54,7 +54,6 @@ var InitDB = &cobra.Command{
 			}
 		}
 
-
 		// Create Magic User
 		c = _Mongo.Database(config.GetString(config.MongoDB)).Collection(config.ColUser)
 		_, err = c.InsertOne(nil, user.User{

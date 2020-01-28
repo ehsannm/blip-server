@@ -22,7 +22,6 @@ var (
 	smsProvider sms.Provider
 )
 
-
 type Permission byte
 
 const (
@@ -42,4 +41,3 @@ type Auth struct {
 
 var authCache map[string]Auth
 var mtxLock sync.RWMutex
-

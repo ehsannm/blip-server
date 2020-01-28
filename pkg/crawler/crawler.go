@@ -34,7 +34,6 @@ func InitMongo(c *mongo.Client) {
 	crawlerCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColCrawler)
 }
 
-
 // Crawler
 type Crawler struct {
 	Url         string `bson:"url"`
@@ -85,8 +84,3 @@ func GetAll() ([]*Crawler, error) {
 func DropAll() error {
 	return crawlerCol.Drop(nil)
 }
-
-
-
-
-

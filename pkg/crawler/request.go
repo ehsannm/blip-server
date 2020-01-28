@@ -31,7 +31,7 @@ type searchResponse struct {
 	Result    struct {
 		SongUrl  string `json:"song_url"`
 		CoverUrl string `json:"cover_url"`
-		Lyrics   string `json:"lyrics, omitempty"`
+		Lyrics   string `json:"lyrics,omitempty"`
 		Artists  string `json:"artists"`
 		Title    string `json:"title"`
 		Genre    string `json:"genre"`

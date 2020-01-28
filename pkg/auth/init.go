@@ -28,7 +28,6 @@ func init() {
 	)
 }
 
-
 func InitMongo(c *mongo.Client) {
 	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
 }
@@ -36,5 +35,3 @@ func InitMongo(c *mongo.Client) {
 func InitRedisCache(c *ronak.RedisCache) {
 	redisCache = c
 }
-
-
