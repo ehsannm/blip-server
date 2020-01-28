@@ -1,4 +1,4 @@
-package music
+package crawler
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
@@ -16,15 +16,15 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var (
-	songCol    *mongo.Collection
-	redisCache *ronak.RedisCache
-)
-
-func InitMongo(c *mongo.Client) {
-	songCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSong)
-}
-
+//go:generate easyjson
 func InitRedisCache(c *ronak.RedisCache) {
 	redisCache = c
+}
+
+func InitMongo(c *mongo.Client) {
+	crawlerCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColCrawler)
+}
+
+func Init() {
+	_, _ = GetAll()
 }

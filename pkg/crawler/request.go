@@ -1,12 +1,11 @@
 package crawler
 
 import (
-	"bytes"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/mediocregopher/radix/v3"
-	"net/http"
+	"sync"
 )
 
 /*
@@ -41,27 +40,39 @@ type searchResponse struct {
 func getNextRequestID() string {
 	return fmt.Sprintf("%s.%s", config.ServerID, ronak.RandomID(32))
 }
-
-func SendSearchRequest(crawlerUrl, keyword string) error {
-	c := http.Client{
-		Timeout: config.HttpRequestTimeout,
+func getRegisteredCrawlers() []*Crawler {
+	list, ok := registeredCrawlersPool.Get().([]*Crawler)
+	if ok {
+		return list
 	}
+	list = make([]*Crawler, 0, len(registeredCrawlers))
+	registeredCrawlersMtx.RLock()
+	for _, crawlers := range registeredCrawlers {
+		idx := ronak.RandomInt(len(crawlers))
+		list = append(list, crawlers[idx])
+	}
+	registeredCrawlersMtx.RUnlock()
+	return list
+}
+func putRegisteredCrawlers(list []*Crawler) {
+	registeredCrawlersPool.Put(list)
+}
+
+func Search(keyword string) (string, error) {
 	reqID := getNextRequestID()
-	redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("CR-%s", reqID)))
+	crawlers := getRegisteredCrawlers()
+	defer putRegisteredCrawlers(crawlers)
 
-	req := searchRequest{
-		Keyword: keyword,
+	waitGroup := sync.WaitGroup{}
+
+	for _, c := range crawlers {
+		waitGroup.Add(1)
+		go func(c *Crawler) {
+			_ = c.SendRequest(keyword)
+			waitGroup.Done()
+		}(c)
 	}
-	reqBytes, err := req.MarshalJSON()
-	if err != nil {
-		return err
-	}
-	httpRes, err := c.Post(crawlerUrl, "application/json", bytes.NewBuffer(reqBytes))
-	if err != nil {
-		return err
-	}
-	if httpRes.StatusCode != http.StatusOK && httpRes.StatusCode != http.StatusAccepted {
-		return fmt.Errorf("invalid http response, got %d", httpRes.StatusCode)
-	}
-	return nil
+	redisCache.Do(radix.FlatCmd(nil, "HMSET", reqID, map[string]interface{}{}))
+
+	return reqID, nil
 }

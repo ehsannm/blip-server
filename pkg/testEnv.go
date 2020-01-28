@@ -4,6 +4,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"git.ronaksoftware.com/blip/server/pkg/music"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -35,6 +36,7 @@ func Init() {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
 	}
 	crawler.InitMongo(mongoClient)
+	music.InitMongo(mongoClient)
 
 	// Initialize RedisCache
 	redisConfig := ronak.DefaultRedisConfig
@@ -42,5 +44,6 @@ func Init() {
 	redisConfig.Password = viper.GetString(config.RedisPass)
 	redisCache := ronak.NewRedisCache(redisConfig)
 	crawler.InitRedisCache(redisCache)
+	music.InitRedisCache(redisCache)
 
 }

@@ -1,14 +1,18 @@
 package crawler
 
 import (
+	"bytes"
 	"context"
+	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
-	"github.com/spf13/viper"
+	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"net/http"
+	"sync"
 )
 
 /*
@@ -20,27 +24,13 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-//go:generate easyjson -pkg
 var (
-	redisCache *ronak.RedisCache
-	crawlerCol *mongo.Collection
+	redisCache             *ronak.RedisCache
+	crawlerCol             *mongo.Collection
+	registeredCrawlersMtx  sync.RWMutex
+	registeredCrawlers     map[string][]*Crawler
+	registeredCrawlersPool sync.Pool
 )
-
-func InitRedisCache(c *ronak.RedisCache) {
-	redisCache = c
-}
-
-func InitMongo(c *mongo.Client) {
-	crawlerCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColCrawler)
-}
-
-// Crawler
-type Crawler struct {
-	Url         string `bson:"url"`
-	Name        string `bson:"name"`
-	Description string `bson:"desc"`
-	Source      string `bson:"source"`
-}
 
 // Save insert the crawler 'c' into the database
 func Save(c Crawler) (primitive.ObjectID, error) {
@@ -64,6 +54,9 @@ func Get(crawlerID primitive.ObjectID) (*Crawler, error) {
 
 // GetAll returns all the crawlers from the database
 func GetAll() ([]*Crawler, error) {
+	registeredCrawlersMtx.Lock()
+	defer registeredCrawlersMtx.Unlock()
+	registeredCrawlers = make(map[string][]*Crawler)
 	cur, err := crawlerCol.Find(context.TODO(), bson.D{})
 	if err != nil {
 		return nil, err
@@ -76,6 +69,7 @@ func GetAll() ([]*Crawler, error) {
 		if err != nil {
 			return crawlers, err
 		}
+		registeredCrawlers[crawler.Source] = append(registeredCrawlers[crawler.Source], crawler)
 		crawlers = append(crawlers, crawler)
 	}
 	return crawlers, nil
@@ -83,4 +77,37 @@ func GetAll() ([]*Crawler, error) {
 
 func DropAll() error {
 	return crawlerCol.Drop(nil)
+}
+
+// Crawler
+type Crawler struct {
+	httpClient  http.Client `bson:"-"`
+	Url         string      `bson:"url"`
+	Name        string      `bson:"name"`
+	Description string      `bson:"desc"`
+	Source      string      `bson:"source"`
+}
+
+func (c *Crawler) SendRequest(keyword string) error {
+	c.httpClient.Timeout = config.HttpRequestTimeout
+	reqID := getNextRequestID()
+	err := redisCache.Do(radix.FlatCmd(nil, "SET", fmt.Sprintf("CR-%s", reqID)))
+	if err != nil {
+		return err
+	}
+	req := searchRequest{
+		Keyword: keyword,
+	}
+	reqBytes, err := req.MarshalJSON()
+	if err != nil {
+		return err
+	}
+	httpRes, err := c.httpClient.Post(c.Url, "application/json", bytes.NewBuffer(reqBytes))
+	if err != nil {
+		return err
+	}
+	if httpRes.StatusCode != http.StatusOK && httpRes.StatusCode != http.StatusAccepted {
+		return fmt.Errorf("invalid http response, got %d", httpRes.StatusCode)
+	}
+	return nil
 }
