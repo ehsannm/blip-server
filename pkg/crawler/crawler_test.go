@@ -60,7 +60,7 @@ func (m mockCrawler) ServeHTTP(httpRes http.ResponseWriter, httpReq *http.Reques
 func initMockCrawler(port int) {
 	s := httptest.NewUnstartedServer(mockCrawler{})
 	tcpConfig := tcplisten.Config{}
-	s.Listener, _ = tcpConfig.NewListener("tcp4", ":8080")
+	s.Listener, _ = tcpConfig.NewListener("tcp4", fmt.Sprintf(":%d", port))
 	s.Start()
 
 }
@@ -73,7 +73,7 @@ func TestCrawler(t *testing.T) {
 		})
 		Convey("Set and Get", func(c C) {
 			for i := 0; i < 10; i++ {
-				crawlerID, err := crawler.Save(crawler.Crawler{
+				crawlerID, err := crawler.Save(&crawler.Crawler{
 					Url:         fmt.Sprintf("http://crawler%d.com/some_text", i),
 					Name:        fmt.Sprintf("Crawler %d", i),
 					Description: fmt.Sprintf("Description for Crawler %d", i),
@@ -102,9 +102,54 @@ func TestCrawler(t *testing.T) {
 				Description: "This is a mock crawler",
 				Source:      "S01",
 			}
-			res, err := crawlerX.SendRequest("", "Text")
+			res, err := crawlerX.SendRequest("Text")
 			c.So(err, ShouldBeNil)
 			c.So(res.Result.Title, ShouldEqual, "Text")
+		})
+	})
+}
+
+func TestSearch(t *testing.T) {
+	Convey("Crawler Search Functionality", t, func() {
+		Convey("DropAll", func(c C) {
+			err := crawler.DropAll()
+			c.So(err, ShouldBeNil)
+		})
+		Convey("Run Mock Servers", func(c C) {
+			portStart := 8080
+
+			for i := 0; i < 5; i++ {
+				initMockCrawler(portStart + i)
+				crawlerX := &crawler.Crawler{
+					Url:         fmt.Sprintf("http://localhost:%d", portStart+i),
+					Name:        fmt.Sprintf("Crawler %d", i),
+					Description: "This is a Mock Crawler",
+					Source:      fmt.Sprintf("Source %d", i%3),
+				}
+				_, err := crawler.Save(crawlerX)
+				c.So(err, ShouldBeNil)
+			}
+		})
+		Convey("Wait For Crawlers to Run", func(c C) {
+			time.Sleep(time.Second)
+		})
+		Convey("Send Search Request", func(c C) {
+			keyword := "Some Text"
+			resChan := make(chan *crawler.SearchResponse, 10)
+			doneChan := make(chan struct{})
+			crawler.Search(keyword, resChan, doneChan)
+		waitLoop:
+			for {
+				select {
+				case r := <-resChan:
+					c.Println("Response:", r.Sources)
+				case <-doneChan:
+					c.Println("Done!")
+					break waitLoop
+				}
+			}
+			close(resChan)
+			close(doneChan)
 		})
 	})
 }

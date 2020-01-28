@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/crawler/messages.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/crawler.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/crawler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/crawler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/crawler_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/request.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/request_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,6 +109,10 @@
     <proxy>direct</proxy>
   </component>
   <component name="WindowStateProjectService">
+    <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580244430983">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580244430983" />
     <state x="498" y="282" width="683" height="486" key="find.popup" timestamp="1580243496179">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

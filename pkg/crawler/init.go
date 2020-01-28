@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
+	"time"
 )
 
 /*
@@ -20,7 +21,7 @@ import (
 */
 
 //go:generate rm -f *_easyjson.go
-//go:generate easyjson crawler.go request.go
+//go:generate easyjson crawler.go messages.go
 func InitRedisCache(c *ronak.RedisCache) {
 	redisCache = c
 }
@@ -46,22 +47,28 @@ func Init() {
 		}
 		registeredCrawlers[crawler.Source] = append(registeredCrawlers[crawler.Source], crawler)
 	}
-	go func() {
+	go watchForCrawlers()
+}
+func watchForCrawlers() {
+	for {
 		stream, err := crawlerCol.Watch(nil, mongo.Pipeline{})
 		if err != nil {
-			log.Warn("Crawler Watcher has been Closed.", zap.Error(err))
-			return
+			log.Warn("Error On Watch Stream for Crawlers", zap.Error(err))
+			time.Sleep(time.Second)
+			continue
 		}
-		defer stream.Close(nil)
+
 		for stream.Next(nil) {
-			c := &Crawler{}
-			err := stream.Decode(c)
+			crawlerX := &Crawler{}
+			err := stream.Decode(crawlerX)
 			if err == nil {
 				registeredCrawlersMtx.Lock()
-				registeredCrawlers[c.Source] = append(registeredCrawlers[c.Source], c)
+				registeredCrawlers[crawlerX.Source] = append(registeredCrawlers[crawlerX.Source], crawlerX)
 				registeredCrawlersMtx.Unlock()
 			}
 		}
-		log.Warn("Crawler Watcher has been Closed.")
-	}()
+		_ = stream.Close(nil)
+	}
+
 }
+

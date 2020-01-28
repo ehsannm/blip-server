@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -37,7 +39,7 @@ func DropAll() error {
 }
 
 // Save insert the crawler 'c' into the database
-func Save(c Crawler) (primitive.ObjectID, error) {
+func Save(c *Crawler) (primitive.ObjectID, error) {
 	res, err := crawlerCol.InsertOne(nil, c, options.InsertOne())
 	if err != nil {
 		return primitive.NilObjectID, err
@@ -67,6 +69,48 @@ func GetAll() []*Crawler {
 	return list
 }
 
+func Search(keyword string, resChan chan<- *SearchResponse, doneChan chan<- struct{}) {
+	crawlers := getRegisteredCrawlers()
+	defer putRegisteredCrawlers(crawlers)
+
+	waitGroup := sync.WaitGroup{}
+	for _, c := range crawlers {
+		waitGroup.Add(1)
+		go func(c *Crawler) {
+			defer waitGroup.Done()
+			res, err := c.SendRequest(keyword)
+			if err != nil {
+				log.Warn("Error On Crawler Request",
+					zap.Error(err),
+					zap.String("CrawlerUrl", c.Url),
+					zap.String("Keyword", keyword),
+				)
+				return
+			}
+			resChan <- res
+		}(c)
+	}
+	waitGroup.Wait()
+	doneChan <- struct{}{}
+}
+func getRegisteredCrawlers() []*Crawler {
+	list, ok := registeredCrawlersPool.Get().([]*Crawler)
+	if ok {
+		return list
+	}
+	list = make([]*Crawler, 0, len(registeredCrawlers))
+	registeredCrawlersMtx.RLock()
+	for _, crawlers := range registeredCrawlers {
+		idx := ronak.RandomInt(len(crawlers))
+		list = append(list, crawlers[idx])
+	}
+	registeredCrawlersMtx.RUnlock()
+	return list
+}
+func putRegisteredCrawlers(list []*Crawler) {
+	registeredCrawlersPool.Put(list)
+}
+
 // Crawler
 type Crawler struct {
 	httpClient  http.Client `bson:"-"`
@@ -76,7 +120,7 @@ type Crawler struct {
 	Source      string      `bson:"source"`
 }
 
-func (c *Crawler) SendRequest(reqID string, keyword string) (*SearchResponse, error) {
+func (c *Crawler) SendRequest(keyword string) (*SearchResponse, error) {
 	c.httpClient.Timeout = config.HttpRequestTimeout
 	req := SearchRequest{
 		Keyword: keyword,
