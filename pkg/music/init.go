@@ -9,9 +9,9 @@ import (
 	"github.com/blevesearch/bleve/mapping"
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
-	"gopkg.in/mgo.v2/bson"
 	"path/filepath"
 	"time"
 )

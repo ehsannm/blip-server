@@ -39,5 +39,4 @@ require (
 	go.mongodb.org/mongo-driver v1.2.1
 	go.uber.org/zap v1.10.0
 	google.golang.org/grpc v1.22.1
-	gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce
 )

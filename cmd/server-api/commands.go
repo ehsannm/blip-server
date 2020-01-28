@@ -9,7 +9,7 @@ import (
 	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"gopkg.in/mgo.v2/bson"
+	"go.mongodb.org/mongo-driver/bson"
 	"time"
 )
 
