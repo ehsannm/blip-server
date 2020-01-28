@@ -12,6 +12,7 @@ build:
   image: registry.ronaksoftware.com/base/docker/golang:1.13.1
   script:
     - cd $CI_PROJECT_DIR
+    - go generate ./...
     - bash ci-build.sh
   artifacts:
     untracked: true

@@ -25,7 +25,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	vasLogCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColLogVas)
+	vasLogCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColLogVas)
 }
 
 

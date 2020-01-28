@@ -24,9 +24,9 @@ var (
 )
 
 func init() {
-	config.Set(config.ConfVasSabaServiceName, "musicchi")
-	config.Set(config.ConfVasSabaServiceToken, "65rejoptjb")
-	config.Set(config.ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com")
+	config.Set(config.VasSabaServiceName, "musicchi")
+	config.Set(config.VasSabaServiceToken, "65rejoptjb")
+	config.Set(config.VasSabaServiceBaseUrl, "http://api.sabaeco.com")
 	saba.Init()
 }
 

@@ -30,7 +30,7 @@ type Token struct {
 }
 
 func InitMongo(c *mongo.Client) {
-	tokenCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColToken)
+	tokenCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColToken)
 }
 
 var mtxLock sync.RWMutex

@@ -31,9 +31,9 @@ var (
 )
 
 func Init() {
-	baseUrl = strings.TrimRight(config.GetString(config.ConfVasSabaServiceBaseUrl), "/")
-	serviceName = config.GetString(config.ConfVasSabaServiceName)
-	serviceToken = config.GetString(config.ConfVasSabaServiceToken)
+	baseUrl = strings.TrimRight(config.GetString(config.VasSabaServiceBaseUrl), "/")
+	serviceName = config.GetString(config.VasSabaServiceName)
+	serviceToken = config.GetString(config.VasSabaServiceToken)
 }
 
 func Subscribe(phone string) (*SubscribeResponse, error) {
@@ -138,9 +138,9 @@ func SendMessage(phone, message string) (*SendSmsResponse, error) {
 	v.Set("message", message)
 
 	httpResp, err := c.Get(fmt.Sprintf("%s/v2/send/%s/%s/%s?%s",
-		viper.GetString(config.ConfVasSabaServiceBaseUrl),
-		viper.GetString(config.ConfVasSabaServiceName),
-		viper.GetString(config.ConfVasSabaServiceToken),
+		viper.GetString(config.VasSabaServiceBaseUrl),
+		viper.GetString(config.VasSabaServiceName),
+		viper.GetString(config.VasSabaServiceToken),
 		phone, v.Encode(),
 	))
 	if err != nil {

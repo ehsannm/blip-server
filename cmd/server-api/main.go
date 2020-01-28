@@ -16,7 +16,6 @@ import (
 	"go.uber.org/zap/zapcore"
 
 	"github.com/kataras/iris"
-	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -28,12 +27,12 @@ var (
 )
 
 func init() {
-	log.InitLogger(zapcore.Level(config.GetInt(config.ConfLogLevel)), "")
+	log.InitLogger(zapcore.Level(config.GetInt(config.LogLevel)), "")
 
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(
 		nil,
-		options.Client().ApplyURI(viper.GetString(config.ConfMongoUrl)),
+		options.Client().ApplyURI(viper.GetString(config.MongoUrl)),
 	); err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
 	} else {
@@ -47,8 +46,8 @@ func init() {
 
 	// Initialize RedisCache
 	redisConfig := ronak.DefaultRedisConfig
-	redisConfig.Host = viper.GetString(config.ConfRedisUrl)
-	redisConfig.Password = viper.GetString(config.ConfRedisPass)
+	redisConfig.Host = viper.GetString(config.RedisUrl)
+	redisConfig.Password = viper.GetString(config.RedisPass)
 	redisCache := ronak.NewRedisCache(redisConfig)
 	auth.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
@@ -100,12 +99,3 @@ func main() {
 	_ = Root.Execute()
 }
 
-var Root = &cobra.Command{
-	Run: func(cmd *cobra.Command, args []string) {
-		app := initServer()
-		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
-		if err != nil {
-			log.Warn(err.Error())
-		}
-	},
-}

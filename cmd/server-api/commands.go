@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	"github.com/kataras/iris"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"time"
@@ -18,10 +20,21 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+var Root = &cobra.Command{
+	Run: func(cmd *cobra.Command, args []string) {
+		app := initServer()
+		err := app.Run(iris.Addr(":80"), iris.WithOptimizations)
+		if err != nil {
+			log.Warn(err.Error())
+		}
+	},
+}
+
+
 var InitDB = &cobra.Command{
 	Use: "initDB",
 	Run: func(cmd *cobra.Command, args []string) {
-		c := _Mongo.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColAuth)
+		c := _Mongo.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
 		_, err := c.InsertOne(nil, auth.Auth{
 			ID:          "ROOT",
 			Permissions: []auth.Permission{auth.Admin},
@@ -33,3 +46,4 @@ var InitDB = &cobra.Command{
 		}
 	},
 }
+

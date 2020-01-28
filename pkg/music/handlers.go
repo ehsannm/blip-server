@@ -47,6 +47,10 @@ func SearchBySound(ctx iris.Context) {
 
 	foundMusic, err := acr.IdentifyByByteString(soundBytes)
 	if err != nil {
+		log.Warn("Error On SearchBySound",
+			zap.Error(err),
+			zap.String("SessionID", ctx.GetHeader(session.HdrSessionID)),
+		)
 		msg.Error(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
 		return
 	}

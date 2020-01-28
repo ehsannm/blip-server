@@ -14,6 +14,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+//go:generate easyjson
+
 // easyjson:json
 type ResponseEnvelope struct {
 	Constructor string      `json:"constructor"`

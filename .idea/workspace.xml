@@ -2,17 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/music/proxy.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitlab-ci.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.gitlab-ci.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/commands.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/commands.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/acr/acr.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/acr.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/crawler/crawler.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/crawler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/shared/constants.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/shared/vars.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/errors.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/build-json.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/envelope.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/envelope.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/music.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/music.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/token.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/token.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/user/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

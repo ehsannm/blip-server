@@ -24,7 +24,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	userCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColUser)
+	userCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColUser)
 }
 
 func InitRedisCache(c *ronak.RedisCache) {

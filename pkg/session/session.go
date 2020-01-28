@@ -23,7 +23,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	sessionCol = c.Database(viper.GetString(config.ConfMongoDB)).Collection(config.ColSession)
+	sessionCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSession)
 }
 
 type Session struct {

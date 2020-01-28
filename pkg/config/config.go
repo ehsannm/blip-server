@@ -15,22 +15,25 @@ import (
 */
 
 const (
-	ConfLogLevel            = "LOG_LEVEL"
-	ConfMongoUrl            = "MONGO_URL"
-	ConfMongoDB             = "MONGO_DB"
-	ConfMongoRequestTimeout = "MONGO_REQUEST_TIMEOUT"
-	ConfRedisUrl            = "REDIS_URL"
-	ConfRedisPass           = "REDIS_PASS"
+	LogLevel  = "LOG_LEVEL"
+	MongoUrl  = "MONGO_URL"
+	MongoDB   = "MONGO_DB"
+	RedisUrl  = "REDIS_URL"
+	RedisPass = "REDIS_PASS"
 
 	// VAS Saba Configs
-	ConfVasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
-	ConfVasSabaServiceName    = "VAS_SABA_SERVICE_NAME"
-	ConfVasSabaServiceToken   = "VAS_SABA_SERVICE_TOKEN"
+	VasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
+	VasSabaServiceName    = "VAS_SABA_SERVICE_NAME"
+	VasSabaServiceToken   = "VAS_SABA_SERVICE_TOKEN"
 
 	// ACR Configs
-	ConfACRAccessKey    = "ACR_ACCESS_KEY"
-	ConfACRAccessSecret = "ACR_ACCESS_SECRET"
-	ConfACRBaseUrl      = "ACR_BASE_URL"
+	ACRAccessKey    = "ACR_ACCESS_KEY"
+	ACRAccessSecret = "ACR_ACCESS_SECRET"
+	ACRBaseUrl      = "ACR_BASE_URL"
+
+	// Crawler Configs
+	CrawlerUrl       = "CRAWLER_URL"
+	CrawlerAccessKey = "CRAWLER_ACCESS_KEY"
 
 	// Sms Configs
 	SmsADPUrl   = "SMS_ADP_URL"
@@ -48,18 +51,18 @@ func init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
-	pflag.Int(ConfLogLevel, 0, "")
-	pflag.String(ConfMongoUrl, "mongodb://localhost:27017", "")
-	pflag.String(ConfMongoDB, "blip", "")
-	pflag.String(ConfRedisUrl, "localhost:6379", "")
-	pflag.String(ConfRedisPass, "ehsan2374", "")
-	pflag.String(ConfVasSabaServiceName, "test", "")
-	pflag.String(ConfVasSabaServiceToken, "stuimxfhyy", "")
-	pflag.String(ConfVasSabaServiceBaseUrl, "http://api.sabaeco.com", "")
+	pflag.Int(LogLevel, 0, "")
+	pflag.String(MongoUrl, "mongodb://localhost:27017", "")
+	pflag.String(MongoDB, "blip", "")
+	pflag.String(RedisUrl, "localhost:6379", "")
+	pflag.String(RedisPass, "ehsan2374", "")
+	pflag.String(VasSabaServiceName, "test", "")
+	pflag.String(VasSabaServiceToken, "stuimxfhyy", "")
+	pflag.String(VasSabaServiceBaseUrl, "http://api.sabaeco.com", "")
 
-	pflag.String(ConfACRBaseUrl, "http://identify-eu-west-1.acrcloud.com", "")
-	pflag.String(ConfACRAccessKey, "7f808c9dcbb700bf7018ffc92c49ff93", "")
-	pflag.String(ConfACRAccessSecret, "EpbFGBwZcFtDUH4OSxPMj6247nb5WIy6yaTbIOiq", "")
+	pflag.String(ACRBaseUrl, "http://identify-eu-west-1.acrcloud.com", "")
+	pflag.String(ACRAccessKey, "7f808c9dcbb700bf7018ffc92c49ff93", "")
+	pflag.String(ACRAccessSecret, "EpbFGBwZcFtDUH4OSxPMj6247nb5WIy6yaTbIOiq", "")
 
 	pflag.String(SmsADPUrl, "https://ws.adpdigital.com/url/send", "")
 	pflag.String(SmsAdpUser, "ronak", "")

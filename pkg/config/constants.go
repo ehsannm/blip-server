@@ -18,6 +18,7 @@ const (
 	ColUser    = "user"
 	ColSession = "session"
 	ColLogVas  = "log.vas"
+	ColSong    = "song"
 )
 
 // Redis Keys

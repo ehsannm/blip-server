@@ -35,9 +35,9 @@ var (
 )
 
 func Init() {
-	baseUrl = config.GetString(config.ConfACRBaseUrl)
-	accessKey = config.GetString(config.ConfACRAccessKey)
-	accessSecret = config.GetString(config.ConfACRAccessSecret)
+	baseUrl = config.GetString(config.ACRBaseUrl)
+	accessKey = config.GetString(config.ACRAccessKey)
+	accessSecret = config.GetString(config.ACRAccessSecret)
 }
 
 func IdentifyByFile(fileAddr string) (*Music, error) {
