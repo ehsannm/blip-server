@@ -19,6 +19,7 @@ const (
 	ColSession = "session"
 	ColLogVas  = "log.vas"
 	ColSong    = "song"
+	ColCrawler = "crawler"
 )
 
 // Redis Keys

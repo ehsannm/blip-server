@@ -30,7 +30,6 @@ var Root = &cobra.Command{
 	},
 }
 
-
 var InitDB = &cobra.Command{
 	Use: "initDB",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -46,4 +45,3 @@ var InitDB = &cobra.Command{
 		}
 	},
 }
-

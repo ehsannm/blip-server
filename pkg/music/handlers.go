@@ -55,9 +55,11 @@ func SearchBySound(ctx iris.Context) {
 		return
 	}
 
+	// TODO: We must do the following steps
+	// #1. Search Local Database for musics and return a result with with a cursorID to the client
+	// #2. For each crawler send search request
+	// #3. Create an in memory object holding information about pending request
 	for _, m := range foundMusic.Metadata.Music {
 		_ = m
 	}
-
-	// TODO:: complete this
 }

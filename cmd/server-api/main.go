@@ -98,4 +98,3 @@ func main() {
 	Root.AddCommand(InitDB)
 	_ = Root.Execute()
 }
-

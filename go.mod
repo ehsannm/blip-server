@@ -4,6 +4,7 @@ go 1.12
 
 require (
 	git.ronaksoftware.com/ronak/toolbox v1.1.3
+	github.com/DataDog/zstd v1.4.4 // indirect
 	github.com/c-bata/go-prompt v0.2.3
 	github.com/dgraph-io/dgo v0.0.0-20190719212137-f244ef658cc5
 	github.com/getsentry/sentry-go v0.3.0
@@ -27,7 +28,7 @@ require (
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
-	go.mongodb.org/mongo-driver v1.1.1
+	go.mongodb.org/mongo-driver v1.2.1
 	go.uber.org/zap v1.10.0
 	google.golang.org/grpc v1.22.1
 )

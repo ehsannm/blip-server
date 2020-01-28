@@ -28,7 +28,6 @@ func InitMongo(c *mongo.Client) {
 	vasLogCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColLogVas)
 }
 
-
 var writeToDB = ronak.NewLifoFlusher(1000, 5, time.Millisecond*500, func(items []ronak.FlusherEntry) {
 	docs := make([]interface{}, 0, len(items))
 	for idx := range items {

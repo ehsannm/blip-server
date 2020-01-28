@@ -22,8 +22,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
-
 type mciNotificationParams struct {
 	CustomerNumber string `bson:"number"`
 	Status         string `bson:"status"`
@@ -145,7 +143,6 @@ func unsubscribe(params *mciNotificationParams) {
 		)
 	}
 }
-
 
 func MCIMo(ctx iris.Context) {
 	customerNumber := ctx.URLParam("msisdn")
