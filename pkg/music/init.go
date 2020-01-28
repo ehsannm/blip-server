@@ -23,7 +23,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-//go:generate easyjson
+//go:generate rm -f *_easyjson.go
+//go:generate easyjson song.go
 var (
 	songIndex  bleve.Index
 	songCol    *mongo.Collection

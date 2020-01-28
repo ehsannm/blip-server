@@ -14,7 +14,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-//go:generate easyjson
+//go:generate rm -f *_easyjson.go
+//go:generate easyjson envelope.go
 
 // easyjson:json
 type ResponseEnvelope struct {

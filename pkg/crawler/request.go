@@ -18,13 +18,13 @@ import (
 */
 
 // easyjson:json
-type searchRequest struct {
+type SearchRequest struct {
 	RequestID string `json:"req_id"`
 	Keyword   string `json:"keyword"`
 }
 
 // easyjson:json
-type searchResponse struct {
+type SearchResponse struct {
 	RequestID string `json:"req_id"`
 	Sources   string `json:"source"`
 	Result    struct {
@@ -47,7 +47,7 @@ func Search(keyword string) (string, error) {
 	for _, c := range crawlers {
 		waitGroup.Add(1)
 		go func(c *Crawler) {
-			_ = c.SendRequest(keyword)
+			// _ = c.SendRequest(keyword)
 			waitGroup.Done()
 		}(c)
 	}

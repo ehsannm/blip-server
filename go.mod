@@ -32,6 +32,7 @@ require (
 	github.com/spf13/viper v1.3.2
 	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
 	github.com/tidwall/pretty v1.0.0 // indirect
+	github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect

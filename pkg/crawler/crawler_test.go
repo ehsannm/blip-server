@@ -5,7 +5,12 @@ import (
 	testEnv "git.ronaksoftware.com/blip/server/pkg"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/valyala/tcplisten"
+	"io/ioutil"
+	"net/http"
+	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 /*
@@ -21,11 +26,50 @@ func init() {
 	testEnv.Init()
 }
 
+type mockCrawler struct{}
+
+func (m mockCrawler) ServeHTTP(httpRes http.ResponseWriter, httpReq *http.Request) {
+	reqData, _ := ioutil.ReadAll(httpReq.Body)
+	req := crawler.SearchRequest{}
+	_ = req.UnmarshalJSON(reqData)
+
+	res := crawler.SearchResponse{
+		RequestID: req.RequestID,
+		Sources:   "Source 01",
+		Result: struct {
+			SongUrl  string `json:"song_url"`
+			CoverUrl string `json:"cover_url"`
+			Lyrics   string `json:"lyrics,omitempty"`
+			Artists  string `json:"artists"`
+			Title    string `json:"title"`
+			Genre    string `json:"genre"`
+		}{
+			SongUrl:  "http://url.com",
+			CoverUrl: "http://cover-url.com",
+			Lyrics:   "This is some lyrics text",
+			Artists:  "Some Famous Artist",
+			Title:    req.Keyword,
+			Genre:    "Rock",
+		},
+	}
+
+	resData, _ := res.MarshalJSON()
+	httpRes.Write(resData)
+}
+
+func initMockCrawler(port int) {
+	s := httptest.NewUnstartedServer(mockCrawler{})
+	tcpConfig := tcplisten.Config{}
+	s.Listener, _ = tcpConfig.NewListener("tcp4", ":8080")
+	s.Start()
+
+}
+
 func TestCrawler(t *testing.T) {
 	Convey("Crawler Functionality", t, func() {
 		Convey("DropAll", func(c C) {
 			err := crawler.DropAll()
-			So(err, ShouldBeNil)
+			c.So(err, ShouldBeNil)
 		})
 		Convey("Set and Get", func(c C) {
 			for i := 0; i < 10; i++ {
@@ -35,19 +79,32 @@ func TestCrawler(t *testing.T) {
 					Description: fmt.Sprintf("Description for Crawler %d", i),
 					Source:      fmt.Sprintf("Source %d", i%3),
 				})
-				So(err, ShouldBeNil)
+				c.So(err, ShouldBeNil)
 				crawlerX, err := crawler.Get(crawlerID)
-				So(err, ShouldBeNil)
-				So(crawlerX, ShouldNotBeNil)
-				So(crawlerX.Url, ShouldEqual, fmt.Sprintf("http://crawler%d.com/some_text", i))
-				So(crawlerX.Source, ShouldEqual, fmt.Sprintf("Source %d", i%3))
+				c.So(err, ShouldBeNil)
+				c.So(crawlerX, ShouldNotBeNil)
+				c.So(crawlerX.Url, ShouldEqual, fmt.Sprintf("http://crawler%d.com/some_text", i))
+				c.So(crawlerX.Source, ShouldEqual, fmt.Sprintf("Source %d", i%3))
 			}
 		})
 		Convey("GetAll", func(c C) {
-			crawlers, err := crawler.GetAll()
-			So(err, ShouldBeNil)
-			So(crawlers, ShouldNotBeNil)
-			So(crawlers, ShouldHaveLength, 10)
+			time.Sleep(time.Second)
+			crawlers := crawler.GetAll()
+			c.So(crawlers, ShouldNotBeNil)
+			c.So(crawlers, ShouldHaveLength, 10)
+		})
+		Convey("Send Request", func(c C) {
+			initMockCrawler(8080)
+			time.Sleep(time.Second)
+			crawlerX := crawler.Crawler{
+				Url:         "http://localhost:8080",
+				Name:        "Mock Crawler",
+				Description: "This is a mock crawler",
+				Source:      "S01",
+			}
+			res, err := crawlerX.SendRequest("", "Text")
+			c.So(err, ShouldBeNil)
+			c.So(res.Result.Title, ShouldEqual, "Text")
 		})
 	})
 }

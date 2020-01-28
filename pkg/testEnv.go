@@ -1,6 +1,7 @@
 package testEnv
 
 import (
+	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
@@ -23,13 +24,14 @@ import (
 */
 
 func Init() {
+	log.InitLogger(log.DebugLevel, "")
 	config.Set(config.MongoUrl, "mongodb://localhost:27017")
 	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
 	config.Set(config.LogLevel, log.DebugLevel)
 	config.Set(config.SongsIndexDir, "./_hdd")
 
-	os.MkdirAll(config.GetString(config.SongsIndexDir), os.ModePerm)
+	_ = os.MkdirAll(config.GetString(config.SongsIndexDir), os.ModePerm)
 
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
@@ -51,7 +53,8 @@ func Init() {
 	music.InitRedisCache(redisCache)
 
 	// Initialize Modules
-	log.InitLogger(log.DebugLevel, "")
+	crawler.Init()
+	fmt.Println("HERE")
 	music.Init()
 
 }

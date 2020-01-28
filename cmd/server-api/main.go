@@ -4,7 +4,6 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -87,9 +86,6 @@ func initServer() *iris.Application {
 	vasParty := app.Party("/vas")
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
-
-	crawlerParty := app.Party("/crawler")
-	crawlerParty.Post("/search_result", crawler.SearchResult)
 
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")

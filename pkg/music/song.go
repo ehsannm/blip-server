@@ -30,10 +30,12 @@ type Song struct {
 	Source         string             `bson:"source" json:"-"`
 }
 
+// DropAllSongs drop all the songs from the database
 func DropAllSongs() error {
 	return songCol.Drop(nil)
 }
 
+// SaveSong saves/replaces the song 's' to the database
 func SaveSong(s *Song) (primitive.ObjectID, error) {
 	s.ID = primitive.NewObjectID()
 	_, err := songCol.InsertOne(nil, s, options.InsertOne())
