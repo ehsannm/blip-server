@@ -63,3 +63,11 @@ func SearchBySound(ctx iris.Context) {
 		_ = m
 	}
 }
+
+func SearchByCursor(ctx iris.Context) {
+	// TODO:: implement it
+}
+
+func Download(ctx iris.Context) {
+	// TODO:: implement it
+}

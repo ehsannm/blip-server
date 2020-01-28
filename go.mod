@@ -5,8 +5,14 @@ go 1.12
 require (
 	git.ronaksoftware.com/ronak/toolbox v1.1.3
 	github.com/DataDog/zstd v1.4.4 // indirect
+	github.com/RoaringBitmap/roaring v0.4.21 // indirect
+	github.com/blevesearch/bleve v0.8.1
+	github.com/blevesearch/go-porterstemmer v1.0.2 // indirect
+	github.com/blevesearch/segment v0.0.0-20160915185041-762005e7a34f // indirect
 	github.com/c-bata/go-prompt v0.2.3
+	github.com/couchbase/vellum v0.0.0-20190829182332-ef2e028c01fd // indirect
 	github.com/dgraph-io/dgo v0.0.0-20190719212137-f244ef658cc5
+	github.com/etcd-io/bbolt v1.3.3 // indirect
 	github.com/getsentry/sentry-go v0.3.0
 	github.com/gobwas/pool v0.2.0
 	github.com/golang/protobuf v1.3.2 // indirect
@@ -24,6 +30,7 @@ require (
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.3
 	github.com/spf13/viper v1.3.2
+	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
 	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect

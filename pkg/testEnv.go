@@ -10,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"os"
 )
 
 /*
@@ -26,6 +27,9 @@ func Init() {
 	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
 	config.Set(config.LogLevel, log.DebugLevel)
+	config.Set(config.SongsIndexDir, "./_hdd")
+
+	os.MkdirAll(config.GetString(config.SongsIndexDir), os.ModePerm)
 
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
@@ -45,5 +49,9 @@ func Init() {
 	redisCache := ronak.NewRedisCache(redisConfig)
 	crawler.InitRedisCache(redisCache)
 	music.InitRedisCache(redisCache)
+
+	// Initialize Modules
+	log.InitLogger(log.DebugLevel, "")
+	music.Init()
 
 }

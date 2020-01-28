@@ -37,6 +37,25 @@ type searchResponse struct {
 	} `json:"result"`
 }
 
+
+func Search(keyword string) (string, error) {
+	reqID := getNextRequestID()
+	crawlers := getRegisteredCrawlers()
+	defer putRegisteredCrawlers(crawlers)
+
+	waitGroup := sync.WaitGroup{}
+
+	for _, c := range crawlers {
+		waitGroup.Add(1)
+		go func(c *Crawler) {
+			_ = c.SendRequest(keyword)
+			waitGroup.Done()
+		}(c)
+	}
+	redisCache.Do(radix.FlatCmd(nil, "HMSET", reqID, map[string]interface{}{}))
+
+	return reqID, nil
+}
 func getNextRequestID() string {
 	return fmt.Sprintf("%s.%s", config.ServerID, ronak.RandomID(32))
 }
@@ -56,23 +75,4 @@ func getRegisteredCrawlers() []*Crawler {
 }
 func putRegisteredCrawlers(list []*Crawler) {
 	registeredCrawlersPool.Put(list)
-}
-
-func Search(keyword string) (string, error) {
-	reqID := getNextRequestID()
-	crawlers := getRegisteredCrawlers()
-	defer putRegisteredCrawlers(crawlers)
-
-	waitGroup := sync.WaitGroup{}
-
-	for _, c := range crawlers {
-		waitGroup.Add(1)
-		go func(c *Crawler) {
-			_ = c.SendRequest(keyword)
-			waitGroup.Done()
-		}(c)
-	}
-	redisCache.Do(radix.FlatCmd(nil, "HMSET", reqID, map[string]interface{}{}))
-
-	return reqID, nil
 }

@@ -22,6 +22,7 @@ const (
 	RedisPass      = "REDIS_PASS"
 	MagicPhone     = "MAGIC_PHONE"
 	MagicPhoneCode = "MAGIC_PHONE_CODE"
+	SongsIndexDir  = "SONGS_INDEX_DIR"
 
 	// VAS Saba Configs
 	VasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
@@ -56,6 +57,8 @@ func init() {
 	pflag.String(RedisPass, "ehsan2374", "")
 	pflag.String(MagicPhone, "2374002374", "")
 	pflag.String(MagicPhoneCode, "2374", "")
+	pflag.String(SongsIndexDir, ".", "")
+
 	pflag.String(VasSabaServiceName, "test", "")
 	pflag.String(VasSabaServiceToken, "stuimxfhyy", "")
 	pflag.String(VasSabaServiceBaseUrl, "http://api.sabaeco.com", "")
