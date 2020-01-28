@@ -11,7 +11,9 @@ import (
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
+	"gopkg.in/mgo.v2/bson"
 	"path/filepath"
+	"time"
 )
 
 /*
@@ -24,7 +26,7 @@ import (
 */
 
 //go:generate rm -f *_easyjson.go
-//go:generate easyjson song.go
+//go:generate easyjson song.go messages.go
 var (
 	songIndex  bleve.Index
 	songCol    *mongo.Collection
@@ -40,6 +42,12 @@ func InitRedisCache(c *ronak.RedisCache) {
 }
 
 func Init() {
+	initializeIndex()
+	updateIndex()
+	go watchForSongs()
+
+}
+func initializeIndex() {
 	path := filepath.Join(config.GetString(config.SongsIndexDir), "songs")
 	if index, err := bleve.Open(path); err != nil {
 		switch err {
@@ -63,6 +71,41 @@ func Init() {
 	} else {
 		songIndex = index
 	}
+}
+func updateIndex() {
+	log.Info("Indexing songs, this may take time ...")
+	cur, err := songCol.Find(nil, bson.D{})
+	if err != nil {
+		log.Fatal("Error On Initializing Music", zap.Error(err))
+	}
+	for cur.Next(nil) {
+		songX := &Song{}
+		err = cur.Decode(songX)
+		if err == nil {
+			err = songIndex.Index(songX.ID.Hex(), songX)
+			log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
+		}
+	}
+	log.Info("Indexing songs done!.")
+}
+func watchForSongs() {
+	for {
+		stream, err := songCol.Watch(nil, mongo.Pipeline{})
+		if err != nil {
+			log.Warn("Error On Watch Stream for Songs", zap.Error(err))
+			time.Sleep(time.Second)
+			continue
+		}
+		for stream.Next(nil) {
+			songX := &Song{}
+			err = stream.Decode(songX)
+			if err == nil {
+				_ = songIndex.Index(songX.ID.Hex(), songX)
+			}
+		}
+		_ = stream.Close(nil)
+	}
+
 }
 
 func indexMapForSongs() (mapping.IndexMapping, error) {

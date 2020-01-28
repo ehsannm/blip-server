@@ -17,6 +17,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+//go:generate rm -f *_easyjson.go
+//go:generate easyjson messages.go
 func init() {
 	authCache = make(map[string]Auth, 100000)
 	smsProvider = sms.NewPayamak(

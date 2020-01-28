@@ -51,7 +51,7 @@ func TestSong(t *testing.T) {
 			}
 		})
 		Convey("Search", func(c C) {
-			songIDs, err := music.SearchIndex("song")
+			songIDs, err := music.SearchLocalIndex("song")
 			c.So(err, ShouldBeNil)
 			for _, songID := range songIDs {
 				_, _ = c.Println(songID.Hex())

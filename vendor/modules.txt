@@ -3,8 +3,12 @@ git.ronaksoftware.com/ronak/toolbox
 git.ronaksoftware.com/ronak/toolbox/logger
 # github.com/BurntSushi/toml v0.3.1
 github.com/BurntSushi/toml
+# github.com/DataDog/zstd v1.4.4
+github.com/DataDog/zstd
 # github.com/Joker/jade v1.0.0
 github.com/Joker/jade
+# github.com/RoaringBitmap/roaring v0.4.21
+github.com/RoaringBitmap/roaring
 # github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398
 github.com/Shopify/goreferrer
 # github.com/ajg/form v1.5.1
@@ -16,19 +20,71 @@ github.com/aymerick/raymond/lexer
 github.com/aymerick/raymond/parser
 # github.com/beorn7/perks v1.0.0
 github.com/beorn7/perks/quantile
+# github.com/blevesearch/bleve v0.8.1
+github.com/blevesearch/bleve
+github.com/blevesearch/bleve/analysis
+github.com/blevesearch/bleve/analysis/analyzer/keyword
+github.com/blevesearch/bleve/analysis/analyzer/standard
+github.com/blevesearch/bleve/analysis/datetime/flexible
+github.com/blevesearch/bleve/analysis/datetime/optional
+github.com/blevesearch/bleve/analysis/lang/en
+github.com/blevesearch/bleve/analysis/token/lowercase
+github.com/blevesearch/bleve/analysis/token/porter
+github.com/blevesearch/bleve/analysis/token/stop
+github.com/blevesearch/bleve/analysis/tokenizer/single
+github.com/blevesearch/bleve/analysis/tokenizer/unicode
+github.com/blevesearch/bleve/document
+github.com/blevesearch/bleve/geo
+github.com/blevesearch/bleve/index
+github.com/blevesearch/bleve/index/scorch
+github.com/blevesearch/bleve/index/scorch/mergeplan
+github.com/blevesearch/bleve/index/scorch/segment
+github.com/blevesearch/bleve/index/scorch/segment/zap
+github.com/blevesearch/bleve/index/store
+github.com/blevesearch/bleve/index/store/boltdb
+github.com/blevesearch/bleve/index/store/gtreap
+github.com/blevesearch/bleve/index/upsidedown
+github.com/blevesearch/bleve/mapping
+github.com/blevesearch/bleve/numeric
+github.com/blevesearch/bleve/registry
+github.com/blevesearch/bleve/search
+github.com/blevesearch/bleve/search/collector
+github.com/blevesearch/bleve/search/facet
+github.com/blevesearch/bleve/search/highlight
+github.com/blevesearch/bleve/search/highlight/format/html
+github.com/blevesearch/bleve/search/highlight/fragmenter/simple
+github.com/blevesearch/bleve/search/highlight/highlighter/html
+github.com/blevesearch/bleve/search/highlight/highlighter/simple
+github.com/blevesearch/bleve/search/query
+github.com/blevesearch/bleve/search/scorer
+github.com/blevesearch/bleve/search/searcher
+github.com/blevesearch/bleve/size
+# github.com/blevesearch/go-porterstemmer v1.0.2
+github.com/blevesearch/go-porterstemmer
+# github.com/blevesearch/segment v0.0.0-20160915185041-762005e7a34f
+github.com/blevesearch/segment
 # github.com/c-bata/go-prompt v0.2.3
 github.com/c-bata/go-prompt
 # github.com/certifi/gocertifi v0.0.0-20190506164543-d2eda7129713
 github.com/certifi/gocertifi
+# github.com/couchbase/vellum v0.0.0-20190829182332-ef2e028c01fd
+github.com/couchbase/vellum
+github.com/couchbase/vellum/levenshtein
+github.com/couchbase/vellum/regexp
+github.com/couchbase/vellum/utf8
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/dgraph-io/dgo v0.0.0-20190719212137-f244ef658cc5
 github.com/dgraph-io/dgo
 github.com/dgraph-io/dgo/protos/api
 github.com/dgraph-io/dgo/y
+# github.com/edsrzf/mmap-go v1.0.0
+github.com/edsrzf/mmap-go
 # github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385
 github.com/eknkc/amber
 github.com/eknkc/amber/parser
+# github.com/etcd-io/bbolt v1.3.3
+github.com/etcd-io/bbolt
 # github.com/fatih/structs v1.1.0
 github.com/fatih/structs
 # github.com/flosch/pongo2 v0.0.0-20190707114632-bbf5a6c351f4
@@ -47,6 +103,8 @@ github.com/globalsign/mgo/bson
 github.com/globalsign/mgo/internal/json
 github.com/globalsign/mgo/internal/sasl
 github.com/globalsign/mgo/internal/scram
+# github.com/glycerine/go-unsnap-stream v0.0.0-20181221182339-f9677308dec2
+github.com/glycerine/go-unsnap-stream
 # github.com/go-stack/stack v1.8.0
 github.com/go-stack/stack
 # github.com/gobwas/pool v0.2.0
@@ -68,7 +126,7 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/snappy
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
-# github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1
+# github.com/gopherjs/gopherjs v0.0.0-20190910122728-9d188e94fb99
 github.com/gopherjs/gopherjs/js
 # github.com/gorilla/schema v1.1.0
 github.com/gorilla/schema
@@ -175,8 +233,12 @@ github.com/modern-go/concurrent
 github.com/modern-go/reflect2
 # github.com/moul/http2curl v1.0.0
 github.com/moul/http2curl
+# github.com/mschoch/smat v0.0.0-20160514031455-90eadee771ae
+github.com/mschoch/smat
 # github.com/pelletier/go-toml v1.2.0
 github.com/pelletier/go-toml
+# github.com/philhofer/fwd v1.0.0
+github.com/philhofer/fwd
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/pkg/term v0.0.0-20190109203006-aa71e9d9e942
@@ -227,9 +289,17 @@ github.com/spf13/jwalterweatherman
 github.com/spf13/pflag
 # github.com/spf13/viper v1.3.2
 github.com/spf13/viper
+# github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2
+github.com/steveyen/gtreap
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
+# github.com/tinylib/msgp v1.1.0
+github.com/tinylib/msgp/msgp
+# github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a
+github.com/valyala/tcplisten
+# github.com/willf/bitset v1.1.10
+github.com/willf/bitset
 # github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c
 github.com/xdg/scram
 # github.com/xdg/stringprep v1.0.0
@@ -247,9 +317,10 @@ github.com/yudai/gojsondiff
 github.com/yudai/gojsondiff/formatter
 # github.com/yudai/golcs v0.0.0-20170316035057-ecda9a501e82
 github.com/yudai/golcs
-# go.mongodb.org/mongo-driver v1.1.1
+# go.mongodb.org/mongo-driver v1.2.1
 go.mongodb.org/mongo-driver/bson
 go.mongodb.org/mongo-driver/bson/bsoncodec
+go.mongodb.org/mongo-driver/bson/bsonoptions
 go.mongodb.org/mongo-driver/bson/bsonrw
 go.mongodb.org/mongo-driver/bson/bsontype
 go.mongodb.org/mongo-driver/bson/primitive
@@ -271,6 +342,8 @@ go.mongodb.org/mongo-driver/x/mongo/driver/auth/internal/gssapi
 go.mongodb.org/mongo-driver/x/mongo/driver/connstring
 go.mongodb.org/mongo-driver/x/mongo/driver/description
 go.mongodb.org/mongo-driver/x/mongo/driver/dns
+go.mongodb.org/mongo-driver/x/mongo/driver/mongocrypt
+go.mongodb.org/mongo-driver/x/mongo/driver/mongocrypt/options
 go.mongodb.org/mongo-driver/x/mongo/driver/operation
 go.mongodb.org/mongo-driver/x/mongo/driver/session
 go.mongodb.org/mongo-driver/x/mongo/driver/topology
@@ -305,6 +378,7 @@ golang.org/x/net/trace
 golang.org/x/sync/semaphore
 # golang.org/x/sys v0.0.0-20190813064441-fde4db37ae7a
 golang.org/x/sys/unix
+golang.org/x/sys/windows
 # golang.org/x/text v0.3.0
 golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
@@ -348,5 +422,8 @@ google.golang.org/grpc/status
 google.golang.org/grpc/tap
 # gopkg.in/inf.v0 v0.9.1
 gopkg.in/inf.v0
+# gopkg.in/mgo.v2 v2.0.0-20180705113604-9856a29383ce
+gopkg.in/mgo.v2/bson
+gopkg.in/mgo.v2/internal/json
 # gopkg.in/yaml.v2 v2.2.2
 gopkg.in/yaml.v2

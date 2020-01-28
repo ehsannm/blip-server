@@ -14,7 +14,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func SearchIndex(keyword string) ([]primitive.ObjectID, error) {
+func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	searchRequest := bleve.NewSearchRequest(bleve.NewQueryStringQuery(keyword))
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
