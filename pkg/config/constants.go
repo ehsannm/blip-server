@@ -11,13 +11,16 @@ import "time"
    Copyright Ronak Software Group 2018
 */
 
+// MongoDB Collections
 const (
 	ColAuth    = "auth"
 	ColToken   = "token"
 	ColUser    = "user"
 	ColSession = "session"
+	ColLogVas  = "log.vas"
 )
 
+// Redis Keys
 const (
 	RkPhoneCode = "PHONE_CODE"
 )
@@ -25,4 +28,6 @@ const (
 var (
 	RegionCode          = "R01"
 	MongoRequestTimeout = time.Second * 3
+	HttpRequestTimeout  = 30 * time.Second
+	ServerID            = "BLIP-01"
 )

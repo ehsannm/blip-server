@@ -2,7 +2,7 @@ package crawler
 
 import (
 	"fmt"
-	"git.ronaksoftware.com/blip/server/pkg/shared"
+	"git.ronaksoftware.com/blip/server/pkg/config"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
 )
 
@@ -23,7 +23,7 @@ func InitRedisCache(c *ronak.RedisCache) {
 }
 
 func getNextRequestID() string {
-	return fmt.Sprintf("%s.%s", shared.ServerID, ronak.RandomID(32))
+	return fmt.Sprintf("%s.%s", config.ServerID, ronak.RandomID(32))
 }
 
 type searchRequest struct {

@@ -42,6 +42,7 @@ func init() {
 		session.InitMongo(mongoClient)
 		token.InitMongo(mongoClient)
 		user.InitMongo(mongoClient)
+		vas.InitMongo(mongoClient)
 	}
 
 	// Initialize RedisCache

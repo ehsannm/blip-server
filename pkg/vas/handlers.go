@@ -22,13 +22,15 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+
+
 type mciNotificationParams struct {
-	CustomerNumber string
-	Status         string
-	Amount         int
-	ServiceID      string
-	Channel        string
-	DateTime       int
+	CustomerNumber string `bson:"number"`
+	Status         string `bson:"status"`
+	Amount         int    `bson:"amount"`
+	ServiceID      string `bson:"service_id"`
+	Channel        string `bson:"channel"`
+	DateTime       int    `bson:"created_on"`
 }
 
 func MCINotification(ctx iris.Context) {
@@ -44,21 +46,22 @@ func MCINotification(ctx iris.Context) {
 	log.Info("VAS NOTIFICATION RECEIVED",
 		zap.String("Number", params.CustomerNumber),
 		zap.String("Status", params.Status),
-		zap.Int("Amount", params.Amount),
-		zap.String("ServiceID", params.ServiceID),
 		zap.String("Channel", params.Channel),
-		zap.Int("DateTime", params.DateTime),
-		zap.String("ClientIP", ctx.RemoteAddr()),
 	)
+	writeToDB.Enter(nil, params)
 	switch params.Status {
 	case MciNotificationStatusSubscription:
 		subscribe(params)
 	case MciNotificationStatusUnsubscription:
 		unsubscribe(params)
 	case MciNotificationStatusActive:
+		// Some who charged
 	case MciNotificationStatusDeleted:
+		//
 	case MciNotificationStatusFailed:
-	case MciNotificationStatusPosPaid:
+		// Failed could not charge
+	case MciNotificationStatusPostPaid:
+
 	}
 }
 func subscribe(params *mciNotificationParams) {
@@ -143,6 +146,7 @@ func unsubscribe(params *mciNotificationParams) {
 	}
 }
 
+
 func MCIMo(ctx iris.Context) {
 	customerNumber := ctx.URLParam("msisdn")
 	serviceID := ctx.URLParam("serviceId")
@@ -177,7 +181,6 @@ func MCIMo(ctx iris.Context) {
 			zap.String("UserID", u.ID),
 			zap.String("Phone", u.Phone),
 		)
-
 	case "":
 		res, err := saba.SendMessage(customerNumber, EmptyMessage)
 		if err != nil {

@@ -42,6 +42,7 @@ type User struct {
 	VasPaid   bool   `json:"vas_paid" bson:"vas_paid"`
 }
 
+// Save stores the object 'u' in the database, replace the old one if already exists
 func Save(u *User) error {
 	_, err := userCol.UpdateOne(nil, bson.M{"_id": u.ID}, bson.M{"$set": bson.M{
 		"username":   u.Username,
@@ -92,12 +93,14 @@ func deleteFromCache(userID string) {
 	_, _ = redisCache.Del(userID)
 }
 
+// Get returns user identified by 'userID'
 func Get(userID string) (*User, error) {
 	return readFromCache(userID)
 }
 
+// GetByPhone returns user identified by 'phone'
 func GetByPhone(phone string) (*User, error) {
-	user := new(User)
+	user := &User{}
 	res := userCol.FindOne(nil, bson.M{"phone": phone}, options.FindOne().SetMaxTime(config.MongoRequestTimeout))
 	err := res.Decode(user)
 	if err != nil {

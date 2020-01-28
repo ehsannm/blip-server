@@ -15,7 +15,7 @@ const (
 	MciNotificationStatusActive         = "active"
 	MciNotificationStatusFailed         = "failed"
 	MciNotificationStatusDeleted        = "deleted"
-	MciNotificationStatusPosPaid        = "postPaid"
+	MciNotificationStatusPostPaid       = "postPaid"
 )
 
 const (
