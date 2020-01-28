@@ -4,6 +4,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -25,7 +26,7 @@ var (
 	_Mongo *mongo.Client
 )
 
-func init() {
+func initModules() {
 	log.InitLogger(zapcore.Level(config.GetInt(config.LogLevel)), "")
 
 	// Initialize MongoDB
@@ -41,6 +42,8 @@ func init() {
 		token.InitMongo(mongoClient)
 		user.InitMongo(mongoClient)
 		vas.InitMongo(mongoClient)
+		music.InitMongo(mongoClient)
+		crawler.InitMongo(mongoClient)
 	}
 
 	// Initialize RedisCache
@@ -50,12 +53,20 @@ func init() {
 	redisCache := ronak.NewRedisCache(redisConfig)
 	auth.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
+	music.InitRedisCache(redisCache)
+	crawler.InitRedisCache(redisCache)
 
 	// Initialize VAS Saba Service
 	saba.Init()
 
 	// Initialize ACR Sound Identification Service
 	acr.Init()
+
+	// Initialize Music service
+	music.Init()
+
+	// Initialize Crawler service
+	crawler.Init()
 }
 
 func initServer() *iris.Application {
@@ -93,6 +104,8 @@ func initServer() *iris.Application {
 }
 
 func main() {
+	// Initialize all the required modules and packages
+	initModules()
 	Root.AddCommand(InitDB)
 	_ = Root.Execute()
 }
