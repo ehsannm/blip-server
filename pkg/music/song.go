@@ -40,6 +40,10 @@ func SaveSong(s *Song) (primitive.ObjectID, error) {
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
+	err = songIndex.Index(s.ID.Hex(), s)
+	if err != nil {
+		return primitive.NilObjectID, err
+	}
 	return s.ID, nil
 }
 

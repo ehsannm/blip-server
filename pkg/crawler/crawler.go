@@ -79,7 +79,6 @@ func DropAll() error {
 	return crawlerCol.Drop(nil)
 }
 
-
 // Crawler
 type Crawler struct {
 	httpClient  http.Client `bson:"-"`

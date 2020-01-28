@@ -37,7 +37,6 @@ type searchResponse struct {
 	} `json:"result"`
 }
 
-
 func Search(keyword string) (string, error) {
 	reqID := getNextRequestID()
 	crawlers := getRegisteredCrawlers()

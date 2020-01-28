@@ -50,5 +50,12 @@ func TestSong(t *testing.T) {
 				So(songX.Source, ShouldEqual, fmt.Sprintf("Source %d", i%3))
 			}
 		})
+		Convey("Search", func(c C) {
+			songIDs, err := music.SearchIndex("song")
+			c.So(err, ShouldBeNil)
+			for _, songID := range songIDs {
+				_, _ = c.Println(songID.Hex())
+			}
+		})
 	})
 }
