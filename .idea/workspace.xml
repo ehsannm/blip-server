@@ -5,11 +5,10 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.turtle" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.turtle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/_mdb_catalog.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/_mdb_catalog.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/search_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/song.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/song.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/song_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/song_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/collection-4-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/collection-4-1087727616862746752.wt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-5-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-5-1087727616862746752.wt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-6-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-6-1087727616862746752.wt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/sizeStorer.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/sizeStorer.wt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
