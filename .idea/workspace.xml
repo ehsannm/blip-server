@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.turtle" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.turtle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/WiredTiger.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/collection-4-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/collection-4-1087727616862746752.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-5-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-5-1087727616862746752.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-6-1087727616862746752.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/index-6-1087727616862746752.wt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/sizeStorer.wt" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/_hdd/db-mongo/sizeStorer.wt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
