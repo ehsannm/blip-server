@@ -15,11 +15,13 @@ import (
 */
 
 const (
-	LogLevel  = "LOG_LEVEL"
-	MongoUrl  = "MONGO_URL"
-	MongoDB   = "MONGO_DB"
-	RedisUrl  = "REDIS_URL"
-	RedisPass = "REDIS_PASS"
+	LogLevel       = "LOG_LEVEL"
+	MongoUrl       = "MONGO_URL"
+	MongoDB        = "MONGO_DB"
+	RedisUrl       = "REDIS_URL"
+	RedisPass      = "REDIS_PASS"
+	MagicPhone     = "MAGIC_PHONE"
+	MagicPhoneCode = "MAGIC_PHONE_CODE"
 
 	// VAS Saba Configs
 	VasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
@@ -30,10 +32,6 @@ const (
 	ACRAccessKey    = "ACR_ACCESS_KEY"
 	ACRAccessSecret = "ACR_ACCESS_SECRET"
 	ACRBaseUrl      = "ACR_BASE_URL"
-
-	// Crawler Configs
-	CrawlerUrl       = "CRAWLER_URL"
-	CrawlerAccessKey = "CRAWLER_ACCESS_KEY"
 
 	// Sms Configs
 	SmsADPUrl   = "SMS_ADP_URL"
@@ -56,6 +54,8 @@ func init() {
 	pflag.String(MongoDB, "blip", "")
 	pflag.String(RedisUrl, "localhost:6379", "")
 	pflag.String(RedisPass, "ehsan2374", "")
+	pflag.String(MagicPhone, "2374002374", "")
+	pflag.String(MagicPhoneCode, "2374", "")
 	pflag.String(VasSabaServiceName, "test", "")
 	pflag.String(VasSabaServiceToken, "stuimxfhyy", "")
 	pflag.String(VasSabaServiceBaseUrl, "http://api.sabaeco.com", "")

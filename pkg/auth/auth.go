@@ -1,10 +1,8 @@
 package auth
 
 import (
-	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/sms"
 	ronak "git.ronaksoftware.com/ronak/toolbox"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
 )
@@ -24,13 +22,6 @@ var (
 	smsProvider sms.Provider
 )
 
-func InitMongo(c *mongo.Client) {
-	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
-}
-
-func InitRedisCache(c *ronak.RedisCache) {
-	redisCache = c
-}
 
 type Permission byte
 
@@ -52,20 +43,3 @@ type Auth struct {
 var authCache map[string]Auth
 var mtxLock sync.RWMutex
 
-func init() {
-	authCache = make(map[string]Auth, 100000)
-	// smsProvider = sms.NewADP(
-	// 	config.GetString(config.SmsAdpUser),
-	// 	config.GetString(config.SmsAdpPass),
-	// 	config.GetString(config.SmsADPUrl),
-	// 	config.GetString(config.SmsAdpPhone),
-	// 	10,
-	// )
-	smsProvider = sms.NewPayamak(
-		config.GetString(config.SmsPayamakUser),
-		config.GetString(config.SmsPayamakPass),
-		config.GetString(config.SmsPayamakUrl),
-		config.GetString(config.SmsPayamakPhone),
-		10,
-	)
-}

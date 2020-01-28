@@ -38,6 +38,7 @@ var (
 	ErrNoResponseFromSmsServer Item = "NO_RESPONSE_FROM_SMS_PANEL"
 	ErrVasIsNotEnabled         Item = "VAS_IS_DISABLED"
 	ErrUserNotFound            Item = "USER_NOT_FOUND"
+	Err3rdParty                Item = "3RD_PARTY_INVALID_RESPONSE"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {

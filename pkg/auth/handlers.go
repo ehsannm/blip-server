@@ -170,12 +170,18 @@ func CreateAccessKeyHandler(ctx iris.Context) {
 }
 
 func SendCodeHandler(ctx iris.Context) {
-	req := new(SendCodeReq)
+	req := &SendCodeReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
+	if req.Phone != config.GetString(config.MagicPhone) {
+		sendCodeMagicNumber(ctx)
+
+		return
+	}
+
 	if len(req.Phone) < 5 {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
@@ -198,7 +204,6 @@ func SendCodeHandler(ctx iris.Context) {
 	} else {
 		phoneCodeHash = ronak.RandomID(12)
 		switch ctx.Values().GetString(CtxClientName) {
-		case AppNameMahyar:
 		case AppNameMusicChi:
 			if registered && u != nil && u.VasPaid {
 				phoneCode = ronak.RandomDigit(4)
@@ -215,7 +220,8 @@ func SendCodeHandler(ctx iris.Context) {
 				}
 				res, err := saba.Subscribe(req.Phone)
 				if err != nil {
-					msg.Error(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+					log.Warn("Error On Saba Subscribe", zap.Error(err))
+					msg.Error(ctx, http.StatusInternalServerError, msg.Err3rdParty)
 					return
 				}
 				otpID = res.OtpID
@@ -245,9 +251,28 @@ func SendCodeHandler(ctx iris.Context) {
 		Registered:    registered,
 	})
 }
+func sendCodeMagicNumber(ctx iris.Context) {
+	magicPhone := config.GetString(config.MagicPhone)
+	phoneCode := config.GetString(config.MagicPhoneCode)
+	phoneCodeHash := ronak.RandomID(12)
+	err := redisCache.Do(radix.FlatCmd(nil, "SETEX",
+		fmt.Sprintf("%s.%s", config.RkPhoneCode, magicPhone),
+		600,
+		fmt.Sprintf("%s|%s|%s", phoneCodeHash, "", phoneCode),
+	))
+	if err != nil {
+		log.Warn("Error On WriteToCache", zap.Error(err))
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
+		return
+	}
+	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
+		PhoneCodeHash: phoneCodeHash,
+		Registered:    true,
+	})
+}
 
 func LoginHandler(ctx iris.Context) {
-	req := new(LoginReq)
+	req := &LoginReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
@@ -320,7 +345,7 @@ func LoginHandler(ctx iris.Context) {
 }
 
 func RegisterHandler(ctx iris.Context) {
-	req := new(RegisterReq)
+	req := &RegisterReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
@@ -410,7 +435,7 @@ func RegisterHandler(ctx iris.Context) {
 }
 
 func LogoutHandler(ctx iris.Context) {
-	req := new(LogoutReq)
+	req := &LogoutReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
