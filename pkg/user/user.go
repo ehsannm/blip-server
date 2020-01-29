@@ -1,8 +1,9 @@
 package user
 
 import (
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -20,14 +21,14 @@ import (
 
 var (
 	userCol    *mongo.Collection
-	redisCache *ronak.RedisCache
+	redisCache *redis.Cache
 )
 
 func InitMongo(c *mongo.Client) {
 	userCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColUser)
 }
 
-func InitRedisCache(c *ronak.RedisCache) {
+func InitRedisCache(c *redis.Cache) {
 	redisCache = c
 }
 
@@ -67,7 +68,7 @@ func readFromCache(userID string) (*User, error) {
 		if err != nil {
 			return nil, err
 		}
-		_, _ = redisCache.Set(userID, userBytes)
+		_ = redisCache.Set(userID, userBytes)
 		return user, nil
 	}
 
@@ -90,7 +91,7 @@ func readFromDb(userID string) (*User, error) {
 }
 
 func deleteFromCache(userID string) {
-	_, _ = redisCache.Del(userID)
+	_ = redisCache.Del(userID)
 }
 
 // Get returns user identified by 'userID'

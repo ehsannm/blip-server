@@ -181,6 +181,9 @@ func (p *pipeliner) flush(reqs []CmdAction) []CmdAction {
 
 		if err := p.c.Do(pipe); err != nil {
 			for _, req := range reqs {
+				if req == nil {
+					continue
+				}
 				req.(*pipelinerCmd).resCh <- err
 			}
 		}
@@ -222,8 +225,24 @@ func (p pipelinerPipeline) Run(c Conn) error {
 	if err := c.Encode(p); err != nil {
 		return err
 	}
-	for _, req := range p.pipeline {
-		req.(*pipelinerCmd).resCh <- c.Decode(req)
+	errConn := ioErrConn{Conn: c}
+	for i, req := range p.pipeline {
+		err := errConn.Decode(req)
+		// the order here is important: if we tried to send the error to
+		// before returning we could end up sending the error twice, which
+		// could lead to data races when the *pipelinerCmd gets reused.
+		// to avoid this we must return without sending a value, in case
+		// we got a non-recoverable error.
+		if errConn.lastIOErr != nil {
+			return errConn.lastIOErr
+		}
+		req.(*pipelinerCmd).resCh <- err
+		// since the *pipelinerCmd can be pooled and reused right after
+		// we send the response, even before this goroutine returns from
+		// the send operation, we must not access it again. to make sure
+		// that we don't regress anywhere we set it to nil, so that the
+		// runtime will trigger a panic if we try to access cmd again.
+		p.pipeline[i] = nil
 	}
 	return nil
 }

@@ -28,4 +28,3 @@ type SearchResponse struct {
 		Genre    string `json:"genre"`
 	} `json:"result"`
 }
-

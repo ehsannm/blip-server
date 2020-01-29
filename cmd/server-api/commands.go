@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"github.com/kataras/iris"
 	"github.com/spf13/cobra"

@@ -2,8 +2,9 @@ package token
 
 import (
 	"encoding/json"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/kataras/iris"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -36,7 +37,7 @@ func CreateHandler(ctx iris.Context) {
 
 	tokenStartDate := time.Now().Unix()
 	tokenExpireDate := time.Now().Unix() + period*84600
-	token := ronak.RandomID(64)
+	token := tools.RandomID(64)
 	res := make([][]string, 0, 1)
 	_, err := tokenCol.InsertOne(nil, Token{
 		ID:        token,

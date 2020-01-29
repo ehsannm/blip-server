@@ -2,7 +2,8 @@ package main
 
 import (
 	"fmt"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+	"git.ronaksoftware.com/blip/server/internal/tools"
+
 	"github.com/c-bata/go-prompt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -72,11 +73,11 @@ var RootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		accessTokenBytes, err := ioutil.ReadFile(".blip-accessToken")
 		if err == nil {
-			accessToken = ronak.ByteToStr(accessTokenBytes)
+			accessToken = tools.ByteToStr(accessTokenBytes)
 		}
 		sessionIDBytes, err := ioutil.ReadFile(".blip-session")
 		if err == nil {
-			sessionID = ronak.ByteToStr(sessionIDBytes)
+			sessionID = tools.ByteToStr(sessionIDBytes)
 		}
 	},
 }

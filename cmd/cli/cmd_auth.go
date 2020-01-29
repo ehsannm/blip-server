@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/cobra"
 	"net/http"
 )
@@ -32,7 +32,7 @@ var CreateAccessKeyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		req := auth.CreateAccessToken{
-			Period:  ronak.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
+			Period:  tools.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
 			AppName: cmd.Flag(FlagAppName).Value.String(),
 		}
 		if b, _ := cmd.Flags().GetBool(FlagPermRead); b {

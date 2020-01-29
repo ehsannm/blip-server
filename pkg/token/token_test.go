@@ -1,9 +1,9 @@
 package token_test
 
 import (
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/token"
-	log "git.ronaksoftware.com/ronak/toolbox/logger"
 	"github.com/iris-contrib/httpexpect"
 	"github.com/kataras/iris"
 	"github.com/smartystreets/goconvey/convey"

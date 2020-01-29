@@ -1,18 +1,19 @@
 package main
 
 import (
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"go.uber.org/zap/zapcore"
 
 	"github.com/kataras/iris"
@@ -47,10 +48,10 @@ func initModules() {
 	}
 
 	// Initialize RedisCache
-	redisConfig := ronak.DefaultRedisConfig
+	redisConfig := redis.DefaultConfig
 	redisConfig.Host = viper.GetString(config.RedisUrl)
 	redisConfig.Password = viper.GetString(config.RedisPass)
-	redisCache := ronak.NewRedisCache(redisConfig)
+	redisCache := redis.New(redisConfig)
 	auth.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
 	music.InitRedisCache(redisCache)

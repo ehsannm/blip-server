@@ -1,9 +1,10 @@
 package music
 
 import (
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
 	"github.com/blevesearch/bleve/mapping"
@@ -30,14 +31,14 @@ import (
 var (
 	songIndex  bleve.Index
 	songCol    *mongo.Collection
-	redisCache *ronak.RedisCache
+	redisCache *redis.Cache
 )
 
 func InitMongo(c *mongo.Client) {
 	songCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSong)
 }
 
-func InitRedisCache(c *ronak.RedisCache) {
+func InitRedisCache(c *redis.Cache) {
 	redisCache = c
 }
 

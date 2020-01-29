@@ -1,10 +1,12 @@
 package radix
 
 import (
-	"fmt"
 	"net"
 	"sync"
+	"sync/atomic"
 	"time"
+
+	errors "golang.org/x/xerrors"
 )
 
 type sentinelOpts struct {
@@ -79,6 +81,10 @@ type Sentinel struct {
 	// only used by tests to ensure certain actions have happened before
 	// continuing on during the test
 	testEventCh chan string
+
+	// only used by tests to delay updates after event on pconnCh
+	// contains time in milliseconds
+	testSleepBeforeSwitch uint32
 }
 
 // NewSentinel creates and returns a *Sentinel instance. NewSentinel takes in a
@@ -273,13 +279,13 @@ func (sc *Sentinel) Client(addr string) (Client, error) {
 
 // Close implements the method for the Client interface.
 func (sc *Sentinel) Close() error {
-	sc.l.Lock()
-	defer sc.l.Unlock()
 	closeErr := errClientClosed
 	sc.closeOnce.Do(func() {
 		close(sc.closeCh)
 		sc.closeWG.Wait()
 		closeErr = nil
+		sc.l.Lock()
+		defer sc.l.Unlock()
 		for _, client := range sc.clients {
 			if client != nil {
 				client.Close()
@@ -292,7 +298,7 @@ func (sc *Sentinel) Close() error {
 // cmd should be the command called which generated m
 func sentinelMtoAddr(m map[string]string, cmd string) (string, error) {
 	if m["ip"] == "" || m["port"] == "" {
-		return "", fmt.Errorf("malformed %s response", cmd)
+		return "", errors.Errorf("malformed %q response: %#v", cmd, m)
 	}
 	return net.JoinHostPort(m["ip"], m["port"]), nil
 }
@@ -467,9 +473,18 @@ func (sc *Sentinel) innerSpin() error {
 			// loop
 		case <-sc.pconnCh:
 			switchMaster = true
+			if waitFor := atomic.SwapUint32(&sc.testSleepBeforeSwitch, 0); waitFor > 0 {
+				time.Sleep(time.Duration(waitFor) * time.Millisecond)
+			}
 			// loop
 		case <-sc.closeCh:
 			return nil
 		}
 	}
+}
+
+func (sc *Sentinel) forceMasterSwitch(waitFor time.Duration) {
+	// can not use waitFor.Milliseconds() here since it was only introduced in Go 1.13 and we still support 1.12
+	atomic.StoreUint32(&sc.testSleepBeforeSwitch, uint32(waitFor.Nanoseconds()/1e6))
+	sc.pconnCh <- PubSubMessage{}
 }

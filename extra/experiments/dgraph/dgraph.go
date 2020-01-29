@@ -3,7 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+	"git.ronaksoftware.com/blip/server/internal/tools"
+
 	"github.com/dgraph-io/dgo"
 	"github.com/dgraph-io/dgo/protos/api"
 	"google.golang.org/grpc"
@@ -155,8 +156,8 @@ func main() {
 func insert() {
 	for i := 0; i < 10; i++ {
 		u := User{
-			Username:  fmt.Sprintf("user(%d)", ronak.RandomInt64(0)),
-			Phone:     ronak.RandomDigit(10),
+			Username:  fmt.Sprintf("user(%d)", tools.RandomInt64(0)),
+			Phone:     tools.RandomDigit(10),
 			GroupUIDs: nil,
 		}
 		err := u.Save(context.Background())
@@ -169,7 +170,7 @@ func insert() {
 
 	for i := 0; i < 10; i++ {
 		g := Group{
-			Title:      fmt.Sprintf("Group (%d)", ronak.RandomInt64(0)),
+			Title:      fmt.Sprintf("Group (%d)", tools.RandomInt64(0)),
 			MemberUIDs: nil,
 		}
 		err := g.Save(context.Background())

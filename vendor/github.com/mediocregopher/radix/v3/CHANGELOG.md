@@ -1,5 +1,53 @@
 Changelog from v3.0.1 and up. Prior changes don't have a changelog.
 
+# v3.4.2
+
+* Fix alignment for atomic values in structs (PR #171)
+
+* Fix closing of sentinel instances while updating state (PR #173)
+
+# v3.4.1
+
+* Update xerrors package (PR #165)
+
+* Have cluster Pools be closed outside of lock, to reduce contention during
+  failover events (PR #168)
+
+# v3.4.0
+
+* Add `PersistentPubSubWithOpts` function, deprecating the old
+  `PersistentPubSub` function. (PR #156)
+
+* Make decode errors a bit more helpful. (PR #157)
+
+* Refactor Pool to rely on its inner lock less, simplifying the code quite a bit
+  and hopefully speeding up certain actions. (PR #160)
+
+* Various documentation updates. (PR #138, Issue #162)
+
+# v3.3.2
+
+* Have `resp2.Error` match with a `resp.ErrDiscarded` when using `errors.As`.
+  Fixes EVAL, among probably other problems. (PR #152)
+
+# v3.3.1
+
+* Use `xerrors` internally. (PR #113)
+
+* Handle unmarshal errors better. Previously an unmarshaling error could leave
+  the connection in an inconsistent state, because the full message wouldn't get
+  completely read off the wire. After a lot of work, this has been fixed. (PR
+  #127, #139, #145)
+
+* Handle CLUSTERDOWN errors better. Upon seeing a CLUSTERDOWN, all commands will
+  be delayed by a small amount of time. The delay will be stopped as soon as the
+  first non-CLUSTERDOWN result is seen from the Cluster. The idea is that, if a
+  failover happens, commands which are incoming will be paused long enough for
+  the cluster to regain it sanity, thus minimizing the number of failed commands
+  during the failover. (PR #137)
+
+* Fix cluster redirect tracing. (PR #142)
+
 # v3.3.0
 
 **New**

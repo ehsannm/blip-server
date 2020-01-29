@@ -3,9 +3,11 @@ package crawler
 import (
 	"bytes"
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/redis"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -26,7 +28,7 @@ import (
 */
 
 var (
-	redisCache             *ronak.RedisCache
+	redisCache             *redis.Cache
 	crawlerCol             *mongo.Collection
 	registeredCrawlersMtx  sync.RWMutex
 	registeredCrawlers     map[string][]*Crawler
@@ -44,6 +46,7 @@ func Save(c *Crawler) (primitive.ObjectID, error) {
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
+
 	return res.InsertedID.(primitive.ObjectID), err
 }
 
@@ -101,7 +104,7 @@ func getRegisteredCrawlers() []*Crawler {
 	list = make([]*Crawler, 0, len(registeredCrawlers))
 	registeredCrawlersMtx.RLock()
 	for _, crawlers := range registeredCrawlers {
-		idx := ronak.RandomInt(len(crawlers))
+		idx := tools.RandomInt(len(crawlers))
 		list = append(list, crawlers[idx])
 	}
 	registeredCrawlersMtx.RUnlock()

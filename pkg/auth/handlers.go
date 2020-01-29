@@ -2,13 +2,14 @@ package auth
 
 import (
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/kataras/iris"
 	"github.com/mediocregopher/radix/v3"
 	"go.mongodb.org/mongo-driver/bson"
@@ -119,7 +120,7 @@ func hasReadAccess(ctx iris.Context) bool {
 }
 
 func CreateAccessKeyHandler(ctx iris.Context) {
-	accessToken := ronak.RandomID(64)
+	accessToken := tools.RandomID(64)
 
 	req := new(CreateAccessToken)
 	err := ctx.ReadJSON(req)
@@ -202,11 +203,11 @@ func SendCodeHandler(ctx iris.Context) {
 		phoneCodeHash = verifyParams[0]
 		otpID = verifyParams[1]
 	} else {
-		phoneCodeHash = ronak.RandomID(12)
+		phoneCodeHash = tools.RandomID(12)
 		switch ctx.Values().GetString(CtxClientName) {
 		case AppNameMusicChi:
 			if registered && u != nil && u.VasPaid {
-				phoneCode = ronak.RandomDigit(4)
+				phoneCode = tools.RandomDigit(4)
 				// User our internal sms provider
 				_, err = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("Blip Code: %s", phoneCode))
 				if err != nil {
@@ -254,7 +255,7 @@ func SendCodeHandler(ctx iris.Context) {
 func sendCodeMagicNumber(ctx iris.Context) {
 	magicPhone := config.GetString(config.MagicPhone)
 	phoneCode := config.GetString(config.MagicPhoneCode)
-	phoneCodeHash := ronak.RandomID(12)
+	phoneCodeHash := tools.RandomID(12)
 	err := redisCache.Do(radix.FlatCmd(nil, "SETEX",
 		fmt.Sprintf("%s.%s", config.RkPhoneCode, magicPhone),
 		600,
@@ -321,7 +322,7 @@ func LoginHandler(ctx iris.Context) {
 		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
 	}
-	sessionID := ronak.RandomID(64)
+	sessionID := tools.RandomID(64)
 	timeNow := time.Now().Unix()
 	err = session.Save(session.Session{
 		ID:         sessionID,
@@ -334,7 +335,7 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
-	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+	_ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    u.ID,
 		Phone:     u.Phone,
@@ -391,13 +392,13 @@ func RegisterHandler(ctx iris.Context) {
 	}
 
 	if req.Username == "" {
-		req.Username = fmt.Sprintf("USER%s", strings.ToUpper(ronak.RandomID(12)))
-	} else if !usernameREGX.Match(ronak.StrToByte(req.Username)) {
+		req.Username = fmt.Sprintf("USER%s", strings.ToUpper(tools.RandomID(12)))
+	} else if !usernameREGX.Match(tools.StrToByte(req.Username)) {
 		msg.Error(ctx, http.StatusBadRequest, msg.ErrUsernameFormat)
 		return
 	}
 
-	userID := fmt.Sprintf("U%s", ronak.RandomID(32))
+	userID := fmt.Sprintf("U%s", tools.RandomID(32))
 	timeNow := time.Now().Unix()
 	err = user.Save(&user.User{
 		ID:        userID,
@@ -412,7 +413,7 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-	sessionID := ronak.RandomID(64)
+	sessionID := tools.RandomID(64)
 	err = session.Save(session.Session{
 		ID:         sessionID,
 		UserID:     userID,
@@ -424,7 +425,7 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-	_, _ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+	_ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    userID,
 		Phone:     req.Phone,

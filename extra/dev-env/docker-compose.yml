@@ -1,12 +1,11 @@
 version: '2'
 services:
-
   # API Server
   api:
     restart: always
     image: registry.ronaksoftware.com/customers/ronakvision/server-blip/server-api:dev
     environment:
-      - BLIP_MONGO_URL=mongodb://mongo:27017
+      - BLIP_MONGO_URL=mongodb://mongo-01:27001
       - BLIP_REDIS_URL=redis:6379
       - BLIP_REDIS_PASS=ehsan2374
       - BLIP_SMS_SERVICE_NAME=test
@@ -16,15 +15,40 @@ services:
     networks:
       - blip
   # MongoDB Server
-  mongo:
+  mongo-01:
     restart: always
     image: registry.ronaksoftware.com/base/mongo:4.0
+    command: mongod --replSet rs0 --port 27001 --bind_ip localhost,mongo-01
     volumes:
-      - ./_hdd/db-mongo:/data/db
+      - ./_hdd/db-mongo-01:/data/db
     ports:
-      - 27017:27017
+      - 27001:27001
     expose:
-      - 27017
+      - 27001
+    networks:
+      - blip
+  mongo-02:
+    restart: always
+    image: registry.ronaksoftware.com/base/mongo:4.0
+    command: mongod --replSet rs0 --port 27002 --bind_ip localhost,mongo-02
+    volumes:
+      - ./_hdd/db-mongo-02:/data/db
+    ports:
+      - 27002:27002
+    expose:
+      - 27002
+    networks:
+      - blip
+  mongo-03:
+    restart: always
+    image: registry.ronaksoftware.com/base/mongo:4.0
+    command: mongod --replSet rs0 --port 27003 --bind_ip localhost,mongo-03
+    volumes:
+      - ./_hdd/db-mongo-03:/data/db
+    ports:
+      - 27003:27003
+    expose:
+      - 27003
     networks:
       - blip
   # Redis

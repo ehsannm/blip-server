@@ -5,10 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/kr/pretty"
 	"io"
 	"io/ioutil"
@@ -62,7 +63,7 @@ func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, pr
 	x := msg.ResponseEnvelope{}
 	err = json.Unmarshal(bodyBytes, &x)
 	if err != nil {
-		return nil, errors.New(fmt.Sprintf("Error In Unmarshal Response: %v, %s", err, ronak.ByteToStr(bodyBytes)))
+		return nil, errors.New(fmt.Sprintf("Error In Unmarshal Response: %v, %s", err, tools.ByteToStr(bodyBytes)))
 	}
 
 	if print {
@@ -120,7 +121,7 @@ func sendFile(urlSuffix string, filename string, print bool) error {
 		return errors.New(fmt.Sprintf("Error In Reading Response: %v", err))
 	}
 	if print {
-		fmt.Println(ronak.ByteToStr(bodyBytes))
+		fmt.Println(tools.ByteToStr(bodyBytes))
 	}
 	return nil
 }

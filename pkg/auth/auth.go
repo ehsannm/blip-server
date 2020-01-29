@@ -1,8 +1,8 @@
 package auth
 
 import (
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/sms"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
 )
@@ -18,7 +18,7 @@ import (
 
 var (
 	authCol     *mongo.Collection
-	redisCache  *ronak.RedisCache
+	redisCache  *redis.Cache
 	smsProvider sms.Provider
 )
 

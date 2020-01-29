@@ -20,8 +20,8 @@
 //
 // Any redis command can be performed by passing a Cmd into a Client's Do
 // method. Each Cmd should only be used once. The return from the Cmd can be
-// captured into any appopriate go primitive type, or a slice or map if the
-// command returns an array.
+// captured into any appopriate go primitive type, or a slice, map, or struct,
+// if the command returns an array.
 //
 //	err := client.Do(radix.Cmd(nil, "SET", "foo", "someval"))
 //
@@ -46,9 +46,9 @@
 //
 // Struct Scanning
 //
-// Cmd and FlatCmd can also unmarshal results into a struct. The results must be
-// a key/value array, such as that returned by HGETALL. Exported field names
-// will be used as keys, unless the fields have the "redis" tag:
+// Cmd and FlatCmd can unmarshal results into a struct. The results must be a
+// key/value array, such as that returned by HGETALL. Exported field names will
+// be used as keys, unless the fields have the "redis" tag:
 //
 //	type MyType struct {
 //		Foo string               // Will be populated with the value for key "Foo"
@@ -128,17 +128,50 @@
 // interface be implemented by a particular underlying type, so feel free to
 // create your own Pools or Conns or Actions or whatever makes your life easier.
 //
+// Errors
+//
+// Errors returned from redis can be explicitly checked for using the the
+// resp2.Error type. Note that the errors.As function, introduced in go 1.13,
+// should be used.
+//
+//	var redisErr resp2.Error
+//	err := client.Do(radix.Cmd(nil, "AUTH", "wrong password"))
+//	if errors.As(err, &redisErr) {
+//		log.Printf("redis error returned: %s", redisErr.E)
+//	}
+//
+// Use the golang.org/x/xerrors package if you're using an older version of go.
+//
+// Implicit pipelining
+//
+// Implicit pipelining is an optimization implemented and enabled in the default
+// Pool implementation (and therefore also used by Cluster and Sentinel) which
+// involves delaying concurrent Cmds and FlatCmds a small amount of time and
+// sending them to redis in a single batch, similar to manually using a Pipeline.
+// By doing this radix significantly reduces the I/O and CPU overhead for
+// concurrent requests.
+//
+// Note that only commands which do not block are eligible for implicit pipelining.
+//
+// See the documentation on Pool for more information about the current
+// implementation of implicit pipelining and for how to configure or disable
+// the feature.
+//
+// For a performance comparisons between Clients with and without implicit
+// pipelining see the benchmark results in the README.md.
+//
 package radix
 
 import (
 	"bufio"
 	"crypto/tls"
-	"errors"
 	"net"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	errors "golang.org/x/xerrors"
 
 	"github.com/mediocregopher/radix/v3/resp"
 )
@@ -175,7 +208,9 @@ var DefaultClientFunc = func(network, addr string) (Client, error) {
 // A Conn can be used directly as a Client, but in general you probably want to
 // use a *Pool instead
 type Conn interface {
-	// The Do method of a Conn is _not_ expected to be thread-safe.
+	// The Do method of a Conn is _not_ expected to be thread-safe with the
+	// other methods of Conn, and merely calls the Action's Run method with
+	// itself as the argument.
 	Client
 
 	// Encode and Decode may be called at the same time by two different

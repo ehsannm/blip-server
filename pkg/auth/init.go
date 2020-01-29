@@ -1,9 +1,9 @@
 package auth
 
 import (
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/sms"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -34,6 +34,6 @@ func InitMongo(c *mongo.Client) {
 	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
 }
 
-func InitRedisCache(c *ronak.RedisCache) {
+func InitRedisCache(c *redis.Cache) {
 	redisCache = c
 }

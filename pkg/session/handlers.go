@@ -1,7 +1,7 @@
 package session
 
 import (
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"github.com/kataras/iris"
 	"go.mongodb.org/mongo-driver/bson"

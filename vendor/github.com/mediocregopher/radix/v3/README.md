@@ -1,41 +1,17 @@
 # Radix
 
 [![Build Status](https://travis-ci.org/mediocregopher/radix.svg)](https://travis-ci.org/mediocregopher/radix)
-[![Go Report Card](https://goreportcard.com/badge/github.com/mediocregopher/radix/v3)](https://goreportcard.com/report/github.com/mediocregopher/radix/v3)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/mediocregopher/radix.svg)
 [![GoDoc](https://godoc.org/github.com/mediocregopher/radix?status.svg)][godoc]
+[![Go Report Card](https://goreportcard.com/badge/github.com/mediocregopher/radix/v3)](https://goreportcard.com/report/github.com/mediocregopher/radix/v3)
+
+![Twitter Follow](https://img.shields.io/twitter/follow/mediocre_gopher.svg?style=social)
 
 Radix is a full-featured [Redis][redis] client for Go. See the [GoDoc][godoc]
 for documentation and general usage examples.
 
 This is the third revision of this project, the previous one has been deprecated
 but can be found [here](https://github.com/mediocregopher/radix.v2).
-
-**This project's name was recently changed from `radix.v3` to `radix`, to
-account for go's new [module][module] system. As long as you are using the
-latest update of your major go version (1.9.7+, 1.10.3+, 1.11+) the module-aware
-go get should work correctly with the new import path.**
-
-**I'm sorry to anyone for whom this change broke their build, I tried very hard
-to not have to do it, but ultimately it was the only way that made sense for the
-future. Hopefully the only thing needed to fix the breakage is to change the
-import paths and re-run 'go get'.**
-
-## Installation and Usage
-
-[Module][module]-aware mode:
-
-    go get github.com/mediocregopher/radix/v3
-    // import github.com/mediocregopher/radix/v3
-
-Legacy GOPATH mode:
-
-    go get github.com/mediocregopher/radix
-    // import github.com/mediocregopher/radix
-
-## Testing
-
-    # requires a redis server running on 127.0.0.1:6379
-    go test github.com/mediocregopher/radix/v3
 
 ## Features
 
@@ -57,6 +33,26 @@ Legacy GOPATH mode:
 
 * Nearly all important types are interfaces, allowing for custom implementations
   of nearly anything.
+
+## Installation and Usage
+
+Radix always aims to support the most recent two versions of go, and is likely
+to support others prior to those two.
+
+[Module][module]-aware mode:
+
+    go get github.com/mediocregopher/radix/v3
+    // import github.com/mediocregopher/radix/v3
+
+Legacy GOPATH mode:
+
+    go get github.com/mediocregopher/radix
+    // import github.com/mediocregopher/radix
+
+## Testing
+
+    # requires a redis server running on 127.0.0.1:6379
+    go test github.com/mediocregopher/radix/v3
 
 ## Benchmarks
 

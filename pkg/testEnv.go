@@ -2,11 +2,12 @@ package testEnv
 
 import (
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -25,7 +26,7 @@ import (
 
 func Init() {
 	log.InitLogger(log.DebugLevel, "")
-	config.Set(config.MongoUrl, "mongodb://localhost:27017")
+	config.Set(config.MongoUrl, "mongodb://localhost:27001")
 	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
 	config.Set(config.LogLevel, log.DebugLevel)
@@ -41,14 +42,18 @@ func Init() {
 	if err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
 	}
+	err = mongoClient.Ping(nil, nil)
+	if err != nil {
+		log.Fatal("Error On MongoConnect (Ping)", zap.Error(err))
+	}
 	crawler.InitMongo(mongoClient)
 	music.InitMongo(mongoClient)
 
 	// Initialize RedisCache
-	redisConfig := ronak.DefaultRedisConfig
+	redisConfig := redis.DefaultConfig
 	redisConfig.Host = viper.GetString(config.RedisUrl)
 	redisConfig.Password = viper.GetString(config.RedisPass)
-	redisCache := ronak.NewRedisCache(redisConfig)
+	redisCache := redis.New(redisConfig)
 	crawler.InitRedisCache(redisCache)
 	music.InitRedisCache(redisCache)
 

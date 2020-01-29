@@ -1,9 +1,10 @@
 package crawler
 
 import (
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,7 +23,7 @@ import (
 
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson crawler.go messages.go
-func InitRedisCache(c *ronak.RedisCache) {
+func InitRedisCache(c *redis.Cache) {
 	redisCache = c
 }
 
@@ -71,4 +72,3 @@ func watchForCrawlers() {
 	}
 
 }
-

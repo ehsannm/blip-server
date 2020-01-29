@@ -3,11 +3,12 @@ package radix
 import (
 	"bufio"
 	"bytes"
-	"errors"
 	"io"
 	"net"
 	"sync"
 	"time"
+
+	errors "golang.org/x/xerrors"
 
 	"github.com/mediocregopher/radix/v3/resp"
 	"github.com/mediocregopher/radix/v3/resp/resp2"
@@ -67,7 +68,7 @@ func (m *PubSubMessage) UnmarshalRESP(br *bufio.Reader) error {
 		if err := (resp2.Any{}).UnmarshalRESP(br); err != nil {
 			return err
 		}
-		return errNotPubSubMessage
+		return resp.ErrDiscarded{Err: errNotPubSubMessage}
 	}
 
 	var ah resp2.ArrayHeader
@@ -309,7 +310,7 @@ func (c *pubSubConn) spin() {
 		if nerr, ok := err.(net.Error); ok && nerr.Timeout() {
 			c.testEvent("timeout")
 			continue
-		} else if err == errNotPubSubMessage {
+		} else if errors.Is(err, errNotPubSubMessage) {
 			c.cmdResCh <- nil
 			continue
 		} else if err != nil {

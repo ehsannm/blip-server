@@ -2,7 +2,7 @@ package sms
 
 import (
 	"errors"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"io"

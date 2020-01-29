@@ -6,9 +6,10 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"go.uber.org/zap"
 	"hash"
 	"io/ioutil"
@@ -54,8 +55,8 @@ func IdentifyByFile(fileAddr string) (*Music, error) {
 	t := time.Now().Unix() * 1000
 	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\naudio\n1\n%d", accessKey, t)
 
-	hm := hmac.New(func() hash.Hash { return sha1.New() }, ronak.StrToByte(accessSecret))
-	hm.Write(ronak.StrToByte(stringToSign))
+	hm := hmac.New(func() hash.Hash { return sha1.New() }, tools.StrToByte(accessSecret))
+	hm.Write(tools.StrToByte(stringToSign))
 	signature := base64.StdEncoding.EncodeToString(hm.Sum(nil))
 
 	c := http.Client{
@@ -97,8 +98,8 @@ func IdentifyByByteString(fileBytes []byte) (*Music, error) {
 	t := time.Now().Unix() * 1000
 	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\naudio\n1\n%d", accessKey, t)
 
-	hm := hmac.New(func() hash.Hash { return sha1.New() }, ronak.StrToByte(accessSecret))
-	hm.Write(ronak.StrToByte(stringToSign))
+	hm := hmac.New(func() hash.Hash { return sha1.New() }, tools.StrToByte(accessSecret))
+	hm.Write(tools.StrToByte(stringToSign))
 	signature := base64.StdEncoding.EncodeToString(hm.Sum(nil))
 
 	c := http.Client{

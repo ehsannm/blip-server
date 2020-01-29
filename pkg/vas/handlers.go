@@ -2,11 +2,12 @@ package vas
 
 import (
 	"fmt"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
 	"strings"
@@ -65,11 +66,11 @@ func MCINotification(ctx iris.Context) {
 func subscribe(params *mciNotificationParams) {
 	u, err := user.GetByPhone(params.CustomerNumber)
 	if err != nil {
-		userID := fmt.Sprintf("U%s", ronak.RandomID(32))
+		userID := fmt.Sprintf("U%s", tools.RandomID(32))
 		timeNow := time.Now().Unix()
 		u = &user.User{
 			ID:        userID,
-			Username:  fmt.Sprintf("USER%s", strings.ToUpper(ronak.RandomID(12))),
+			Username:  fmt.Sprintf("USER%s", strings.ToUpper(tools.RandomID(12))),
 			Phone:     params.CustomerNumber,
 			Email:     "",
 			CreatedOn: timeNow,

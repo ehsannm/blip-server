@@ -2,9 +2,10 @@ package saba
 
 import (
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	log "git.ronaksoftware.com/blip/server/pkg/logger"
-	ronak "git.ronaksoftware.com/ronak/toolbox"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -61,7 +62,7 @@ func Subscribe(phone string) (*SubscribeResponse, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", ronak.ByteToStr(httpBytes)),
+			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -91,7 +92,7 @@ func Unsubscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", ronak.ByteToStr(httpBytes)),
+			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -122,7 +123,7 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", ronak.ByteToStr(httpBytes)),
+			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 

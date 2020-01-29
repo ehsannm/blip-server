@@ -4,11 +4,13 @@ package bytesutil
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"strconv"
 	"sync"
+
+	"github.com/mediocregopher/radix/v3/resp"
+	errors "golang.org/x/xerrors"
 )
 
 // AnyIntToInt64 converts a value of any of Go's integer types (signed and unsigned) into a signed int64.
@@ -100,7 +102,7 @@ func ParseUint(b []byte) (uint64, error) {
 
 	for i, c := range b {
 		if c < '0' || c > '9' {
-			return 0, fmt.Errorf("invalid character %c at position %d in parseUint", c, i)
+			return 0, errors.Errorf("invalid character %c at position %d in parseUint", c, i)
 		}
 
 		n *= 10
@@ -128,7 +130,7 @@ func BufferedBytesDelim(br *bufio.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	} else if len(b) < 2 || b[len(b)-2] != '\r' {
-		return nil, fmt.Errorf("malformed resp %q", b)
+		return nil, errors.Errorf("malformed resp %q", b)
 	}
 	return b[:len(b)-2], err
 }
@@ -153,7 +155,7 @@ func ReadNAppend(r io.Reader, b []byte, n int) ([]byte, error) {
 	return b, err
 }
 
-// ReadNDicard discards exactly n bytes from r.
+// ReadNDiscard discards exactly n bytes from r.
 func ReadNDiscard(r io.Reader, n int) error {
 	type discarder interface {
 		Discard(int) (int, error)
@@ -201,7 +203,11 @@ func ReadInt(r io.Reader, n int) (int64, error) {
 	if *scratch, err = ReadNAppend(r, *scratch, n); err != nil {
 		return 0, err
 	}
-	return ParseInt(*scratch)
+	i, err := ParseInt(*scratch)
+	if err != nil {
+		return 0, resp.ErrDiscarded{Err: err}
+	}
+	return i, nil
 }
 
 // ReadUint reads the next n bytes from r as an unsigned 64 bit integer.
@@ -213,7 +219,11 @@ func ReadUint(r io.Reader, n int) (uint64, error) {
 	if *scratch, err = ReadNAppend(r, *scratch, n); err != nil {
 		return 0, err
 	}
-	return ParseUint(*scratch)
+	ui, err := ParseUint(*scratch)
+	if err != nil {
+		return 0, resp.ErrDiscarded{Err: err}
+	}
+	return ui, nil
 }
 
 // ReadFloat reads the next n bytes from r as a 64 bit floating point number with the given precision.
@@ -225,5 +235,9 @@ func ReadFloat(r io.Reader, precision, n int) (float64, error) {
 	if *scratch, err = ReadNAppend(r, *scratch, n); err != nil {
 		return 0, err
 	}
-	return strconv.ParseFloat(string(*scratch), precision)
+	f, err := strconv.ParseFloat(string(*scratch), precision)
+	if err != nil {
+		return 0, resp.ErrDiscarded{Err: err}
+	}
+	return f, nil
 }
