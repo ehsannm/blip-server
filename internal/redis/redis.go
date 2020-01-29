@@ -100,6 +100,48 @@ type Scanner interface {
 	Close() error
 }
 
+type PubSubConn interface {
+	// Subscribe subscribes the PubSubConn to the given set of channels. msgCh
+	// will receieve a PubSubMessage for every publish written to any of the
+	// channels. This may be called multiple times for the same channels and
+	// different msgCh's, each msgCh will receieve a copy of the PubSubMessage
+	// for each publish.
+	Subscribe(msgCh chan<- radix.PubSubMessage, channels ...string) error
+
+	// Unsubscribe unsubscribes the msgCh from the given set of channels, if it
+	// was subscribed at all.
+	//
+	// NOTE even if msgCh is not subscribed to any other redis channels, it
+	// should still be considered "active", and therefore still be having
+	// messages read from it, until Unsubscribe has returned
+	Unsubscribe(msgCh chan<- radix.PubSubMessage, channels ...string) error
+
+	// PSubscribe is like Subscribe, but it subscribes msgCh to a set of
+	// patterns and not individual channels.
+	PSubscribe(msgCh chan<- radix.PubSubMessage, patterns ...string) error
+
+	// PUnsubscribe is like Unsubscribe, but it unsubscribes msgCh from a set of
+	// patterns and not individual channels.
+	//
+	// NOTE even if msgCh is not subscribed to any other redis channels, it
+	// should still be considered "active", and therefore still be having
+	// messages read from it, until PUnsubscribe has returned
+	PUnsubscribe(msgCh chan<- radix.PubSubMessage, patterns ...string) error
+
+	// Ping performs a simple Ping command on the PubSubConn, returning an error
+	// if it failed for some reason
+	Ping() error
+
+	// Close closes the PubSubConn so it can't be used anymore. All subscribed
+	// channels will stop receiving PubSubMessages from this Conn (but will not
+	// themselves be closed).
+	//
+	// NOTE all msgChs should be considered "active", and therefore still be
+	// having messages read from them, until Close has returned.
+	Close() error
+}
+
+
 // New
 // This is the constructor of Cache, it accepts Config as input, you can use
 // DefaultConfig for quick initialization, but make sure to add 'Conn' and 'Password' to it
@@ -151,7 +193,7 @@ func New(conf Config) *Cache {
 }
 
 func NewCluster(conf Config) *Cache {
-	r := new(Cache)
+	r := &Cache{}
 	r.scripts = make(map[string]radix.EvalScript)
 	var ClusterOpt radix.ClusterOpt = nil
 	if len(conf.Password) > 0 {
@@ -178,6 +220,18 @@ func NewCluster(conf Config) *Cache {
 
 	return r
 
+}
+
+func NewPubSub(conf Config) PubSubConn {
+	return radix.PersistentPubSub("tcp", conf.Host, func(network, addr string) (conn radix.Conn, err error) {
+		return radix.Dial(network, addr,
+			radix.DialAuthPass(conf.Password),
+			radix.DialSelectDB(conf.Db),
+			radix.DialConnectTimeout(conf.DialTimeout),
+			radix.DialReadTimeout(conf.ConnReadTimeout),
+			radix.DialWriteTimeout(conf.ConnWriteTimeout),
+		)
+	})
 }
 
 // NewScanner
@@ -337,4 +391,13 @@ func (r *Cache) HGetAllInt32Map(keyName string) (reply map[string]int32, err err
 func (r *Cache) ZCard(keyName string) (reply int, err error) {
 	err = r.Do(radix.Cmd(&reply, "ZCARD", keyName))
 	return
+}
+
+func (r *Cache) NewSub() {
+
+}
+
+func x () {
+
+
 }

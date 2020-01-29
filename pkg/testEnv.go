@@ -8,7 +8,6 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -37,7 +36,7 @@ func Init() {
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
 		nil,
-		options.Client().ApplyURI(viper.GetString(config.MongoUrl)),
+		options.Client().ApplyURI(config.GetString(config.MongoUrl)),
 	)
 	if err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
@@ -51,8 +50,8 @@ func Init() {
 
 	// Initialize RedisCache
 	redisConfig := redis.DefaultConfig
-	redisConfig.Host = viper.GetString(config.RedisUrl)
-	redisConfig.Password = viper.GetString(config.RedisPass)
+	redisConfig.Host = config.GetString(config.RedisUrl)
+	redisConfig.Password = config.GetString(config.RedisPass)
 	redisCache := redis.New(redisConfig)
 	crawler.InitRedisCache(redisCache)
 	music.InitRedisCache(redisCache)
