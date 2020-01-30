@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/pools"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
@@ -46,7 +47,6 @@ func Save(c *Crawler) (primitive.ObjectID, error) {
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-
 	return res.InsertedID.(primitive.ObjectID), err
 }
 
@@ -72,11 +72,17 @@ func GetAll() []*Crawler {
 	return list
 }
 
+// Search
 func Search(keyword string, resChan chan<- *SearchResponse, doneChan chan<- struct{}) {
 	crawlers := getRegisteredCrawlers()
 	defer putRegisteredCrawlers(crawlers)
 
-	waitGroup := sync.WaitGroup{}
+	if len(crawlers) == 0 {
+		log.Warn("No Crawler has been Registered")
+		return
+	}
+
+	waitGroup := pools.AcquireWaitGroup()
 	for _, c := range crawlers {
 		waitGroup.Add(1)
 		go func(c *Crawler) {
@@ -94,6 +100,7 @@ func Search(keyword string, resChan chan<- *SearchResponse, doneChan chan<- stru
 		}(c)
 	}
 	waitGroup.Wait()
+	pools.ReleaseWaitGroup(waitGroup)
 	doneChan <- struct{}{}
 }
 func getRegisteredCrawlers() []*Crawler {

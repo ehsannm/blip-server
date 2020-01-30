@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-docker stop $(docker ps -aq)
+docker stop $(docker ps -a -q)

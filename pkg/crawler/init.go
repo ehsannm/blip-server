@@ -4,6 +4,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
@@ -52,7 +53,9 @@ func Init() {
 }
 func watchForCrawlers() {
 	for {
-		stream, err := crawlerCol.Watch(nil, mongo.Pipeline{})
+		stream, err := crawlerCol.Watch(nil, mongo.Pipeline{},
+			options.ChangeStream().SetFullDocument(options.UpdateLookup),
+		)
 		if err != nil {
 			log.Warn("Error On Watch Stream for Crawlers", zap.Error(err))
 			time.Sleep(time.Second)
@@ -61,12 +64,19 @@ func watchForCrawlers() {
 
 		for stream.Next(nil) {
 			crawlerX := &Crawler{}
-			err := stream.Decode(crawlerX)
-			if err == nil {
-				registeredCrawlersMtx.Lock()
-				registeredCrawlers[crawlerX.Source] = append(registeredCrawlers[crawlerX.Source], crawlerX)
-				registeredCrawlersMtx.Unlock()
+			err := stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, crawlerX)
+			if err != nil {
+				log.Warn("Error On Decoding Crawler", zap.Error(err))
+				continue
 			}
+
+			registeredCrawlersMtx.Lock()
+			registeredCrawlers[crawlerX.Source] = append(registeredCrawlers[crawlerX.Source], crawlerX)
+			registeredCrawlersMtx.Unlock()
+			log.Debug("Crawler Found",
+				zap.String("Url", crawlerX.Url),
+				zap.String("Source", crawlerX.Source),
+			)
 		}
 		_ = stream.Close(nil)
 	}

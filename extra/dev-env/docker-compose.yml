@@ -14,47 +14,49 @@ services:
       - 80:80
     networks:
       - blip
-  # MongoDB Server
+  # MongoDB Server 01
   mongo-01:
     restart: always
-    image: registry.ronaksoftware.com/base/mongo:4.0
-    command: mongod --replSet rs0 --port 27001 --bind_ip localhost,mongo-01
+    image: registry.ronaksoftware.com/base/docker/mongo
+    command: mongod --replSet rs0
     volumes:
       - ./_hdd/db-mongo-01:/data/db
     ports:
-      - 27001:27001
+      - 27001:27017
     expose:
-      - 27001
+      - 27017
     networks:
       - blip
+  # MongoDB Server 02
   mongo-02:
     restart: always
-    image: registry.ronaksoftware.com/base/mongo:4.0
-    command: mongod --replSet rs0 --port 27002 --bind_ip localhost,mongo-02
+    image: registry.ronaksoftware.com/base/docker/mongo
+    command: mongod --replSet rs0
     volumes:
       - ./_hdd/db-mongo-02:/data/db
     ports:
-      - 27002:27002
+      - 27002:27017
     expose:
-      - 27002
+      - 27017
     networks:
       - blip
+  # MongoDB Server 03
   mongo-03:
     restart: always
-    image: registry.ronaksoftware.com/base/mongo:4.0
-    command: mongod --replSet rs0 --port 27003 --bind_ip localhost,mongo-03
+    image: registry.ronaksoftware.com/base/docker/mongo
+    command: mongod --replSet rs0
     volumes:
       - ./_hdd/db-mongo-03:/data/db
     ports:
-      - 27003:27003
+      - 27003:27017
     expose:
-      - 27003
+      - 27017
     networks:
       - blip
   # Redis
   redis:
     restart: always
-    image: registry.ronaksoftware.com/base/redis
+    image: registry.ronaksoftware.com/base/docker/redis
     command: redis-server --requirepass ehsan2374 --save 1 1
     volumes:
       - ./_hdd/redis:/data

@@ -4,6 +4,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
@@ -91,7 +92,9 @@ func updateIndex() {
 }
 func watchForSongs() {
 	for {
-		stream, err := songCol.Watch(nil, mongo.Pipeline{})
+		stream, err := songCol.Watch(nil, mongo.Pipeline{},
+			options.ChangeStream().SetFullDocument(options.UpdateLookup),
+		)
 		if err != nil {
 			log.Warn("Error On Watch Stream for Songs", zap.Error(err))
 			time.Sleep(time.Second)
@@ -99,10 +102,15 @@ func watchForSongs() {
 		}
 		for stream.Next(nil) {
 			songX := &Song{}
-			err = stream.Decode(songX)
-			if err == nil {
-				_ = songIndex.Index(songX.ID.Hex(), songX)
+			err = stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, songX)
+			if err != nil {
+				log.Warn("Error On Decoding Song", zap.Error(err))
+				continue
 			}
+
+			_ = songIndex.Index(songX.ID.Hex(), songX)
+			log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
+
 		}
 		_ = stream.Close(nil)
 	}

@@ -1,7 +1,6 @@
 package testEnv
 
 import (
-	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
@@ -36,7 +35,7 @@ func Init() {
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
 		nil,
-		options.Client().ApplyURI(config.GetString(config.MongoUrl)),
+		options.Client().ApplyURI(config.GetString(config.MongoUrl)).SetDirect(true),
 	)
 	if err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
@@ -58,7 +57,6 @@ func Init() {
 
 	// Initialize Modules
 	crawler.Init()
-	fmt.Println("HERE")
 	music.Init()
 
 }
