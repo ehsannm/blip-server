@@ -5,6 +5,7 @@ import (
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
@@ -52,27 +53,67 @@ func Init() {
 	go watchForCrawlers()
 }
 func watchForCrawlers() {
+	var resumeToken bson.Raw
 	for {
-		stream, err := crawlerCol.Watch(nil, mongo.Pipeline{},
-			options.ChangeStream().SetFullDocument(options.UpdateLookup),
-		)
+		opts := options.ChangeStream().SetFullDocument(options.UpdateLookup)
+		if resumeToken != nil {
+			opts.SetStartAfter(resumeToken)
+		}
+		stream, err := crawlerCol.Watch(nil, mongo.Pipeline{}, opts)
 		if err != nil {
 			log.Warn("Error On Watch Stream for Crawlers", zap.Error(err))
 			time.Sleep(time.Second)
 			continue
 		}
 
+	EventsLoop:
 		for stream.Next(nil) {
 			crawlerX := &Crawler{}
-			err := stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, crawlerX)
-			if err != nil {
-				log.Warn("Error On Decoding Crawler", zap.Error(err))
+			resumeToken = stream.ResumeToken()
+			operationType := strings.Trim(stream.Current.Lookup("operationType").String(), "\"")
+			switch operationType {
+			case "insert":
+				err := stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, crawlerX)
+				if err != nil {
+					log.Warn("Error On Decoding Crawler", zap.Error(err))
+					continue
+				}
+				registeredCrawlersMtx.Lock()
+				registeredCrawlers[crawlerX.Source] = append(registeredCrawlers[crawlerX.Source], crawlerX)
+				registeredCrawlersMtx.Unlock()
+			case "update":
+				err := stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, crawlerX)
+				if err != nil {
+					log.Warn("Error On Decoding Crawler", zap.Error(err))
+					continue
+				}
+				registeredCrawlersMtx.Lock()
+				for idx, c := range registeredCrawlers[crawlerX.Source] {
+					if c.ID == crawlerX.ID {
+						registeredCrawlers[crawlerX.Source][idx] = crawlerX
+					}
+				}
+				registeredCrawlersMtx.Unlock()
+			case "delete":
+				crawlerID := stream.Current.Lookup("documentKey").ObjectID()
+				registeredCrawlersMtx.Lock()
+				for idx, c := range registeredCrawlers[crawlerX.Source] {
+					if c.ID == crawlerID {
+						registeredCrawlers[crawlerX.Source][idx] = registeredCrawlers[crawlerX.Source][len(registeredCrawlers[crawlerX.Source])-1]
+						registeredCrawlers[crawlerX.Source] = registeredCrawlers[crawlerX.Source][:len(registeredCrawlers[crawlerX.Source])-1]
+					}
+				}
+				registeredCrawlersMtx.Unlock()
 				continue
+			case "invalidate", "drop":
+				registeredCrawlersMtx.Lock()
+				registeredCrawlers = make(map[string][]*Crawler)
+				registeredCrawlersMtx.Unlock()
+				break EventsLoop
+			default:
+				log.Warn("Unknown Operation Type", zap.String("OT", operationType))
 			}
 
-			registeredCrawlersMtx.Lock()
-			registeredCrawlers[crawlerX.Source] = append(registeredCrawlers[crawlerX.Source], crawlerX)
-			registeredCrawlersMtx.Unlock()
 			log.Debug("Crawler Found",
 				zap.String("Url", crawlerX.Url),
 				zap.String("Source", crawlerX.Source),

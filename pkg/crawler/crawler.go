@@ -8,12 +8,12 @@ import (
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"go.uber.org/zap"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -73,36 +73,40 @@ func GetAll() []*Crawler {
 }
 
 // Search
-func Search(keyword string, resChan chan<- *SearchResponse, doneChan chan<- struct{}) {
+func Search(keyword string) <-chan *SearchResponse {
 	crawlers := getRegisteredCrawlers()
-	defer putRegisteredCrawlers(crawlers)
-
 	if len(crawlers) == 0 {
 		log.Warn("No Crawler has been Registered")
-		return
+		return nil
 	}
+	resChan := make(chan *SearchResponse, len(crawlers))
 
-	waitGroup := pools.AcquireWaitGroup()
-	for _, c := range crawlers {
-		waitGroup.Add(1)
-		go func(c *Crawler) {
-			defer waitGroup.Done()
-			res, err := c.SendRequest(keyword)
-			if err != nil {
-				log.Warn("Error On Crawler Request",
-					zap.Error(err),
-					zap.String("CrawlerUrl", c.Url),
-					zap.String("Keyword", keyword),
-				)
-				return
-			}
-			resChan <- res
-		}(c)
-	}
-	waitGroup.Wait()
-	pools.ReleaseWaitGroup(waitGroup)
-	doneChan <- struct{}{}
+	go func() {
+		defer putRegisteredCrawlers(crawlers)
+		waitGroup := pools.AcquireWaitGroup()
+		for _, c := range crawlers {
+			waitGroup.Add(1)
+			go func(c *Crawler) {
+				defer waitGroup.Done()
+				res, err := c.SendRequest(keyword)
+				if err != nil {
+					log.Warn("Error On Crawler Request",
+						zap.Error(err),
+						zap.String("CrawlerUrl", c.Url),
+						zap.String("Keyword", keyword),
+					)
+					return
+				}
+				resChan <- res
+			}(c)
+		}
+		waitGroup.Wait()
+		pools.ReleaseWaitGroup(waitGroup)
+		close(resChan)
+	}()
+	return resChan
 }
+
 func getRegisteredCrawlers() []*Crawler {
 	list, ok := registeredCrawlersPool.Get().([]*Crawler)
 	if ok {
@@ -123,17 +127,19 @@ func putRegisteredCrawlers(list []*Crawler) {
 
 // Crawler
 type Crawler struct {
-	httpClient  http.Client `bson:"-"`
-	Url         string      `bson:"url"`
-	Name        string      `bson:"name"`
-	Description string      `bson:"desc"`
-	Source      string      `bson:"source"`
+	httpClient  http.Client        `bson:"-"`
+	ID          primitive.ObjectID `bson:"_id"`
+	Url         string             `bson:"url"`
+	Name        string             `bson:"name"`
+	Description string             `bson:"desc"`
+	Source      string             `bson:"source"`
 }
 
 func (c *Crawler) SendRequest(keyword string) (*SearchResponse, error) {
 	c.httpClient.Timeout = config.HttpRequestTimeout
 	req := SearchRequest{
-		Keyword: keyword,
+		RequestID: tools.RandomID(24),
+		Keyword:   keyword,
 	}
 	reqBytes, err := req.MarshalJSON()
 	if err != nil {
@@ -146,11 +152,11 @@ func (c *Crawler) SendRequest(keyword string) (*SearchResponse, error) {
 	if httpRes.StatusCode != http.StatusOK && httpRes.StatusCode != http.StatusAccepted {
 		return nil, fmt.Errorf("invalid http response, got %d", httpRes.StatusCode)
 	}
-
 	resBytes, err := ioutil.ReadAll(httpRes.Body)
 	if err != nil {
 		return nil, err
 	}
+
 	res := &SearchResponse{}
 	err = res.UnmarshalJSON(resBytes)
 	if err != nil {

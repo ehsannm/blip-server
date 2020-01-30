@@ -6,6 +6,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/valyala/tcplisten"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -32,7 +33,6 @@ func (m mockCrawler) ServeHTTP(httpRes http.ResponseWriter, httpReq *http.Reques
 	reqData, _ := ioutil.ReadAll(httpReq.Body)
 	req := crawler.SearchRequest{}
 	_ = req.UnmarshalJSON(reqData)
-
 	res := crawler.SearchResponse{
 		RequestID: req.RequestID,
 		Sources:   "Source 01",
@@ -74,6 +74,7 @@ func TestCrawler(t *testing.T) {
 		Convey("Set and Get", func(c C) {
 			for i := 0; i < 10; i++ {
 				crawlerID, err := crawler.Save(&crawler.Crawler{
+					ID:          primitive.NewObjectID(),
 					Url:         fmt.Sprintf("http://crawler%d.com/some_text", i),
 					Name:        fmt.Sprintf("Crawler %d", i),
 					Description: fmt.Sprintf("Description for Crawler %d", i),
@@ -94,10 +95,10 @@ func TestCrawler(t *testing.T) {
 			c.So(crawlers, ShouldHaveLength, 10)
 		})
 		Convey("Send Request", func(c C) {
-			initMockCrawler(8080)
+			initMockCrawler(8079)
 			time.Sleep(time.Second)
 			crawlerX := crawler.Crawler{
-				Url:         "http://localhost:8080",
+				Url:         "http://localhost:8079",
 				Name:        "Mock Crawler",
 				Description: "This is a mock crawler",
 				Source:      "S01",
@@ -116,11 +117,11 @@ func TestSearch(t *testing.T) {
 			c.So(err, ShouldBeNil)
 		})
 		Convey("Run Mock Servers", func(c C) {
-			portStart := 8080
-
+			portStart := 8081
 			for i := 0; i < 5; i++ {
 				initMockCrawler(portStart + i)
 				crawlerX := &crawler.Crawler{
+					ID:          primitive.NewObjectID(),
 					Url:         fmt.Sprintf("http://localhost:%d", portStart+i),
 					Name:        fmt.Sprintf("Crawler %d", i),
 					Description: "This is a Mock Crawler",
@@ -135,21 +136,10 @@ func TestSearch(t *testing.T) {
 		})
 		Convey("Send Search Request", func(c C) {
 			keyword := "Some Text"
-			resChan := make(chan *crawler.SearchResponse, 10)
-			doneChan := make(chan struct{})
-			crawler.Search(keyword, resChan, doneChan)
-		waitLoop:
-			for {
-				select {
-				case r := <-resChan:
-					c.Println("Response:", r.Sources)
-				case <-doneChan:
-					c.Println("Done!")
-					break waitLoop
-				}
+			resChan := crawler.Search(keyword)
+			for x := range resChan {
+				_, _ = c.Println("Response:", x.RequestID)
 			}
-			close(resChan)
-			close(doneChan)
 		})
 	})
 }
