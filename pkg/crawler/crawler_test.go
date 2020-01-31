@@ -2,6 +2,7 @@ package crawler_test
 
 import (
 	"fmt"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	testEnv "git.ronaksoftware.com/blip/server/pkg"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	. "github.com/smartystreets/goconvey/convey"
@@ -27,22 +28,27 @@ func init() {
 	testEnv.Init()
 }
 
-type mockCrawler struct{}
+type mockCrawler struct {
+	MaxDelay time.Duration
+}
 
 func (m mockCrawler) ServeHTTP(httpRes http.ResponseWriter, httpReq *http.Request) {
+	if m.MaxDelay > 0 {
+		time.Sleep(time.Duration(tools.RandomInt(int(m.MaxDelay))))
+	}
 	reqData, _ := ioutil.ReadAll(httpReq.Body)
 	req := crawler.SearchRequest{}
 	_ = req.UnmarshalJSON(reqData)
 	res := crawler.SearchResponse{
 		RequestID: req.RequestID,
-		Sources:   "Source 01",
+		Source:    "Source 01",
 		Result: struct {
 			SongUrl  string `json:"song_url"`
 			CoverUrl string `json:"cover_url"`
 			Lyrics   string `json:"lyrics,omitempty"`
 			Artists  string `json:"artists"`
 			Title    string `json:"title"`
-			Genre    string `json:"genre"`
+			Genre    string `json:"genre,omitempty"`
 		}{
 			SongUrl:  "http://url.com",
 			CoverUrl: "http://cover-url.com",
@@ -57,8 +63,10 @@ func (m mockCrawler) ServeHTTP(httpRes http.ResponseWriter, httpReq *http.Reques
 	httpRes.Write(resData)
 }
 
-func initMockCrawler(port int) {
-	s := httptest.NewUnstartedServer(mockCrawler{})
+func initMockCrawler(maxDelay time.Duration, port int) {
+	s := httptest.NewUnstartedServer(mockCrawler{
+		MaxDelay: maxDelay,
+	})
 	tcpConfig := tcplisten.Config{}
 	s.Listener, _ = tcpConfig.NewListener("tcp4", fmt.Sprintf(":%d", port))
 	s.Start()
@@ -95,7 +103,7 @@ func TestCrawler(t *testing.T) {
 			c.So(crawlers, ShouldHaveLength, 10)
 		})
 		Convey("Send Request", func(c C) {
-			initMockCrawler(8079)
+			initMockCrawler(0, 8079)
 			time.Sleep(time.Second)
 			crawlerX := crawler.Crawler{
 				Url:         "http://localhost:8079",
@@ -103,7 +111,7 @@ func TestCrawler(t *testing.T) {
 				Description: "This is a mock crawler",
 				Source:      "S01",
 			}
-			res, err := crawlerX.SendRequest("Text")
+			res, err := crawlerX.SendRequest(nil, "Text")
 			c.So(err, ShouldBeNil)
 			c.So(res.Result.Title, ShouldEqual, "Text")
 		})
@@ -119,7 +127,7 @@ func TestSearch(t *testing.T) {
 		Convey("Run Mock Servers", func(c C) {
 			portStart := 8081
 			for i := 0; i < 5; i++ {
-				initMockCrawler(portStart + i)
+				initMockCrawler(time.Second*10, portStart+i)
 				crawlerX := &crawler.Crawler{
 					ID:          primitive.NewObjectID(),
 					Url:         fmt.Sprintf("http://localhost:%d", portStart+i),
@@ -136,7 +144,8 @@ func TestSearch(t *testing.T) {
 		})
 		Convey("Send Search Request", func(c C) {
 			keyword := "Some Text"
-			resChan := crawler.Search(keyword)
+
+			resChan := crawler.Search(nil, keyword)
 			for x := range resChan {
 				_, _ = c.Println("Response:", x.RequestID)
 			}

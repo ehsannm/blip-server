@@ -4,8 +4,6 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"github.com/kataras/iris"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -25,8 +23,7 @@ func MustHaveSession(ctx iris.Context) {
 	session, ok := sessionCache[sessionID]
 	mtxLock.RUnlock()
 	if !ok {
-		res := sessionCol.FindOne(nil, bson.M{"_id": sessionID}, options.FindOne())
-		if err := res.Decode(&session); err != nil {
+		if s, err := Get(sessionID); err != nil {
 			if ce := log.Check(log.DebugLevel, "Error On GetSession"); ce != nil {
 				ce.Write(
 					zap.Error(err),
@@ -35,6 +32,8 @@ func MustHaveSession(ctx iris.Context) {
 			}
 			msg.Error(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
 			return
+		} else {
+			session = s
 		}
 	}
 

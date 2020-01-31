@@ -3,9 +3,6 @@ package vas
 import (
 	"git.ronaksoftware.com/blip/server/internal/flusher"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"git.ronaksoftware.com/blip/server/pkg/config"
-
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
@@ -24,10 +21,6 @@ import (
 var (
 	vasLogCol *mongo.Collection
 )
-
-func InitMongo(c *mongo.Client) {
-	vasLogCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColLogVas)
-}
 
 var writeToDB = flusher.NewLifo(1000, 5, time.Millisecond*500, func(items []flusher.Entry) {
 	docs := make([]interface{}, 0, len(items))

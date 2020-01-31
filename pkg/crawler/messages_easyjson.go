@@ -39,7 +39,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler(in *jlexer.Le
 		case "req_id":
 			out.RequestID = string(in.String())
 		case "source":
-			out.Sources = string(in.String())
+			out.Source = string(in.String())
 		case "result":
 			easyjson66c1e240Decode(in, &out.Result)
 		default:
@@ -64,7 +64,7 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler(out *jwriter.
 	{
 		const prefix string = ",\"source\":"
 		out.RawString(prefix)
-		out.String(string(in.Sources))
+		out.String(string(in.Source))
 	}
 	{
 		const prefix string = ",\"result\":"
@@ -103,7 +103,7 @@ func easyjson66c1e240Decode(in *jlexer.Lexer, out *struct {
 	Lyrics   string `json:"lyrics,omitempty"`
 	Artists  string `json:"artists"`
 	Title    string `json:"title"`
-	Genre    string `json:"genre"`
+	Genre    string `json:"genre,omitempty"`
 }) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
@@ -151,7 +151,7 @@ func easyjson66c1e240Encode(out *jwriter.Writer, in struct {
 	Lyrics   string `json:"lyrics,omitempty"`
 	Artists  string `json:"artists"`
 	Title    string `json:"title"`
-	Genre    string `json:"genre"`
+	Genre    string `json:"genre,omitempty"`
 }) {
 	out.RawByte('{')
 	first := true
@@ -181,7 +181,7 @@ func easyjson66c1e240Encode(out *jwriter.Writer, in struct {
 		out.RawString(prefix)
 		out.String(string(in.Title))
 	}
-	{
+	if in.Genre != "" {
 		const prefix string = ",\"genre\":"
 		out.RawString(prefix)
 		out.String(string(in.Genre))

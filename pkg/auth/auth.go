@@ -20,6 +20,8 @@ var (
 	authCol     *mongo.Collection
 	redisCache  *redis.Cache
 	smsProvider sms.Provider
+	authCache   map[string]*Auth
+	mtxLock     sync.RWMutex
 )
 
 type Permission byte
@@ -31,6 +33,7 @@ const (
 	Write
 )
 
+// Auth
 type Auth struct {
 	ID          string       `bson:"_id"`
 	Permissions []Permission `bson:"perm"`
@@ -38,6 +41,3 @@ type Auth struct {
 	ExpiredOn   int64        `bson:"expired_on"`
 	AppName     string       `bson:"app_name"`
 }
-
-var authCache map[string]Auth
-var mtxLock sync.RWMutex

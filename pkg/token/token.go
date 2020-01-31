@@ -1,8 +1,6 @@
 package token
 
 import (
-	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
 )
@@ -17,9 +15,12 @@ import (
 */
 
 var (
-	tokenCol *mongo.Collection
+	tokenCol   *mongo.Collection
+	mtxLock    sync.RWMutex
+	tokenCache map[string]Token
 )
 
+// Token
 type Token struct {
 	ID        string `bson:"_id"`
 	Phone     string `bson:"phone"`
@@ -27,15 +28,4 @@ type Token struct {
 	CreatedOn int64  `bson:"created_on"`
 	ExpiredOn int64  `bson:"expired_on"`
 	DeviceID  string `bson:"device_id"`
-}
-
-func InitMongo(c *mongo.Client) {
-	tokenCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColToken)
-}
-
-var mtxLock sync.RWMutex
-var tokenCache map[string]Token
-
-func init() {
-	tokenCache = make(map[string]Token, 100000)
 }

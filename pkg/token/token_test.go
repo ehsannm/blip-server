@@ -1,15 +1,12 @@
 package token_test
 
 import (
-	log "git.ronaksoftware.com/blip/server/internal/logger"
+	testEnv "git.ronaksoftware.com/blip/server/pkg"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"github.com/iris-contrib/httpexpect"
 	"github.com/kataras/iris"
 	"github.com/smartystreets/goconvey/convey"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.uber.org/zap"
 	"testing"
 	"time"
 )
@@ -27,18 +24,8 @@ const (
 	BaseUrl = "http://localhost:80"
 )
 
-var (
-	_Log log.Logger
-)
-
 func init() {
-	_Log = log.NewConsoleLogger()
-	if mongoClient, err := mongo.Connect(nil, options.Client().ApplyURI("mongodb://localhost:27017")); err != nil {
-		_Log.Fatal("Error On MongoConnect", zap.Error(err))
-	} else {
-		auth.InitMongo(mongoClient)
-		token.InitMongo(mongoClient)
-	}
+	testEnv.Init()
 
 	app := iris.New()
 	app.UseGlobal(auth.MustHaveAccessKey)

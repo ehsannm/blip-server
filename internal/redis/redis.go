@@ -141,7 +141,6 @@ type PubSubConn interface {
 	Close() error
 }
 
-
 // New
 // This is the constructor of Cache, it accepts Config as input, you can use
 // DefaultConfig for quick initialization, but make sure to add 'Conn' and 'Password' to it
@@ -397,7 +396,6 @@ func (r *Cache) NewSub() {
 
 }
 
-func x () {
-
+func x() {
 
 }

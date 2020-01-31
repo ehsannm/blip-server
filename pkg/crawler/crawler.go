@@ -2,6 +2,7 @@ package crawler
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/pools"
@@ -73,7 +74,7 @@ func GetAll() []*Crawler {
 }
 
 // Search
-func Search(keyword string) <-chan *SearchResponse {
+func Search(ctx context.Context, keyword string) <-chan *SearchResponse {
 	crawlers := getRegisteredCrawlers()
 	if len(crawlers) == 0 {
 		log.Warn("No Crawler has been Registered")
@@ -88,7 +89,7 @@ func Search(keyword string) <-chan *SearchResponse {
 			waitGroup.Add(1)
 			go func(c *Crawler) {
 				defer waitGroup.Done()
-				res, err := c.SendRequest(keyword)
+				res, err := c.SendRequest(ctx, keyword)
 				if err != nil {
 					log.Warn("Error On Crawler Request",
 						zap.Error(err),
@@ -135,7 +136,10 @@ type Crawler struct {
 	Source      string             `bson:"source"`
 }
 
-func (c *Crawler) SendRequest(keyword string) (*SearchResponse, error) {
+func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchResponse, error) {
+	if ctx == nil {
+		ctx = context.Background()
+	}
 	c.httpClient.Timeout = config.HttpRequestTimeout
 	req := SearchRequest{
 		RequestID: tools.RandomID(24),
@@ -145,7 +149,11 @@ func (c *Crawler) SendRequest(keyword string) (*SearchResponse, error) {
 	if err != nil {
 		return nil, err
 	}
-	httpRes, err := c.httpClient.Post(c.Url, "application/json", bytes.NewBuffer(reqBytes))
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.Url, bytes.NewBuffer(reqBytes))
+	if err != nil {
+		return nil, err
+	}
+	httpRes, err := c.httpClient.Do(httpReq)
 	if err != nil {
 		return nil, err
 	}

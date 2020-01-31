@@ -18,13 +18,13 @@ type SearchRequest struct {
 // easyjson:json
 type SearchResponse struct {
 	RequestID string `json:"req_id"`
-	Sources   string `json:"source"`
+	Source    string `json:"source"`
 	Result    struct {
 		SongUrl  string `json:"song_url"`
 		CoverUrl string `json:"cover_url"`
 		Lyrics   string `json:"lyrics,omitempty"`
 		Artists  string `json:"artists"`
 		Title    string `json:"title"`
-		Genre    string `json:"genre"`
+		Genre    string `json:"genre,omitempty"`
 	} `json:"result"`
 }

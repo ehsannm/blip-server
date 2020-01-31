@@ -59,7 +59,7 @@ func RemoveAll(userID string) error {
 }
 
 func Get(sessionID string) (*Session, error) {
-	session := new(Session)
+	session := &Session{}
 	res := sessionCol.FindOne(nil, bson.M{"_id": sessionID}, options.FindOne().SetMaxTime(config.MongoRequestTimeout))
 	err := res.Decode(session)
 	if err != nil {
@@ -68,9 +68,9 @@ func Get(sessionID string) (*Session, error) {
 	return session, nil
 }
 
-var sessionCache map[string]Session
+var sessionCache map[string]*Session
 var mtxLock sync.RWMutex
 
 func init() {
-	sessionCache = make(map[string]Session, 100000)
+	sessionCache = make(map[string]*Session, 100000)
 }

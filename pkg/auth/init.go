@@ -1,11 +1,14 @@
 package auth
 
 import (
+	"fmt"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/sms"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"time"
 )
 
 /*
@@ -19,16 +22,6 @@ import (
 
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson messages.go
-func init() {
-	authCache = make(map[string]Auth, 100000)
-	smsProvider = sms.NewPayamak(
-		config.GetString(config.SmsPayamakUser),
-		config.GetString(config.SmsPayamakPass),
-		config.GetString(config.SmsPayamakUrl),
-		config.GetString(config.SmsPayamakPhone),
-		10,
-	)
-}
 
 func InitMongo(c *mongo.Client) {
 	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
@@ -36,4 +29,32 @@ func InitMongo(c *mongo.Client) {
 
 func InitRedisCache(c *redis.Cache) {
 	redisCache = c
+}
+
+func Init() {
+	authCache = make(map[string]*Auth, 100000)
+	smsProvider = sms.NewPayamak(
+		config.GetString(config.SmsPayamakUser),
+		config.GetString(config.SmsPayamakPass),
+		config.GetString(config.SmsPayamakUrl),
+		config.GetString(config.SmsPayamakPhone),
+		10,
+	)
+
+	cnt, err := authCol.CountDocuments(nil, bson.D{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	if cnt == 0 {
+		_, err := authCol.InsertOne(nil, Auth{
+			ID:          "ROOT",
+			Permissions: []Permission{Admin},
+			CreatedOn:   time.Now().Unix(),
+			ExpiredOn:   0,
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
+	}
 }

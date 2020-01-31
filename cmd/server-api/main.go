@@ -57,15 +57,15 @@ func initModules() {
 	music.InitRedisCache(redisCache)
 	crawler.InitRedisCache(redisCache)
 
+	auth.Init()
+	token.Init()
+	user.Init()
 	// Initialize VAS Saba Service
 	saba.Init()
-
 	// Initialize ACR Sound Identification Service
 	acr.Init()
-
 	// Initialize Music service
 	music.Init()
-
 	// Initialize Crawler service
 	crawler.Init()
 }

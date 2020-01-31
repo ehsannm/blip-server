@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	testEnv "git.ronaksoftware.com/blip/server/pkg"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"github.com/iris-contrib/httpexpect"
 	"github.com/kataras/iris"
@@ -22,8 +23,9 @@ import (
 */
 
 func TestMain(m *testing.M) {
+	testEnv.Init()
 	app := initServer()
-	go app.Run(iris.Addr(":80"), iris.WithOptimizations)
+	go app.Run(iris.Addr(":8080"), iris.WithOptimizations)
 
 	time.Sleep(time.Second)
 
@@ -34,7 +36,7 @@ func TestMain(m *testing.M) {
 
 func TestAuth(t *testing.T) {
 	e := httpexpect.WithConfig(httpexpect.Config{
-		BaseURL:        "http://localhost:80",
+		BaseURL:        "http://localhost:8080",
 		RequestFactory: httpexpect.DefaultRequestFactory{},
 		Client:         http.DefaultClient,
 		Reporter:       httpexpect.NewAssertReporter(t),

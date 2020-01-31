@@ -15,7 +15,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func TestPubSub(t *testing.T) {
 	redisConfig := redis.DefaultConfig
 	redisConfig.Host = config.GetString(config.RedisUrl)

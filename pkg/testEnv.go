@@ -3,9 +3,12 @@ package testEnv
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
+	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"git.ronaksoftware.com/blip/server/pkg/music"
+	"git.ronaksoftware.com/blip/server/pkg/token"
+	"git.ronaksoftware.com/blip/server/pkg/user"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -23,7 +26,7 @@ import (
 */
 
 func Init() {
-	log.InitLogger(log.DebugLevel, "")
+	log.InitLogger(log.InfoLevel, "")
 	config.Set(config.MongoUrl, "mongodb://localhost:27001")
 	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
@@ -44,6 +47,8 @@ func Init() {
 	if err != nil {
 		log.Fatal("Error On MongoConnect (Ping)", zap.Error(err))
 	}
+	auth.InitMongo(mongoClient)
+	token.InitMongo(mongoClient)
 	crawler.InitMongo(mongoClient)
 	music.InitMongo(mongoClient)
 
@@ -56,6 +61,9 @@ func Init() {
 	music.InitRedisCache(redisCache)
 
 	// Initialize Modules
+	auth.Init()
+	token.Init()
+	user.Init()
 	crawler.Init()
 	music.Init()
 
