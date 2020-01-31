@@ -5,6 +5,7 @@ import (
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
@@ -91,10 +92,13 @@ func updateIndex() {
 	log.Info("Indexing songs done!.")
 }
 func watchForSongs() {
+	var resumeToken bson.Raw
 	for {
-		stream, err := songCol.Watch(nil, mongo.Pipeline{},
-			options.ChangeStream().SetFullDocument(options.UpdateLookup),
-		)
+		opts := options.ChangeStream().SetFullDocument(options.UpdateLookup)
+		if resumeToken != nil {
+			opts.SetStartAfter(resumeToken)
+		}
+		stream, err := songCol.Watch(nil, mongo.Pipeline{}, opts)
 		if err != nil {
 			log.Warn("Error On Watch Stream for Songs", zap.Error(err))
 			time.Sleep(time.Second)
@@ -102,15 +106,19 @@ func watchForSongs() {
 		}
 		for stream.Next(nil) {
 			songX := &Song{}
-			err = stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, songX)
-			if err != nil {
-				log.Warn("Error On Decoding Song", zap.Error(err))
-				continue
+			resumeToken = stream.ResumeToken()
+			operationType := strings.Trim(stream.Current.Lookup("operationType").String(), "\"")
+			switch operationType {
+			case "insert", "update":
+				err = stream.Current.Lookup("fullDocument").UnmarshalWithRegistry(bson.DefaultRegistry, songX)
+				if err != nil {
+					log.Warn("Error On Decoding Song", zap.Error(err))
+					continue
+				}
+
+				_ = songIndex.Index(songX.ID.Hex(), songX)
+				log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
 			}
-
-			_ = songIndex.Index(songX.ID.Hex(), songX)
-			log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
-
 		}
 		_ = stream.Close(nil)
 	}
