@@ -39,12 +39,13 @@ func initModules() {
 	} else {
 		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
+		crawler.InitMongo(mongoClient)
+		music.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
 		token.InitMongo(mongoClient)
 		user.InitMongo(mongoClient)
 		vas.InitMongo(mongoClient)
-		music.InitMongo(mongoClient)
-		crawler.InitMongo(mongoClient)
+
 	}
 
 	// Initialize RedisCache
@@ -57,17 +58,14 @@ func initModules() {
 	music.InitRedisCache(redisCache)
 	crawler.InitRedisCache(redisCache)
 
+	acr.Init()
 	auth.Init()
+	crawler.Init()
+	music.Init()
+	saba.Init()
+	session.Init()
 	token.Init()
 	user.Init()
-	// Initialize VAS Saba Service
-	saba.Init()
-	// Initialize ACR Sound Identification Service
-	acr.Init()
-	// Initialize Music service
-	music.Init()
-	// Initialize Crawler service
-	crawler.Init()
 }
 
 func initServer() *iris.Application {

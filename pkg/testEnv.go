@@ -7,6 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"git.ronaksoftware.com/blip/server/pkg/music"
+	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 
@@ -48,9 +49,11 @@ func Init() {
 		log.Fatal("Error On MongoConnect (Ping)", zap.Error(err))
 	}
 	auth.InitMongo(mongoClient)
-	token.InitMongo(mongoClient)
 	crawler.InitMongo(mongoClient)
 	music.InitMongo(mongoClient)
+	session.InitMongo(mongoClient)
+	token.InitMongo(mongoClient)
+	user.InitMongo(mongoClient)
 
 	// Initialize RedisCache
 	redisConfig := redis.DefaultConfig
@@ -62,9 +65,10 @@ func Init() {
 
 	// Initialize Modules
 	auth.Init()
-	token.Init()
-	user.Init()
 	crawler.Init()
 	music.Init()
+	session.Init()
+	token.Init()
+	user.Init()
 
 }

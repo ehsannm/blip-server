@@ -2,7 +2,6 @@ package session
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,13 +18,12 @@ import (
 */
 
 var (
-	sessionCol *mongo.Collection
+	sessionCol   *mongo.Collection
+	sessionCache map[string]*Session
+	mtxLock      sync.RWMutex
 )
 
-func InitMongo(c *mongo.Client) {
-	sessionCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSession)
-}
-
+// Session
 type Session struct {
 	ID         string `json:"id" bson:"_id"`
 	UserID     string `json:"user_id" bson:"user_id"`
@@ -66,11 +64,4 @@ func Get(sessionID string) (*Session, error) {
 		return nil, err
 	}
 	return session, nil
-}
-
-var sessionCache map[string]*Session
-var mtxLock sync.RWMutex
-
-func init() {
-	sessionCache = make(map[string]*Session, 100000)
 }
