@@ -53,7 +53,7 @@ func TestAuth(t *testing.T) {
 			r := e.POST("/auth/create").
 				WithHeader(auth.HdrAccessKey, "ROOT").
 				WithBytes(reqBytes).Expect().JSON().Object()
-			r.Value("constructor").Equal(auth.CAccessTokenCreated)
+			c.So(r.Value("constructor").String().Raw(), ShouldEqual, auth.CAccessTokenCreated)
 			_, _ = c.Println(r.Raw())
 
 		})
@@ -64,8 +64,10 @@ func TestAuth(t *testing.T) {
 			})
 			r := e.POST("/auth/send_code").
 				WithHeader(auth.HdrAccessKey, "ROOT").
-				WithBytes(reqBytes).Expect().JSON().Object().Value("payload").Object()
+				WithBytes(reqBytes).Expect().JSON().Object()
+			c.So(r.Value("constructor").String().Raw(), ShouldEqual, auth.CPhoneCodeSent)
 
+			r = r.Value("payload").Object()
 			phoneCodeHash := r.Value("phone_code_hash").String().Raw()
 			registered := r.Value("registered").Boolean().Raw()
 			_, _ = c.Println(r.Raw(), registered, phoneCodeHash)
@@ -76,10 +78,11 @@ func TestAuth(t *testing.T) {
 						PhoneCodeHash: phoneCodeHash,
 						Phone:         "989121228718",
 					})
-					r := e.POST("/auth/register").
+					r := e.POST("/auth/login").
 						WithHeader(auth.HdrAccessKey, "ROOT").
-						WithBytes(reqBytes).Expect().JSON()
-					c.Println(r.Raw())
+						WithBytes(reqBytes).Expect().JSON().Object()
+					_, _ = c.Println(r.Raw())
+					c.So(r.Value("constructor").String().Raw(), ShouldEqual, auth.CAuthorization)
 				})
 			} else {
 				Convey("Register", func(c C) {
@@ -91,8 +94,8 @@ func TestAuth(t *testing.T) {
 					})
 					r := e.POST("/auth/register").
 						WithHeader(auth.HdrAccessKey, "ROOT").
-						WithBytes(reqBytes).Expect().JSON()
-					c.Println(r.Raw())
+						WithBytes(reqBytes).Expect().JSON().Object()
+					c.So(r.Value("constructor").String().Raw(), ShouldEqual, auth.CAuthorization)
 				})
 			}
 		})
