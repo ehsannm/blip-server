@@ -14,17 +14,18 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+func UpdateLocalIndex(s *Song) error {
+	return songIndex.Index(s.ID.Hex(), s)
+}
 func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	searchRequest := bleve.NewSearchRequest(bleve.NewQueryStringQuery(keyword))
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
-
 	songIDs := make([]primitive.ObjectID, 0, len(res.Hits))
 	for _, hit := range res.Hits {
-		songID, err := primitive.ObjectIDFromHex(hit.ID)
-		if err == nil {
+		if songID, err := primitive.ObjectIDFromHex(hit.ID); err == nil {
 			songIDs = append(songIDs, songID)
 		}
 	}

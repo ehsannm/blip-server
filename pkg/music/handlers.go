@@ -34,7 +34,17 @@ func SearchByProxy(ctx iris.Context) {
 }
 
 func SearchByText(ctx iris.Context) {
+	req := &SearchReq{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	SearchLocalIndex(req.Keyword)
+
 	// TODO:: implement it
+
 }
 
 func SearchBySound(ctx iris.Context) {

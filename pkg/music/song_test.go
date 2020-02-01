@@ -36,8 +36,6 @@ func TestSong(t *testing.T) {
 					Genre:          fmt.Sprintf("Genre %d", i),
 					Lyrics:         fmt.Sprintf("Lyrics %d", i),
 					Artists:        fmt.Sprintf("Artists %d", i),
-					CoverUrl:       fmt.Sprintf("http://cdn.blip.fun/cover_%d", i),
-					SongUrl:        fmt.Sprintf("http://cdn.blip.fun/song_%d", i),
 					OriginCoverUrl: fmt.Sprintf("http://cdn.blip.fun/org_cover_%d", i),
 					OriginSongUrl:  fmt.Sprintf("http://cdn.blip.fun/org_song_%d", i),
 					Source:         fmt.Sprintf("Source %d", i%3),

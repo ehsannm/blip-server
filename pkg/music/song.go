@@ -1,6 +1,9 @@
 package music
 
 import (
+	"encoding/hex"
+	"git.ronaksoftware.com/blip/server/internal/tools"
+	"github.com/gobwas/pool/pbytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -19,15 +22,23 @@ import (
 // easyjson:json
 type Song struct {
 	ID             primitive.ObjectID `bson:"_id" json:"id"`
+	UniqueKey      string             `bson:"unique_key" json:"-"`
 	Title          string             `bson:"title" json:"title"`
 	Genre          string             `bson:"genre" json:"genre"`
 	Lyrics         string             `bson:"lyrics" json:"lyrics"`
 	Artists        string             `bson:"artists" json:"artists"`
-	CoverUrl       string             `bson:"cover_url" json:"cover_url"`
-	SongUrl        string             `bson:"song_url" json:"song_url"`
+	Cdn            string             `bson:"cdn" json:"-"`
 	OriginCoverUrl string             `bson:"org_cover_url" json:"-"`
 	OriginSongUrl  string             `bson:"org_song_url" json:"-"`
 	Source         string             `bson:"source" json:"-"`
+}
+
+func GenerateUniqueKey(songX *Song) string {
+	uniqueKeyArgs := pbytes.GetCap(len(songX.Title) + len(songX.Artists))
+	uniqueKeyArgs = append(uniqueKeyArgs, tools.StrToByte(songX.Title)...)
+	uniqueKeyArgs = append(uniqueKeyArgs, tools.StrToByte(songX.Artists)...)
+	id, _ := tools.Sha256(uniqueKeyArgs)
+	return hex.EncodeToString(id[:])
 }
 
 // DropAllSongs drop all the songs from the database
@@ -36,17 +47,17 @@ func DropAllSongs() error {
 }
 
 // SaveSong saves/replaces the song 's' to the database
-func SaveSong(s *Song) (primitive.ObjectID, error) {
-	s.ID = primitive.NewObjectID()
-	_, err := songCol.InsertOne(nil, s, options.InsertOne())
+func SaveSong(songX *Song) (primitive.ObjectID, error) {
+	songX.ID = primitive.NewObjectID()
+	_, err := songCol.InsertOne(nil, songX)
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-	err = songIndex.Index(s.ID.Hex(), s)
+	err = UpdateLocalIndex(songX)
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-	return s.ID, nil
+	return songX.ID, nil
 }
 
 func GetSong(songID primitive.ObjectID) (*Song, error) {

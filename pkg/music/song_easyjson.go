@@ -48,10 +48,6 @@ func easyjson366630dfDecodeGitRonaksoftwareComBlipServerPkgMusic(in *jlexer.Lexe
 			out.Lyrics = string(in.String())
 		case "artists":
 			out.Artists = string(in.String())
-		case "cover_url":
-			out.CoverUrl = string(in.String())
-		case "song_url":
-			out.SongUrl = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -90,16 +86,6 @@ func easyjson366630dfEncodeGitRonaksoftwareComBlipServerPkgMusic(out *jwriter.Wr
 		const prefix string = ",\"artists\":"
 		out.RawString(prefix)
 		out.String(string(in.Artists))
-	}
-	{
-		const prefix string = ",\"cover_url\":"
-		out.RawString(prefix)
-		out.String(string(in.CoverUrl))
-	}
-	{
-		const prefix string = ",\"song_url\":"
-		out.RawString(prefix)
-		out.String(string(in.SongUrl))
 	}
 	out.RawByte('}')
 }
