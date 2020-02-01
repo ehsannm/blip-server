@@ -16,7 +16,6 @@ for pkg in $packages; do
     fi
   done
   if [ $skipTest = false ]; then
-    echo "Test $pkg"
     x=$(go test -v "$pkg");
     if [ $? -ne 0 ]; then
       curl https://notifier.nstd.me/log/Git%20-%20River%20Test%20Error/${x}

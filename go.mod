@@ -20,6 +20,7 @@ require (
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/subset v0.0.0-20150612182917-8dac2c3c4870 // indirect
 	github.com/getsentry/sentry-go v0.3.0
+	github.com/glycerine/goconvey v0.0.0-20190410193231-58a59202ab31
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gobwas/pool v0.2.0
 	github.com/google/go-cmp v0.3.0 // indirect

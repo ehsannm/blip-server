@@ -6,7 +6,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"github.com/iris-contrib/httpexpect"
 	"github.com/kataras/iris"
-	"github.com/smartystreets/goconvey/convey"
+	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
 )
@@ -21,7 +21,7 @@ import (
 */
 
 const (
-	BaseUrl = "http://localhost:80"
+	BaseUrl = "http://localhost:8989"
 )
 
 func init() {
@@ -34,16 +34,16 @@ func init() {
 	tokenParty.Post("/validate", auth.MustReadAccess, token.ValidateHandler)
 
 	go func() {
-		_ = app.Run(iris.Addr(":80"), iris.WithOptimizations)
+		_ = app.Run(iris.Addr(":8989"), iris.WithOptimizations)
 	}()
 	time.Sleep(time.Second)
 }
 
 func TestToken(t *testing.T) {
 	genToken := ""
-	convey.Convey("TestToken", t, func(c convey.C) {
+	Convey("TestToken", t, func(c C) {
 		e := httpexpect.New(t, BaseUrl)
-		convey.Convey("Create Token", func(c convey.C) {
+		Convey("Create Token", func(c C) {
 			r := e.POST("/token/create").
 				WithHeader(auth.HdrAccessKey, "ROOT").
 				WithFormField("Phone", "989121228718").
@@ -52,14 +52,14 @@ func TestToken(t *testing.T) {
 			genToken = r.Element(0).Array().Element(0).String().Raw()
 		})
 
-		convey.Convey("Validate Token", func(c convey.C) {
+		Convey("Validate Token", func(c C) {
 			r := e.POST("/token/validate").
 				WithHeader(auth.HdrAccessKey, "ROOT").
 				WithFormField("DeviceID", "989121228718").
 				WithFormField("Token", genToken).
 				Expect().JSON().Object()
 			r.Value("constructor").String().Equal(token.CValidated)
-			_, _ = convey.Println(r.Value("payload").Object().Value("remaining_days").Number().Raw())
+			_, _ = c.Println(r.Value("payload").Object().Value("remaining_days").Number().Raw())
 		})
 
 	})
