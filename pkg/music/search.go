@@ -50,51 +50,54 @@ type searchCtx struct {
 
 func (ctx *searchCtx) job() {
 	for r := range ctx.resChan {
-		uniqueKey := GenerateUniqueKey(r.Result.Title, r.Result.Artists)
-		songX, err := GetSongByUniqueKey(uniqueKey)
-		if err != nil {
-			songX = &Song{
-				ID:             primitive.NilObjectID,
-				UniqueKey:      uniqueKey,
-				Title:          r.Result.Title,
-				Genre:          r.Result.Genre,
-				Lyrics:         r.Result.Lyrics,
-				Artists:        r.Result.Artists,
-				Cdn:            "",
-				OriginCoverUrl: r.Result.CoverUrl,
-				OriginSongUrl:  r.Result.SongUrl,
-				Source:         r.Source,
+		for _, foundSong := range r.Result {
+			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
+			songX, err := GetSongByUniqueKey(uniqueKey)
+			if err != nil {
+				songX = &Song{
+					ID:             primitive.NilObjectID,
+					UniqueKey:      uniqueKey,
+					Title:          foundSong.Title,
+					Genre:          foundSong.Genre,
+					Lyrics:         foundSong.Lyrics,
+					Artists:        foundSong.Artists,
+					Cdn:            "",
+					OriginCoverUrl: foundSong.CoverUrl,
+					OriginSongUrl:  foundSong.SongUrl,
+					Source:         r.Source,
+				}
+				_, err = SaveSong(songX)
+				if err != nil {
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Source", r.Source),
+						zap.String("Title", foundSong.Title),
+					)
+					continue
+				}
+				select {
+				case ctx.songChan <- songX:
+				default:
+				}
+				continue
 			}
+			songX.Artists = foundSong.Artists
+			songX.Title = foundSong.Title
+			songX.Genre = foundSong.Genre
+			songX.Lyrics = foundSong.Lyrics
+			songX.OriginSongUrl = foundSong.SongUrl
+			songX.OriginCoverUrl = foundSong.CoverUrl
+			songX.Source = r.Source
 			_, err = SaveSong(songX)
 			if err != nil {
 				log.Warn("Error On Save Search Result",
 					zap.Error(err),
 					zap.String("Source", r.Source),
-					zap.String("Title", r.Result.Title),
+					zap.String("Title", foundSong.Title),
 				)
-				continue
 			}
-			select {
-			case ctx.songChan <- songX:
-			default:
-			}
-			continue
 		}
-		songX.Artists = r.Result.Artists
-		songX.Title = r.Result.Title
-		songX.Genre = r.Result.Genre
-		songX.Lyrics = r.Result.Lyrics
-		songX.OriginSongUrl = r.Result.SongUrl
-		songX.OriginCoverUrl = r.Result.CoverUrl
-		songX.Source = r.Source
-		_, err = SaveSong(songX)
-		if err != nil {
-			log.Warn("Error On Save Search Result",
-				zap.Error(err),
-				zap.String("Source", r.Source),
-				zap.String("Title", r.Result.Title),
-			)
-		}
+
 	}
 	close(ctx.songChan)
 	ctx.done <- struct{}{}
@@ -113,7 +116,7 @@ func StartSearch(cursorID string, keyword string) <-chan *Song {
 
 	ctx = &searchCtx{
 		cursorID: cursorID,
-		done:     make(chan struct{}),
+		done:     make(chan struct{}, 1),
 		songChan: make(chan *Song, 100),
 	}
 	ctx.ctx, ctx.cancelFunc = context.WithCancel(context.Background())
@@ -130,6 +133,7 @@ func ResumeSearch(cursorID string) <-chan *Song {
 	if ctx == nil {
 		return nil
 	}
+
 	return ctx.songChan
 }
 
@@ -140,7 +144,20 @@ func saveSearchCtx(ctx *searchCtx) {
 }
 func getSearchCtx(cursorID string) *searchCtx {
 	searchContextsMtx.RLock()
-	v := searchContexts[cursorID]
+	ctx := searchContexts[cursorID]
 	searchContextsMtx.RUnlock()
-	return v
+	if ctx != nil {
+		select {
+		case <-ctx.done:
+			searchContextsMtx.Lock()
+			delete(searchContexts, cursorID)
+			searchContextsMtx.Unlock()
+			return nil
+		default:
+		}
+	}
+	return ctx
+}
+func deleteSearchCtx(cursorID string) {
+
 }

@@ -17,14 +17,17 @@ type SearchRequest struct {
 
 // easyjson:json
 type SearchResponse struct {
-	RequestID string `json:"req_id"`
-	Source    string `json:"source"`
-	Result    struct {
-		SongUrl  string `json:"song_url"`
-		CoverUrl string `json:"cover_url"`
-		Lyrics   string `json:"lyrics,omitempty"`
-		Artists  string `json:"artists"`
-		Title    string `json:"title"`
-		Genre    string `json:"genre,omitempty"`
-	} `json:"result"`
+	RequestID string      `json:"req_id"`
+	Source    string      `json:"source"`
+	Result    []FoundSong `json:"result"`
+}
+
+// easyjson:json
+type FoundSong struct {
+	SongUrl  string `json:"song_url"`
+	CoverUrl string `json:"cover_url"`
+	Lyrics   string `json:"lyrics,omitempty"`
+	Artists  string `json:"artists"`
+	Title    string `json:"title"`
+	Genre    string `json:"genre,omitempty"`
 }

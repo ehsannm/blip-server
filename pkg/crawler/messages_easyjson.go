@@ -41,7 +41,28 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler(in *jlexer.Le
 		case "source":
 			out.Source = string(in.String())
 		case "result":
-			easyjson66c1e240Decode(in, &out.Result)
+			if in.IsNull() {
+				in.Skip()
+				out.Result = nil
+			} else {
+				in.Delim('[')
+				if out.Result == nil {
+					if !in.IsDelim(']') {
+						out.Result = make([]FoundSong, 0, 1)
+					} else {
+						out.Result = []FoundSong{}
+					}
+				} else {
+					out.Result = (out.Result)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v1 FoundSong
+					(v1).UnmarshalEasyJSON(in)
+					out.Result = append(out.Result, v1)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
 		default:
 			in.SkipRecursive()
 		}
@@ -69,7 +90,18 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler(out *jwriter.
 	{
 		const prefix string = ",\"result\":"
 		out.RawString(prefix)
-		easyjson66c1e240Encode(out, in.Result)
+		if in.Result == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v2, v3 := range in.Result {
+				if v2 > 0 {
+					out.RawByte(',')
+				}
+				(v3).MarshalEasyJSON(out)
+			}
+			out.RawByte(']')
+		}
 	}
 	out.RawByte('}')
 }
@@ -96,97 +128,6 @@ func (v *SearchResponse) UnmarshalJSON(data []byte) error {
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SearchResponse) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler(l, v)
-}
-func easyjson66c1e240Decode(in *jlexer.Lexer, out *struct {
-	SongUrl  string `json:"song_url"`
-	CoverUrl string `json:"cover_url"`
-	Lyrics   string `json:"lyrics,omitempty"`
-	Artists  string `json:"artists"`
-	Title    string `json:"title"`
-	Genre    string `json:"genre,omitempty"`
-}) {
-	isTopLevel := in.IsStart()
-	if in.IsNull() {
-		if isTopLevel {
-			in.Consumed()
-		}
-		in.Skip()
-		return
-	}
-	in.Delim('{')
-	for !in.IsDelim('}') {
-		key := in.UnsafeString()
-		in.WantColon()
-		if in.IsNull() {
-			in.Skip()
-			in.WantComma()
-			continue
-		}
-		switch key {
-		case "song_url":
-			out.SongUrl = string(in.String())
-		case "cover_url":
-			out.CoverUrl = string(in.String())
-		case "lyrics":
-			out.Lyrics = string(in.String())
-		case "artists":
-			out.Artists = string(in.String())
-		case "title":
-			out.Title = string(in.String())
-		case "genre":
-			out.Genre = string(in.String())
-		default:
-			in.SkipRecursive()
-		}
-		in.WantComma()
-	}
-	in.Delim('}')
-	if isTopLevel {
-		in.Consumed()
-	}
-}
-func easyjson66c1e240Encode(out *jwriter.Writer, in struct {
-	SongUrl  string `json:"song_url"`
-	CoverUrl string `json:"cover_url"`
-	Lyrics   string `json:"lyrics,omitempty"`
-	Artists  string `json:"artists"`
-	Title    string `json:"title"`
-	Genre    string `json:"genre,omitempty"`
-}) {
-	out.RawByte('{')
-	first := true
-	_ = first
-	{
-		const prefix string = ",\"song_url\":"
-		out.RawString(prefix[1:])
-		out.String(string(in.SongUrl))
-	}
-	{
-		const prefix string = ",\"cover_url\":"
-		out.RawString(prefix)
-		out.String(string(in.CoverUrl))
-	}
-	if in.Lyrics != "" {
-		const prefix string = ",\"lyrics\":"
-		out.RawString(prefix)
-		out.String(string(in.Lyrics))
-	}
-	{
-		const prefix string = ",\"artists\":"
-		out.RawString(prefix)
-		out.String(string(in.Artists))
-	}
-	{
-		const prefix string = ",\"title\":"
-		out.RawString(prefix)
-		out.String(string(in.Title))
-	}
-	if in.Genre != "" {
-		const prefix string = ",\"genre\":"
-		out.RawString(prefix)
-		out.String(string(in.Genre))
-	}
-	out.RawByte('}')
 }
 func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler1(in *jlexer.Lexer, out *SearchRequest) {
 	isTopLevel := in.IsStart()
@@ -260,4 +201,105 @@ func (v *SearchRequest) UnmarshalJSON(data []byte) error {
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SearchRequest) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler1(l, v)
+}
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler2(in *jlexer.Lexer, out *FoundSong) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "song_url":
+			out.SongUrl = string(in.String())
+		case "cover_url":
+			out.CoverUrl = string(in.String())
+		case "lyrics":
+			out.Lyrics = string(in.String())
+		case "artists":
+			out.Artists = string(in.String())
+		case "title":
+			out.Title = string(in.String())
+		case "genre":
+			out.Genre = string(in.String())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler2(out *jwriter.Writer, in FoundSong) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"song_url\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.SongUrl))
+	}
+	{
+		const prefix string = ",\"cover_url\":"
+		out.RawString(prefix)
+		out.String(string(in.CoverUrl))
+	}
+	if in.Lyrics != "" {
+		const prefix string = ",\"lyrics\":"
+		out.RawString(prefix)
+		out.String(string(in.Lyrics))
+	}
+	{
+		const prefix string = ",\"artists\":"
+		out.RawString(prefix)
+		out.String(string(in.Artists))
+	}
+	{
+		const prefix string = ",\"title\":"
+		out.RawString(prefix)
+		out.String(string(in.Title))
+	}
+	if in.Genre != "" {
+		const prefix string = ",\"genre\":"
+		out.RawString(prefix)
+		out.String(string(in.Genre))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v FoundSong) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler2(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v FoundSong) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler2(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *FoundSong) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler2(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *FoundSong) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler2(l, v)
 }
