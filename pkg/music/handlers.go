@@ -9,6 +9,7 @@ import (
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
 	"net/http"
+	"time"
 )
 
 /*
@@ -31,20 +32,6 @@ func SearchByProxy(ctx iris.Context) {
 
 	}
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
-}
-
-func SearchByText(ctx iris.Context) {
-	req := &SearchReq{}
-	err := ctx.ReadJSON(req)
-	if err != nil {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
-		return
-	}
-
-	SearchLocalIndex(req.Keyword)
-
-	// TODO:: implement it
-
 }
 
 func SearchBySound(ctx iris.Context) {
@@ -74,8 +61,73 @@ func SearchBySound(ctx iris.Context) {
 	}
 }
 
+func SearchByText(ctx iris.Context) {
+	req := &SearchReq{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
+
+	songIDs, err := SearchLocalIndex(req.Keyword)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		return
+	}
+
+	songs, err := GetManySongs(songIDs)
+	if err != nil {
+		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
+
+	if len(songs) == 0 {
+		songX, ok := <-songChan
+		if ok {
+			songs = append(songs, songX)
+		}
+	MainLoop:
+		for {
+			select {
+			case songX, ok := <-songChan:
+				if !ok {
+					break MainLoop
+				}
+				songs = append(songs, songX)
+			default:
+
+			}
+		}
+	}
+
+	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
+		Songs: songs,
+	})
+}
+
 func SearchByCursor(ctx iris.Context) {
-	// TODO:: implement it
+	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
+	t := time.NewTimer(time.Minute)
+	t.Stop()
+	songs := make([]*Song, 0, 100)
+MainLoop:
+	for {
+		select {
+		case songX, ok := <-songChan:
+			if !ok {
+				break MainLoop
+			}
+			songs = append(songs, songX)
+			t.Reset(time.Second)
+		case <-t.C:
+			break MainLoop
+		}
+	}
+	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
+		Songs: songs,
+	})
 }
 
 func Download(ctx iris.Context) {

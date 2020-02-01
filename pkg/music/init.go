@@ -2,10 +2,10 @@ package music
 
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"strings"
+	"sync"
 
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
@@ -31,20 +31,18 @@ import (
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson song.go messages.go
 var (
-	songIndex  bleve.Index
-	songCol    *mongo.Collection
-	redisCache *redis.Cache
+	songIndex         bleve.Index
+	songCol           *mongo.Collection
+	searchContexts    map[string]*searchCtx
+	searchContextsMtx sync.RWMutex
 )
 
 func InitMongo(c *mongo.Client) {
 	songCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSong)
 }
 
-func InitRedisCache(c *redis.Cache) {
-	redisCache = c
-}
-
 func Init() {
+	searchContexts = make(map[string]*searchCtx)
 	initializeIndex()
 	updateIndex()
 	go watchForSongs()

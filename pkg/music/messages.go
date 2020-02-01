@@ -21,6 +21,5 @@ const CSearchResult = "SEARCH_RESULT"
 
 // SearchResult
 type SearchResult struct {
-	Songs    []Song `json:"songs"`
-	CursorID string `json:"cursor_id"`
+	Songs []*Song `json:"songs"`
 }

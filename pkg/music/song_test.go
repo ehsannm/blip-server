@@ -41,7 +41,7 @@ func TestSong(t *testing.T) {
 					Source:         fmt.Sprintf("Source %d", i%3),
 				})
 				So(err, ShouldBeNil)
-				songX, err := music.GetSong(songID)
+				songX, err := music.GetSongByID(songID)
 				So(err, ShouldBeNil)
 				So(songX, ShouldNotBeNil)
 				So(songX.Title, ShouldEqual, fmt.Sprintf("Song %d", i))

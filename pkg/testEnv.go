@@ -62,8 +62,6 @@ func Init() {
 	redisConfig.Password = config.GetString(config.RedisPass)
 	redisCache := redis.New(redisConfig)
 	auth.InitRedisCache(redisCache)
-	crawler.InitRedisCache(redisCache)
-	music.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
 
 	// Initialize Modules

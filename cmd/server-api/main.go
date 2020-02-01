@@ -55,8 +55,6 @@ func initModules() {
 	redisCache := redis.New(redisConfig)
 	auth.InitRedisCache(redisCache)
 	user.InitRedisCache(redisCache)
-	music.InitRedisCache(redisCache)
-	crawler.InitRedisCache(redisCache)
 
 	acr.Init()
 	auth.Init()

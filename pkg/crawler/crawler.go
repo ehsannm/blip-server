@@ -6,18 +6,15 @@ import (
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/pools"
-	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.uber.org/zap"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"io/ioutil"
 	"net/http"
-	"sync"
 )
 
 /*
@@ -28,14 +25,6 @@ import (
    Auditor: Ehsan N. Moosa (E2)
    Copyright Ronak Software Group 2018
 */
-
-var (
-	redisCache             *redis.Cache
-	crawlerCol             *mongo.Collection
-	registeredCrawlersMtx  sync.RWMutex
-	registeredCrawlers     map[string][]*Crawler
-	registeredCrawlersPool sync.Pool
-)
 
 // DropAll deletes all the crawlers from the database
 func DropAll() error {
@@ -73,7 +62,8 @@ func GetAll() []*Crawler {
 	return list
 }
 
-// Search
+// Search sends search request to all the crawlers and pushes the result into the channel.
+// Crawlers are categorized with their 'Source' tag.
 func Search(ctx context.Context, keyword string) <-chan *SearchResponse {
 	crawlers := getRegisteredCrawlers()
 	if len(crawlers) == 0 {
@@ -107,7 +97,6 @@ func Search(ctx context.Context, keyword string) <-chan *SearchResponse {
 	}()
 	return resChan
 }
-
 func getRegisteredCrawlers() []*Crawler {
 	list, ok := registeredCrawlersPool.Get().([]*Crawler)
 	if ok {

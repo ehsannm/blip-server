@@ -2,10 +2,10 @@ package crawler
 
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"strings"
+	"sync"
 
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,9 +25,12 @@ import (
 
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson crawler.go messages.go
-func InitRedisCache(c *redis.Cache) {
-	redisCache = c
-}
+var (
+	crawlerCol             *mongo.Collection
+	registeredCrawlersMtx  sync.RWMutex
+	registeredCrawlers     map[string][]*Crawler
+	registeredCrawlersPool sync.Pool
+)
 
 func InitMongo(c *mongo.Client) {
 	crawlerCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColCrawler)

@@ -40,6 +40,7 @@ var (
 	ErrUserNotFound            Item = "USER_NOT_FOUND"
 	Err3rdParty                Item = "3RD_PARTY_INVALID_RESPONSE"
 	ErrCorruptData             Item = "CORRUPT_DATA"
+	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
 )
 
 func Error(ctx iris.Context, httpStatus int, errItem Item) {
