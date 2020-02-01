@@ -28,6 +28,7 @@ import (
 
 func Init() {
 	log.InitLogger(log.InfoLevel, "")
+	config.Set(config.TestMode, true)
 	config.Set(config.MongoUrl, "mongodb://localhost:27001")
 	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
@@ -60,8 +61,10 @@ func Init() {
 	redisConfig.Host = config.GetString(config.RedisUrl)
 	redisConfig.Password = config.GetString(config.RedisPass)
 	redisCache := redis.New(redisConfig)
+	auth.InitRedisCache(redisCache)
 	crawler.InitRedisCache(redisCache)
 	music.InitRedisCache(redisCache)
+	user.InitRedisCache(redisCache)
 
 	// Initialize Modules
 	auth.Init()

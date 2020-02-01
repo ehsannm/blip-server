@@ -15,6 +15,7 @@ import (
 */
 
 const (
+	TestMode       = "TEST_MODE"
 	LogLevel       = "LOG_LEVEL"
 	MongoUrl       = "MONGO_URL"
 	MongoDB        = "MONGO_DB"
@@ -35,11 +36,10 @@ const (
 	ACRBaseUrl      = "ACR_BASE_URL"
 
 	// Sms Configs
-	SmsADPUrl   = "SMS_ADP_URL"
-	SmsAdpUser  = "SMS_ADP_USER"
-	SmsAdpPass  = "SMS_ADP_PASS"
-	SmsAdpPhone = "SMS_ADP_PHONE"
-
+	SmsADPUrl       = "SMS_ADP_URL"
+	SmsAdpUser      = "SMS_ADP_USER"
+	SmsAdpPass      = "SMS_ADP_PASS"
+	SmsAdpPhone     = "SMS_ADP_PHONE"
 	SmsPayamakUrl   = "SMS_PAYAMAK_URL"
 	SmsPayamakUser  = "SMS_PAYAMAK_USER"
 	SmsPayamakPass  = "SMS_PAYAMAK_PASS"
@@ -50,6 +50,7 @@ func init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
+	pflag.Bool(TestMode, false, "")
 	pflag.Int(LogLevel, 0, "")
 	pflag.String(MongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(MongoDB, "blip", "")

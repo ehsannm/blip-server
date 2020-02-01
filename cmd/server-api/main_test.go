@@ -45,15 +45,16 @@ func TestAuth(t *testing.T) {
 
 	Convey("Auth Tests", t, func() {
 		Convey("CreateAuth", func(c C) {
+			reqBytes, _ := auth.CreateAccessToken{
+				Permissions: []string{"read", "write"},
+				Period:      90,
+				AppName:     auth.AppNameMusicChi,
+			}.MarshalJSON()
 			r := e.POST("/auth/create").
 				WithHeader(auth.HdrAccessKey, "ROOT").
-				WithFormField("Permissions", "read").
-				WithFormField("Permissions", "write").
-				WithFormField("Period", 90).
-				Expect().JSON().Object()
-
-			c.Println(r.Raw())
-			// r.Value("constructor").Equal(auth.CAccessTokenCreated)
+				WithBytes(reqBytes).Expect().JSON().Object()
+			r.Value("constructor").Equal(auth.CAccessTokenCreated)
+			_, _ = c.Println(r.Raw())
 
 		})
 
@@ -63,21 +64,37 @@ func TestAuth(t *testing.T) {
 			})
 			r := e.POST("/auth/send_code").
 				WithHeader(auth.HdrAccessKey, "ROOT").
-				WithBytes(reqBytes).Expect().JSON()
-			c.Println(r.Raw())
-		})
+				WithBytes(reqBytes).Expect().JSON().Object().Value("payload").Object()
 
-		Convey("Register", func(c C) {
-			reqBytes, _ := json.Marshal(auth.RegisterReq{
-				PhoneCode:     "0",
-				PhoneCodeHash: "",
-				Phone:         "989121228718",
-				Username:      "ehsan",
-			})
-			r := e.POST("/auth/register").
-				WithHeader(auth.HdrAccessKey, "ROOT").
-				WithBytes(reqBytes).Expect().JSON()
-			c.Println(r.Raw())
+			phoneCodeHash := r.Value("phone_code_hash").String().Raw()
+			registered := r.Value("registered").Boolean().Raw()
+			_, _ = c.Println(r.Raw(), registered, phoneCodeHash)
+			if registered {
+				Convey("Login", func(c C) {
+					reqBytes, _ := json.Marshal(auth.LoginReq{
+						PhoneCode:     "2374",
+						PhoneCodeHash: phoneCodeHash,
+						Phone:         "989121228718",
+					})
+					r := e.POST("/auth/register").
+						WithHeader(auth.HdrAccessKey, "ROOT").
+						WithBytes(reqBytes).Expect().JSON()
+					c.Println(r.Raw())
+				})
+			} else {
+				Convey("Register", func(c C) {
+					reqBytes, _ := json.Marshal(auth.RegisterReq{
+						PhoneCode:     "2374",
+						PhoneCodeHash: phoneCodeHash,
+						Phone:         "989121228718",
+						Username:      "ehsan",
+					})
+					r := e.POST("/auth/register").
+						WithHeader(auth.HdrAccessKey, "ROOT").
+						WithBytes(reqBytes).Expect().JSON()
+					c.Println(r.Raw())
+				})
+			}
 		})
 	})
 
