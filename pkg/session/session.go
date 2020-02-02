@@ -16,7 +16,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 // Session
 type Session struct {
 	ID         string `json:"id" bson:"_id"`

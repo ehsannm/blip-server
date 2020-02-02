@@ -1,5 +1,10 @@
 package music
 
+import (
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
+
 /*
    Creation Time: 2020 - Feb - 02
    Created by:  (ehsan)
@@ -15,6 +20,12 @@ type Store struct {
 	Dsn      string `bson:"dsn"`
 	Capacity int    `bson:"cap"`
 	Region   string `bson:"region"`
+}
+
+// SaveStore
+func SaveStore(storeX *Store) error {
+	_, err := storeCol.UpdateOne(nil, bson.M{"_id": storeX.ID}, bson.M{"$set": storeX}, options.Update().SetUpsert(true))
+	return err
 }
 
 // GetStore returns a store identified by storeID

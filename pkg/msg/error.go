@@ -40,4 +40,3 @@ var (
 	ErrCorruptData             Item = "CORRUPT_DATA"
 	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
 )
-

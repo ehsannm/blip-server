@@ -497,7 +497,7 @@ func LogoutHandler(ctx iris.Context) {
 		return
 	}
 
-	msg.WriteResponse(ctx, CBool, Bool{
+	msg.WriteResponse(ctx, msg.CBool, msg.Bool{
 		Success: true,
 	})
 }

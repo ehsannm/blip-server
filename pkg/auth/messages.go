@@ -74,10 +74,3 @@ type Authorization struct {
 type LogoutReq struct {
 	Unsubscribe bool `json:"unsubscribe"`
 }
-
-const CBool = "BOOL"
-
-// easyjson:json
-type Bool struct {
-	Success bool `json:"success"`
-}

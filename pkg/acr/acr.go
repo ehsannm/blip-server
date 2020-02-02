@@ -29,7 +29,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 func IdentifyByFile(fileAddr string) (*Music, error) {
 	f, err := os.Open(fileAddr)
 	if err != nil {

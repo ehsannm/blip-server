@@ -17,7 +17,117 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(in *jlexer.Lexer, out *SearchReq) {
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(in *jlexer.Lexer, out *SearchResult) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "songs":
+			if in.IsNull() {
+				in.Skip()
+				out.Songs = nil
+			} else {
+				in.Delim('[')
+				if out.Songs == nil {
+					if !in.IsDelim(']') {
+						out.Songs = make([]*Song, 0, 8)
+					} else {
+						out.Songs = []*Song{}
+					}
+				} else {
+					out.Songs = (out.Songs)[:0]
+				}
+				for !in.IsDelim(']') {
+					var v1 *Song
+					if in.IsNull() {
+						in.Skip()
+						v1 = nil
+					} else {
+						if v1 == nil {
+							v1 = new(Song)
+						}
+						(*v1).UnmarshalEasyJSON(in)
+					}
+					out.Songs = append(out.Songs, v1)
+					in.WantComma()
+				}
+				in.Delim(']')
+			}
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(out *jwriter.Writer, in SearchResult) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"songs\":"
+		out.RawString(prefix[1:])
+		if in.Songs == nil && (out.Flags&jwriter.NilSliceAsEmpty) == 0 {
+			out.RawString("null")
+		} else {
+			out.RawByte('[')
+			for v2, v3 := range in.Songs {
+				if v2 > 0 {
+					out.RawByte(',')
+				}
+				if v3 == nil {
+					out.RawString("null")
+				} else {
+					(*v3).MarshalEasyJSON(out)
+				}
+			}
+			out.RawByte(']')
+		}
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v SearchResult) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v SearchResult) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *SearchResult) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *SearchResult) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(l, v)
+}
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic1(in *jlexer.Lexer, out *SearchReq) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -52,7 +162,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(in *jlexer.Lexe
 		in.Consumed()
 	}
 }
-func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(out *jwriter.Writer, in SearchReq) {
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic1(out *jwriter.Writer, in SearchReq) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -77,23 +187,110 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(out *jwriter.Wr
 // MarshalJSON supports json.Marshaler interface
 func (v SearchReq) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(&w, v)
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic1(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v SearchReq) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic(w, v)
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic1(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *SearchReq) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(&r, v)
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic1(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *SearchReq) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic(l, v)
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic1(l, v)
+}
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic2(in *jlexer.Lexer, out *SaveStoreReq) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "store_id":
+			out.StoreID = int64(in.Int64())
+		case "dsn":
+			out.Dsn = string(in.String())
+		case "region":
+			out.Region = string(in.String())
+		case "capacity":
+			out.Capacity = int(in.Int())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic2(out *jwriter.Writer, in SaveStoreReq) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"store_id\":"
+		out.RawString(prefix[1:])
+		out.Int64(int64(in.StoreID))
+	}
+	{
+		const prefix string = ",\"dsn\":"
+		out.RawString(prefix)
+		out.String(string(in.Dsn))
+	}
+	{
+		const prefix string = ",\"region\":"
+		out.RawString(prefix)
+		out.String(string(in.Region))
+	}
+	{
+		const prefix string = ",\"capacity\":"
+		out.RawString(prefix)
+		out.Int(int(in.Capacity))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v SaveStoreReq) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic2(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v SaveStoreReq) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgMusic2(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *SaveStoreReq) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic2(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *SaveStoreReq) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgMusic2(l, v)
 }

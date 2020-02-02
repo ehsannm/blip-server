@@ -9,7 +9,6 @@ package auth
    Copyright Ronak Software Group 2018
 */
 
-
 type Permission byte
 
 const (

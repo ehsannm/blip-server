@@ -6,20 +6,20 @@
 package main
 
 import (
-  "fmt"
-  "os"
+	"fmt"
+	"os"
 
-  "github.com/mailru/easyjson/gen"
+	"github.com/mailru/easyjson/gen"
 
-  pkg "git.ronaksoftware.com/blip/server/pkg/msg"
+	pkg "git.ronaksoftware.com/blip/server/pkg/msg"
 )
 
 func main() {
-  g := gen.NewGenerator("envelope_easyjson.go")
-  g.SetPkg("msg", "git.ronaksoftware.com/blip/server/pkg/msg")
-  g.Add(pkg.EasyJSON_exporter_ResponseEnvelope(nil))
-  if err := g.Run(os.Stdout); err != nil {
-    fmt.Fprintln(os.Stderr, err)
-    os.Exit(1)
-  }
+	g := gen.NewGenerator("envelope_easyjson.go")
+	g.SetPkg("msg", "git.ronaksoftware.com/blip/server/pkg/msg")
+	g.Add(pkg.EasyJSON_exporter_ResponseEnvelope(nil))
+	if err := g.Run(os.Stdout); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }

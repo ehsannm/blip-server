@@ -22,7 +22,27 @@ import (
 */
 
 func AddStore(ctx iris.Context) {
-	// TODO:: implement it
+	req := &SaveStoreReq{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+
+	err = SaveStore(&Store{
+		ID:       req.StoreID,
+		Dsn:      req.Dsn,
+		Capacity: req.Capacity,
+		Region:   req.Region,
+	})
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+
+	msg.WriteResponse(ctx, msg.CBool, &msg.Bool{
+		Success: true,
+	})
 }
 
 func SearchByProxy(ctx iris.Context) {
