@@ -28,4 +28,5 @@ const (
 	FlagSessionID     = "sessionID"
 	FlagAppName       = "appName"
 	FlagFilePath      = "filePath"
+	FlagKeyword       = "keyword"
 )

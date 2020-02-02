@@ -2,14 +2,28 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/music/search_test.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/acr/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/crawler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/crawler_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/cmd_music.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/cmd_music.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/acr/acr.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/acr.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/envelope.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/envelope.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/song_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/song_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/search_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/song.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/song.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/testEnv.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/testEnv.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/user/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/handlers.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,13 +127,13 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580244430983" />
-    <state x="498" y="282" width="837" height="550" key="find.popup" timestamp="1580310185951">
+    <state x="498" y="282" width="837" height="550" key="find.popup" timestamp="1580586722172">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580310185951" />
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1580221289901">
+    <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580586722172" />
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1580586985203">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580221289901" />
+    <state x="505" y="233" width="670" height="676" key="search.everywhere.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580586985203" />
   </component>
 </project>

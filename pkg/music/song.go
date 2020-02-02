@@ -33,6 +33,8 @@ type Song struct {
 	Source         string             `bson:"source" json:"-"`
 }
 
+// GenerateUniqueKey returns a unique hash which help us to identify similar songs to prevent from double storing
+// those songs in the database.
 func GenerateUniqueKey(title, artists string) string {
 	uniqueKeyArgs := pbytes.GetCap(len(title) + len(artists))
 	uniqueKeyArgs = append(uniqueKeyArgs, tools.StrToByte(title)...)

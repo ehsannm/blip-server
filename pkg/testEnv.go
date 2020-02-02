@@ -35,7 +35,7 @@ import (
 */
 
 func Init() {
-	log.InitLogger(log.InfoLevel, "")
+	log.InitLogger(log.DebugLevel, "")
 	config.Set(config.TestMode, true)
 	config.Set(config.MongoUrl, "mongodb://localhost:27001")
 	config.Set(config.MongoDB, "blip")

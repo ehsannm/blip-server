@@ -49,6 +49,7 @@ type searchCtx struct {
 }
 
 func (ctx *searchCtx) job() {
+	log.Debug("SearchContext started", zap.String("CursorID", ctx.cursorID))
 	for r := range ctx.resChan {
 		for _, foundSong := range r.Result {
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
@@ -101,6 +102,7 @@ func (ctx *searchCtx) job() {
 	}
 	close(ctx.songChan)
 	ctx.done <- struct{}{}
+	log.Debug("SearchContext done", zap.String("CursorID", ctx.cursorID))
 }
 
 // StartSearch creates a new context and send the request to all the crawlers and waits for them to finish. If a context

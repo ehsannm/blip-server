@@ -17,11 +17,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var (
-	sessionCol   *mongo.Collection
-	sessionCache map[string]*Session
-	mtxLock      sync.RWMutex
-)
 
 // Session
 type Session struct {
@@ -50,9 +45,9 @@ func RemoveAll(userID string) error {
 	if err != nil {
 		return err
 	}
-	mtxLock.Lock()
+	sessionCacheMtx.Lock()
 	delete(sessionCache, session.ID)
-	mtxLock.Unlock()
+	sessionCacheMtx.Unlock()
 	return err
 }
 

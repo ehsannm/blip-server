@@ -19,9 +19,9 @@ import (
 
 func MustHaveSession(ctx iris.Context) {
 	sessionID := ctx.GetHeader(HdrSessionID)
-	mtxLock.RLock()
+	sessionCacheMtx.RLock()
 	session, ok := sessionCache[sessionID]
-	mtxLock.RUnlock()
+	sessionCacheMtx.RUnlock()
 	if !ok {
 		if s, err := Get(sessionID); err != nil {
 			if ce := log.Check(log.DebugLevel, "Error On GetSession"); ce != nil {
@@ -30,16 +30,16 @@ func MustHaveSession(ctx iris.Context) {
 					zap.String("SessionID", sessionID),
 				)
 			}
-			msg.Error(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
+			msg.WriteError(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
 			return
 		} else {
 			session = s
 		}
 	}
 
-	mtxLock.Lock()
+	sessionCacheMtx.Lock()
 	sessionCache[sessionID] = session
-	mtxLock.Unlock()
+	sessionCacheMtx.Unlock()
 	ctx.Values().Save(CtxSession, session, true)
 	ctx.Next()
 }

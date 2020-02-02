@@ -87,7 +87,7 @@ func initServer() *iris.Application {
 	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)
 	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
 	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByText)
-	musicParty.Post("/search_by_cursor", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursor)
+	musicParty.Post("/search_resume", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursor)
 	musicParty.Get("/download", session.MustHaveSession, user.MustVasEnabled, music.Download)
 
 	// Value Added Services

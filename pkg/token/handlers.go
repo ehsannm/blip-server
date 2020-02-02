@@ -26,12 +26,12 @@ func CreateHandler(ctx iris.Context) {
 	period := ctx.PostValueInt64Default("Period", 0) // Period is the number of days
 
 	if len(phone) < 8 {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
 
 	if period <= 0 {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrPeriodNotValid)
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPeriodNotValid)
 		return
 	}
 
@@ -67,7 +67,7 @@ func ValidateHandler(ctx iris.Context) {
 	if !ok {
 		res := tokenCol.FindOne(nil, bson.M{"_id": tokenID}, options.FindOne())
 		if err := res.Decode(&token); err != nil {
-			msg.Error(ctx, http.StatusForbidden, msg.ErrAccessTokenInvalid)
+			msg.WriteError(ctx, http.StatusForbidden, msg.ErrAccessTokenInvalid)
 			return
 		}
 		mtxLock.Lock()
@@ -76,7 +76,7 @@ func ValidateHandler(ctx iris.Context) {
 	}
 
 	if time.Now().Unix() > token.ExpiredOn {
-		msg.Error(ctx, http.StatusForbidden, msg.ErrAccessTokenExpired)
+		msg.WriteError(ctx, http.StatusForbidden, msg.ErrAccessTokenExpired)
 		return
 	}
 
@@ -85,7 +85,7 @@ func ValidateHandler(ctx iris.Context) {
 	if token.DeviceID == "" {
 		_, err := tokenCol.UpdateOne(nil, bson.M{"_id": tokenID}, bson.M{"$set": bson.M{"device_id": deviceID}})
 		if err != nil {
-			msg.Error(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 			return
 		}
 		token.DeviceID = deviceID

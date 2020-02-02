@@ -38,7 +38,7 @@ func SearchBySound(ctx iris.Context) {
 	sound := ctx.PostValue("sound")
 	soundBytes, err := base64.StdEncoding.DecodeString(sound)
 	if err != nil {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
 		return
 	}
 
@@ -48,7 +48,7 @@ func SearchBySound(ctx iris.Context) {
 			zap.Error(err),
 			zap.String("SessionID", ctx.GetHeader(session.HdrSessionID)),
 		)
-		msg.Error(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
+		msg.WriteError(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
 		return
 	}
 
@@ -65,7 +65,7 @@ func SearchByText(ctx iris.Context) {
 	req := &SearchReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
-		msg.Error(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
 
@@ -73,13 +73,13 @@ func SearchByText(ctx iris.Context) {
 
 	songIDs, err := SearchLocalIndex(req.Keyword)
 	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
 		return
 	}
 
 	songs, err := GetManySongs(songIDs)
 	if err != nil {
-		msg.Error(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
 	}
 

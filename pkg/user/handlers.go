@@ -19,17 +19,17 @@ import (
 func MustVasEnabled(ctx iris.Context) {
 	s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
 	if !ok {
-		msg.Error(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
+		msg.WriteError(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
 		return
 	}
 	u, err := Get(s.UserID)
 	if err != nil {
-		msg.Error(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
+		msg.WriteError(ctx, http.StatusForbidden, msg.ErrSessionInvalid)
 		return
 	}
 
 	if !u.VasPaid {
-		msg.Error(ctx, http.StatusForbidden, msg.ErrVasIsNotEnabled)
+		msg.WriteError(ctx, http.StatusForbidden, msg.ErrVasIsNotEnabled)
 		return
 	}
 	ctx.Next()

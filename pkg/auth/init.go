@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"sync"
 	"time"
 )
 
@@ -22,6 +23,13 @@ import (
 
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson messages.go
+var (
+	authCol      *mongo.Collection
+	authCache    map[string]*Auth
+	authCacheMtx sync.RWMutex
+	redisCache   *redis.Cache
+	smsProvider  sms.Provider
+)
 
 func InitMongo(c *mongo.Client) {
 	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)

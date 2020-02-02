@@ -1,7 +1,5 @@
 package msg
 
-import "github.com/kataras/iris"
-
 /*
    Creation Time: 2019 - Sep - 21
    Created by:  (ehsan)
@@ -43,9 +41,3 @@ var (
 	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
 )
 
-func Error(ctx iris.Context, httpStatus int, errItem Item) {
-	ctx.ContentType("application/json")
-	_, _ = ctx.JSON(CreateEnvelope("err", errItem))
-	ctx.StatusCode(httpStatus)
-	ctx.StopExecution()
-}

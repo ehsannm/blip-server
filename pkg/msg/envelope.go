@@ -40,3 +40,10 @@ func WriteResponse(ctx iris.Context, constructor string, payload interface{}) {
 	})
 	ctx.StopExecution()
 }
+
+func WriteError(ctx iris.Context, httpStatus int, errItem Item) {
+	ctx.ContentType("application/json")
+	_, _ = ctx.JSON(CreateEnvelope("err", errItem))
+	ctx.StatusCode(httpStatus)
+	ctx.StopExecution()
+}

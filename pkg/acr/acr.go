@@ -29,17 +29,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var (
-	baseUrl      string
-	accessKey    string
-	accessSecret string
-)
-
-func Init() {
-	baseUrl = config.GetString(config.ACRBaseUrl)
-	accessKey = config.GetString(config.ACRAccessKey)
-	accessSecret = config.GetString(config.ACRAccessSecret)
-}
 
 func IdentifyByFile(fileAddr string) (*Music, error) {
 	f, err := os.Open(fileAddr)

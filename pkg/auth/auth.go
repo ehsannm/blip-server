@@ -1,12 +1,5 @@
 package auth
 
-import (
-	"git.ronaksoftware.com/blip/server/internal/redis"
-	"git.ronaksoftware.com/blip/server/pkg/sms"
-	"go.mongodb.org/mongo-driver/mongo"
-	"sync"
-)
-
 /*
    Creation Time: 2019 - Sep - 21
    Created by:  (ehsan)
@@ -16,13 +9,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var (
-	authCol     *mongo.Collection
-	redisCache  *redis.Cache
-	smsProvider sms.Provider
-	authCache   map[string]*Auth
-	mtxLock     sync.RWMutex
-)
 
 type Permission byte
 
