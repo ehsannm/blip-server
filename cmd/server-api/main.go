@@ -30,8 +30,7 @@ func initModules() {
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(nil,
 		options.Client().
-			ApplyURI(config.GetString(config.MongoUrl)).
-			SetDirect(true),
+			ApplyURI(config.GetString(config.MongoUrl)),
 	); err != nil {
 		log.Fatal("Error On Mongo Connect", zap.Error(err))
 	} else {

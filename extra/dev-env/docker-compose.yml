@@ -5,7 +5,7 @@ services:
     restart: always
     image: registry.ronaksoftware.com/customers/ronakvision/server-blip/server-api:dev
     environment:
-      - BLIP_MONGO_URL=mongodb://mongo-01:27001
+      - BLIP_MONGO_URL=mongodb://mongo-01:27017
       - BLIP_REDIS_URL=redis:6379
       - BLIP_REDIS_PASS=ehsan2374
       - BLIP_SMS_SERVICE_NAME=test
