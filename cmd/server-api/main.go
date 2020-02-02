@@ -28,12 +28,17 @@ func initModules() {
 	log.InitLogger(zapcore.Level(config.GetInt(config.LogLevel)), "")
 
 	// Initialize MongoDB
-	if mongoClient, err := mongo.Connect(
-		nil,
-		options.Client().ApplyURI(viper.GetString(config.MongoUrl)),
+	if mongoClient, err := mongo.Connect(nil,
+		options.Client().
+			ApplyURI(config.GetString(config.MongoUrl)).
+			SetDirect(true),
 	); err != nil {
-		log.Fatal("Error On MongoConnect", zap.Error(err))
+		log.Fatal("Error On Mongo Connect", zap.Error(err))
 	} else {
+		err := mongoClient.Ping(nil, nil)
+		if err != nil {
+			log.Fatal("Error On Mongo Ping", zap.Error(err))
+		}
 		auth.InitMongo(mongoClient)
 		crawler.InitMongo(mongoClient)
 		music.InitMongo(mongoClient)
