@@ -24,14 +24,3 @@ const CSearchResult = "SEARCH_RESULT"
 type SearchResult struct {
 	Songs []*Song `json:"songs"`
 }
-
-const CSaveStore = "SAVE_STORE"
-
-// easyjson:json
-// SaveStoreReq
-type SaveStoreReq struct {
-	StoreID  int64  `json:"store_id"`
-	Dsn      string `json:"dsn"`
-	Region   string `json:"region"`
-	Capacity int    `json:"capacity"`
-}

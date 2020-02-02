@@ -21,30 +21,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func AddStore(ctx iris.Context) {
-	req := &SaveStoreReq{}
-	err := ctx.ReadJSON(req)
-	if err != nil {
-		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
-		return
-	}
-
-	err = SaveStore(&Store{
-		ID:       req.StoreID,
-		Dsn:      req.Dsn,
-		Capacity: req.Capacity,
-		Region:   req.Region,
-	})
-	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
-		return
-	}
-
-	msg.WriteResponse(ctx, msg.CBool, &msg.Bool{
-		Success: true,
-	})
-}
-
 func SearchByProxy(ctx iris.Context) {
 	if ce := log.Check(log.DebugLevel, "SearchByProxy"); ce != nil {
 		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)

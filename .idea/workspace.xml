@@ -2,18 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/msg/common.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/cli/cmd_store.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/handlers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/init.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/messages.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/acr/acr.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/acr.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/easyjson-bootstrap480723471.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/easyjson-bootstrap480723471.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/cmd_music.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/cmd_music.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/easyjson-bootstrap480723471.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/store.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/messages_easyjson.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/store.go" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,25 +62,25 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/cmd/cli" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/internal" />
-      <recent name="$PROJECT_DIR$/testdata" />
-      <recent name="$PROJECT_DIR$/pkg/sms" />
-      <recent name="$PROJECT_DIR$/pkg" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/pkg/vas" />
       <recent name="$PROJECT_DIR$/pkg/acr" />
       <recent name="$PROJECT_DIR$/extra/testdata" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cmd/cli" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/internal" />
+      <recent name="$PROJECT_DIR$/testdata" />
+      <recent name="$PROJECT_DIR$/pkg/sms" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -113,6 +116,10 @@
     <proxy>direct</proxy>
   </component>
   <component name="WindowStateProjectService">
+    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1580632469584">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580632469584" />
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580244430983">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

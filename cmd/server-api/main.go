@@ -9,6 +9,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
+	"git.ronaksoftware.com/blip/server/pkg/store"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
@@ -23,10 +24,6 @@ import (
 	"go.uber.org/zap"
 )
 
-var (
-	_Mongo *mongo.Client
-)
-
 func initModules() {
 	log.InitLogger(zapcore.Level(config.GetInt(config.LogLevel)), "")
 
@@ -37,15 +34,14 @@ func initModules() {
 	); err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
 	} else {
-		_Mongo = mongoClient
 		auth.InitMongo(mongoClient)
 		crawler.InitMongo(mongoClient)
 		music.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
+		store.InitMongo(mongoClient)
 		token.InitMongo(mongoClient)
 		user.InitMongo(mongoClient)
 		vas.InitMongo(mongoClient)
-
 	}
 
 	// Initialize RedisCache
@@ -62,6 +58,7 @@ func initModules() {
 	music.Init()
 	saba.Init()
 	session.Init()
+	store.Init()
 	token.Init()
 	user.Init()
 }
@@ -82,9 +79,13 @@ func initServer() *iris.Application {
 	authParty.Post("/register", auth.RegisterHandler)
 	authParty.Post("/logout", session.MustHaveSession, auth.LogoutHandler)
 
+	storeParty := app.Party("/store")
+	storeParty.Use(auth.MustHaveAccessKey)
+	storeParty.Post("/save", auth.MustAdmin, store.Save)
+	storeParty.Get("/get", auth.MustAdmin, store.Get)
+
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
-	musicParty.Post("/add_store", auth.MustAdmin, music.AddStore)
 	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)
 	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
 	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByText)

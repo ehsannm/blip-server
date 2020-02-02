@@ -29,4 +29,9 @@ const (
 	FlagAppName       = "appName"
 	FlagFilePath      = "filePath"
 	FlagKeyword       = "keyword"
+	FlagStoreID       = "storeID"
+	FlagStoreIDs      = "storeIDs"
+	FlagStoreDsn      = "storeDSN"
+	FlagCapacity      = "capacity"
+	FlagRegion        = "region"
 )

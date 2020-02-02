@@ -20,7 +20,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(MusicCmd)
-	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResume)
+	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResumeCmd)
 
 	SearchByProxyCmd.Flags().String(FlagFilePath, "", "")
 	SearchByTextCmd.Flags().String(FlagKeyword, "", "")
@@ -56,7 +56,7 @@ var SearchByTextCmd = &cobra.Command{
 	},
 }
 
-var SearchResume = &cobra.Command{
+var SearchResumeCmd = &cobra.Command{
 	Use: "SearchResume",
 	Run: func(cmd *cobra.Command, args []string) {
 		req := music.SearchReq{
@@ -70,3 +70,4 @@ var SearchResume = &cobra.Command{
 		}
 	},
 }
+
