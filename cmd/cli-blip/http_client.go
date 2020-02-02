@@ -40,7 +40,7 @@ const (
 
 func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, print bool) (*msg.ResponseEnvelope, error) {
 	c := http.Client{
-		Timeout: 3 * time.Second,
+		Timeout: 30 * time.Second,
 	}
 
 	req, err := http.NewRequest(method, fmt.Sprintf("%s/%s", baseUrl, urlSuffix), reader)

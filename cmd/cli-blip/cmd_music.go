@@ -59,11 +59,7 @@ var SearchByTextCmd = &cobra.Command{
 var SearchResumeCmd = &cobra.Command{
 	Use: "SearchResume",
 	Run: func(cmd *cobra.Command, args []string) {
-		req := music.SearchReq{
-			Keyword: cmd.Flag(FlagKeyword).Value.String(),
-		}
-		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		_, err := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return

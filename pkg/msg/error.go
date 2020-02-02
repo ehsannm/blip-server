@@ -39,4 +39,5 @@ var (
 	Err3rdParty                Item = "3RD_PARTY_INVALID_RESPONSE"
 	ErrCorruptData             Item = "CORRUPT_DATA"
 	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
+	ErrAlreadyServed           Item = "ALREADY_SERVED"
 )

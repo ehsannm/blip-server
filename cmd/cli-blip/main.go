@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"git.ronaksoftware.com/blip/server/internal/tools"
+	"os"
 
 	"github.com/c-bata/go-prompt"
 	"github.com/spf13/cobra"
@@ -12,6 +13,7 @@ import (
 )
 
 func main() {
+	RootCmd.AddCommand(ExitCmd)
 	p := prompt.New(executor, completer)
 	p.Run()
 }
@@ -71,7 +73,14 @@ func completer(d prompt.Document) []prompt.Suggest {
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		baseUrl = cmd.Flag(FlagServerUrl).Value.String()
+		if cmd.Flag(FlagServerUrl).Changed {
+			_ = ioutil.WriteFile(".blip-url", tools.StrToByte(cmd.Flag(FlagServerUrl).Value.String()), os.ModePerm)
+		} else {
+			baseUrlBytes, err := ioutil.ReadFile(".blip-url")
+			if err == nil {
+				baseUrl = tools.ByteToStr(baseUrlBytes)
+			}
+		}
 		accessTokenBytes, err := ioutil.ReadFile(".blip-accessToken")
 		if err == nil {
 			accessToken = tools.ByteToStr(accessTokenBytes)
@@ -80,6 +89,13 @@ var RootCmd = &cobra.Command{
 		if err == nil {
 			sessionID = tools.ByteToStr(sessionIDBytes)
 		}
+	},
+}
+
+var ExitCmd = &cobra.Command{
+	Use: "exit",
+	Run: func(cmd *cobra.Command, args []string) {
+		os.Exit(0)
 	},
 }
 

@@ -160,6 +160,3 @@ func getSearchCtx(cursorID string) *searchCtx {
 	}
 	return ctx
 }
-func deleteSearchCtx(cursorID string) {
-
-}

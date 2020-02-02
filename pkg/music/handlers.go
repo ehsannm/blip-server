@@ -84,21 +84,20 @@ func SearchByText(ctx iris.Context) {
 		songX, ok := <-songChan
 		if ok {
 			songs = append(songs, songX)
-		}
-	MainLoop:
-		for {
-			select {
-			case songX, ok := <-songChan:
-				if !ok {
-					break MainLoop
-				}
-				songs = append(songs, songX)
-			default:
+		MainLoop:
+			for {
+				select {
+				case songX, ok := <-songChan:
+					if !ok {
+						break MainLoop
+					}
+					songs = append(songs, songX)
+				default:
 
+				}
 			}
 		}
 	}
-
 	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
 		Songs: songs,
 	})
@@ -106,8 +105,11 @@ func SearchByText(ctx iris.Context) {
 
 func SearchByCursor(ctx iris.Context) {
 	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
-	t := time.NewTimer(time.Minute)
-	t.Stop()
+	if songChan == nil {
+		msg.WriteError(ctx, http.StatusAlreadyReported, msg.ErrAlreadyServed)
+		return
+	}
+	t := time.NewTimer(time.Second * 5) // Wait
 	songs := make([]*Song, 0, 100)
 MainLoop:
 	for {
@@ -117,7 +119,10 @@ MainLoop:
 				break MainLoop
 			}
 			songs = append(songs, songX)
-			t.Reset(time.Second)
+			if !t.Stop() {
+				<-t.C
+			}
+			t.Reset(time.Second) // WaitAfter
 		case <-t.C:
 			break MainLoop
 		}
