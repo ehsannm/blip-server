@@ -12,15 +12,18 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AuthCmd)
+	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd, CreateAccessKeyCmd)
 
+	AuthCmd.Flags().String(FlagPhone, "", "")
+	AuthCmd.Flags().String(FlagPhoneCode, "", "")
+	AuthCmd.Flags().String(FlagPhoneCodeHash, "", "")
+	AuthCmd.Flags().String(FlagOtpID, "", "")
 	RegisterCmd.Flags().String(FlagUsername, "", "")
 	CreateAccessKeyCmd.Flags().Bool(FlagPermRead, true, "")
 	CreateAccessKeyCmd.Flags().Bool(FlagPermWrite, false, "")
 	CreateAccessKeyCmd.Flags().Bool(FlagPermAdmin, false, "")
 	CreateAccessKeyCmd.Flags().Int64(FlagPeriod, 0, "")
 	CreateAccessKeyCmd.Flags().String(FlagAppName, "", "")
-
-	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd, CreateAccessKeyCmd)
 }
 
 var AuthCmd = &cobra.Command{
@@ -53,6 +56,7 @@ var CreateAccessKeyCmd = &cobra.Command{
 		}
 	},
 }
+
 var SendCodeCmd = &cobra.Command{
 	Use:   "SendCode",
 	Short: "send sms code request",

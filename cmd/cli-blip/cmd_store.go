@@ -32,7 +32,7 @@ func init() {
 }
 
 var StoreCmd = &cobra.Command{
-	Use: "Music",
+	Use: "Store",
 }
 
 var SaveStoreCmd = &cobra.Command{

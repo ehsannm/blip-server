@@ -9,6 +9,7 @@ import (
 	"github.com/kataras/iris"
 	"go.uber.org/zap"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -68,10 +69,11 @@ func SearchByText(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
-
+	req.Keyword = strings.Trim(req.Keyword, "\" ")
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
 	songIDs, err := SearchLocalIndex(req.Keyword)
 	if err != nil {
+		log.Warn("Error On LocalIndex", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
 		return
 	}

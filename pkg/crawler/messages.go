@@ -1,5 +1,7 @@
 package crawler
 
+import "go.mongodb.org/mongo-driver/bson/primitive"
+
 /*
    Creation Time: 2020 - Jan - 28
    Created by:  (ehsan)
@@ -35,7 +37,9 @@ type FoundSong struct {
 
 // easyjson:json
 type SaveReq struct {
-	Url    string `json:"url"`
-	Source string `json:"source"`
-	Name   string `json:"name"`
+	ID             primitive.ObjectID `json:"id"`
+	Url            string             `json:"url"`
+	Source         string             `json:"source"`
+	Name           string             `json:"name"`
+	DownloaderJobs int                `json:"downloader_jobs"`
 }

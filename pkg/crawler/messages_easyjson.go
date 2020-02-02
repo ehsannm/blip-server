@@ -221,12 +221,18 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler2(in *jlexer.L
 			continue
 		}
 		switch key {
+		case "id":
+			if data := in.Raw(); in.Ok() {
+				in.AddError((out.ID).UnmarshalJSON(data))
+			}
 		case "url":
 			out.Url = string(in.String())
 		case "source":
 			out.Source = string(in.String())
 		case "name":
 			out.Name = string(in.String())
+		case "downloader_jobs":
+			out.DownloaderJobs = int(in.Int())
 		default:
 			in.SkipRecursive()
 		}
@@ -242,8 +248,13 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler2(out *jwriter
 	first := true
 	_ = first
 	{
-		const prefix string = ",\"url\":"
+		const prefix string = ",\"id\":"
 		out.RawString(prefix[1:])
+		out.Raw((in.ID).MarshalJSON())
+	}
+	{
+		const prefix string = ",\"url\":"
+		out.RawString(prefix)
 		out.String(string(in.Url))
 	}
 	{
@@ -255,6 +266,11 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler2(out *jwriter
 		const prefix string = ",\"name\":"
 		out.RawString(prefix)
 		out.String(string(in.Name))
+	}
+	{
+		const prefix string = ",\"downloader_jobs\":"
+		out.RawString(prefix)
+		out.Int(int(in.DownloaderJobs))
 	}
 	out.RawByte('}')
 }

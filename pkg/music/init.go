@@ -51,18 +51,13 @@ func initSongIndex() {
 	if index, err := bleve.Open(path); err != nil {
 		switch err {
 		case bleve.ErrorIndexPathDoesNotExist:
-			// create a mapping
 			indexMapping := bleve.NewIndexMapping()
-			// indexMapping, err := indexMapForSongs()
-			// if err != nil {
-			// 	log.Fatal("Error On Init Music", zap.Error(errors.Wrap(err, "Search(Message)")))
-			// 	return
-			// }
 			index, err = bleve.New(path, indexMapping)
 			if err != nil {
 				log.Fatal("Error On Init Music", zap.Error(errors.Wrap(err, "Search(Message)")))
 				return
 			}
+			songIndex = index
 		default:
 			log.Fatal("Error On Init Music", zap.Error(errors.Wrap(err, "Search(Message)")))
 			return
@@ -72,6 +67,7 @@ func initSongIndex() {
 	}
 }
 func updateSongIndex() {
+	startTime := time.Now()
 	log.Info("Indexing songs, this may take time ...")
 	cur, err := songCol.Find(nil, bson.D{})
 	if err != nil {
@@ -90,7 +86,10 @@ func updateSongIndex() {
 			}
 		}
 	}
-	log.Info("Indexing songs done!.", zap.Int("Indexed", cnt))
+	log.Info("Indexing songs done!.",
+		zap.Int("Indexed", cnt),
+		zap.Duration("Elapsed Time", time.Now().Sub(startTime)),
+	)
 }
 func watchForSongs() {
 	var resumeToken bson.Raw

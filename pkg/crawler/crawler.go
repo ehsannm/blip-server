@@ -31,12 +31,15 @@ func DropAll() error {
 }
 
 // Save insert the crawler 'c' into the database
-func Save(c *Crawler) (primitive.ObjectID, error) {
-	res, err := crawlerCol.InsertOne(nil, c, options.InsertOne())
+func Save(crawlerX *Crawler) (primitive.ObjectID, error) {
+	if crawlerX.ID == primitive.NilObjectID {
+		crawlerX.ID = primitive.NewObjectID()
+	}
+	_, err := crawlerCol.UpdateOne(nil, bson.M{"_id": crawlerX.ID}, bson.M{"$set": crawlerX}, options.Update().SetUpsert(true))
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-	return res.InsertedID.(primitive.ObjectID), err
+	return crawlerX.ID, err
 }
 
 // Get returns a crawler identified by 'crawlerID'
@@ -116,12 +119,13 @@ func putRegisteredCrawlers(list []*Crawler) {
 
 // Crawler
 type Crawler struct {
-	httpClient  http.Client        `bson:"-"`
-	ID          primitive.ObjectID `bson:"_id" json:"id"`
-	Url         string             `bson:"url" json:"url"`
-	Name        string             `bson:"name" json:"name"`
-	Description string             `bson:"desc" json:"description"`
-	Source      string             `bson:"source" json:"source"`
+	httpClient     http.Client        `bson:"-"`
+	ID             primitive.ObjectID `bson:"_id" json:"id"`
+	Url            string             `bson:"url" json:"url"`
+	Name           string             `bson:"name" json:"name"`
+	Description    string             `bson:"desc" json:"description"`
+	Source         string             `bson:"source" json:"source"`
+	DownloaderJobs int                `bson:"downloader_jobs" json:"downloader_jobs"`
 }
 
 func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchResponse, error) {

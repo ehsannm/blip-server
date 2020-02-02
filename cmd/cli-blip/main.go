@@ -75,6 +75,7 @@ var RootCmd = &cobra.Command{
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		if cmd.Flag(FlagServerUrl).Changed {
 			_ = ioutil.WriteFile(".blip-url", tools.StrToByte(cmd.Flag(FlagServerUrl).Value.String()), os.ModePerm)
+			baseUrl = cmd.Flag(FlagServerUrl).Value.String()
 		} else {
 			baseUrlBytes, err := ioutil.ReadFile(".blip-url")
 			if err == nil {
@@ -102,8 +103,4 @@ var ExitCmd = &cobra.Command{
 func init() {
 	fs := RootCmd.PersistentFlags()
 	fs.String(FlagServerUrl, "https://v2.blipapi.xyz", "")
-	fs.String(FlagPhone, "", "")
-	fs.String(FlagPhoneCode, "", "")
-	fs.String(FlagPhoneCodeHash, "", "")
-	fs.String(FlagOtpID, "", "")
 }

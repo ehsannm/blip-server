@@ -24,11 +24,13 @@ func Add(ctx iris.Context) {
 	}
 
 	_, err = Save(&Crawler{
-		httpClient:  http.Client{},
-		Url:         req.Url,
-		Name:        req.Name,
-		Description: "",
-		Source:      req.Source,
+		httpClient:     http.Client{},
+		ID:             req.ID,
+		Url:            req.Url,
+		Name:           req.Name,
+		Description:    "",
+		Source:         req.Source,
+		DownloaderJobs: req.DownloaderJobs,
 	})
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
