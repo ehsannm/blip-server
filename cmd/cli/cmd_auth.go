@@ -32,7 +32,7 @@ var CreateAccessKeyCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		req := auth.CreateAccessToken{
-			Period:  tools.StrToInt64(cmd.Flag(FlagPhone).Value.String()),
+			Period:  tools.StrToInt64(cmd.Flag(FlagPeriod).Value.String()),
 			AppName: cmd.Flag(FlagAppName).Value.String(),
 		}
 		if b, _ := cmd.Flags().GetBool(FlagPermRead); b {

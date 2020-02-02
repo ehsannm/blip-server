@@ -21,9 +21,9 @@ import (
 func init() {
 	RootCmd.AddCommand(CrawlerCmd)
 	CrawlerCmd.AddCommand(CrawlerSaveCmd)
-	CrawlerCmd.Flags().String(FlagSource, "", "")
-	CrawlerCmd.Flags().String(FlagName, "", "")
-	CrawlerCmd.Flags().String(FlagUrl, "", "")
+	CrawlerSaveCmd.Flags().String(FlagSource, "MeloBit", "")
+	CrawlerSaveCmd.Flags().String(FlagName, "", "")
+	CrawlerSaveCmd.Flags().String(FlagUrl, "http://ws.blipapi.xyz/crowler/melobit/", "")
 }
 
 var CrawlerCmd = &cobra.Command{
@@ -39,6 +39,7 @@ var CrawlerSaveCmd = &cobra.Command{
 			Source: cmd.Flag(FlagSource).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
+		fmt.Println(string(reqBytes))
 		_, err := sendHttp(http.MethodPost, "crawler/save", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
 		if err != nil {
 			fmt.Println(err)

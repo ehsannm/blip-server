@@ -16,7 +16,7 @@ import (
 */
 
 func Add(ctx iris.Context) {
-	req := SaveReq{}
+	req := &SaveReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
