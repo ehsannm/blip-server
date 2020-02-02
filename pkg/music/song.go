@@ -27,7 +27,7 @@ type Song struct {
 	Genre          string             `bson:"genre" json:"genre"`
 	Lyrics         string             `bson:"lyrics" json:"lyrics"`
 	Artists        string             `bson:"artists" json:"artists"`
-	Cdn            string             `bson:"cdn" json:"-"`
+	StoreID        int64              `bson:"store_id" json:"-"`
 	OriginCoverUrl string             `bson:"org_cover_url" json:"-"`
 	OriginSongUrl  string             `bson:"org_song_url" json:"-"`
 	Source         string             `bson:"source" json:"-"`

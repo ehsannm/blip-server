@@ -21,6 +21,10 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+func AddStore(ctx iris.Context) {
+	// TODO:: implement it
+}
+
 func SearchByProxy(ctx iris.Context) {
 	if ce := log.Check(log.DebugLevel, "SearchByProxy"); ce != nil {
 		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
@@ -131,5 +135,9 @@ MainLoop:
 }
 
 func Download(ctx iris.Context) {
+	// TODO:: implement it
+}
+
+func Upload(ctx iris.Context) {
 	// TODO:: implement it
 }

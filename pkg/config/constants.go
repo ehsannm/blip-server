@@ -20,6 +20,7 @@ const (
 	ColLogVas  = "log.vas"
 	ColSong    = "song"
 	ColCrawler = "crawler"
+	ColStore   = "store"
 )
 
 // Redis Keys

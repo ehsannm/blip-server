@@ -62,7 +62,7 @@ func (ctx *searchCtx) job() {
 					Genre:          foundSong.Genre,
 					Lyrics:         foundSong.Lyrics,
 					Artists:        foundSong.Artists,
-					Cdn:            "",
+					StoreID:        1,
 					OriginCoverUrl: foundSong.CoverUrl,
 					OriginSongUrl:  foundSong.SongUrl,
 					Source:         r.Source,
