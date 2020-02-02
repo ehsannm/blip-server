@@ -84,6 +84,10 @@ func initServer() *iris.Application {
 	storeParty.Post("/save", auth.MustAdmin, store.Save)
 	storeParty.Get("/get", auth.MustAdmin, store.Get)
 
+	crawlerParty := app.Party("/crawler")
+	crawlerParty.Use(auth.MustHaveAccessKey)
+	crawlerParty.Post("/save", auth.MustAdmin, crawler.Add)
+
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
 	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)

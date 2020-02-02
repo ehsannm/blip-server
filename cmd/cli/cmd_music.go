@@ -70,4 +70,3 @@ var SearchResumeCmd = &cobra.Command{
 		}
 	},
 }
-

@@ -1,7 +1,6 @@
 package crawler
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
@@ -118,11 +117,11 @@ func putRegisteredCrawlers(list []*Crawler) {
 // Crawler
 type Crawler struct {
 	httpClient  http.Client        `bson:"-"`
-	ID          primitive.ObjectID `bson:"_id"`
-	Url         string             `bson:"url"`
-	Name        string             `bson:"name"`
-	Description string             `bson:"desc"`
-	Source      string             `bson:"source"`
+	ID          primitive.ObjectID `bson:"_id" json:"id"`
+	Url         string             `bson:"url" json:"url"`
+	Name        string             `bson:"name" json:"name"`
+	Description string             `bson:"desc" json:"description"`
+	Source      string             `bson:"source" json:"source"`
 }
 
 func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchResponse, error) {
@@ -130,15 +129,9 @@ func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchRespo
 		ctx = context.Background()
 	}
 	c.httpClient.Timeout = config.HttpRequestTimeout
-	req := SearchRequest{
-		RequestID: tools.RandomID(24),
-		Keyword:   keyword,
-	}
-	reqBytes, err := req.MarshalJSON()
-	if err != nil {
-		return nil, err
-	}
-	httpReq, err := http.NewRequestWithContext(ctx, http.MethodPost, c.Url, bytes.NewBuffer(reqBytes))
+
+	url := fmt.Sprintf("%s/%s/%s", c.Url, tools.RandomID(24), keyword)
+	httpReq, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}

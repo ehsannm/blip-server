@@ -70,19 +70,16 @@ func SearchByText(ctx iris.Context) {
 	}
 
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
-
 	songIDs, err := SearchLocalIndex(req.Keyword)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
 		return
 	}
-
 	songs, err := GetManySongs(songIDs)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
 	}
-
 	if len(songs) == 0 {
 		songX, ok := <-songChan
 		if ok {

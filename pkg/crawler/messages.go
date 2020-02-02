@@ -24,10 +24,18 @@ type SearchResponse struct {
 
 // easyjson:json
 type FoundSong struct {
-	SongUrl  string `json:"song_url"`
-	CoverUrl string `json:"cover_url"`
-	Lyrics   string `json:"lyrics,omitempty"`
-	Artists  string `json:"artists"`
-	Title    string `json:"title"`
-	Genre    string `json:"genre,omitempty"`
+	SongUrl     string `json:"song_url"`
+	CoverUrl    string `json:"cover_url"`
+	Lyrics      string `json:"lyrics,omitempty"`
+	Artists     string `json:"artists"`
+	Title       string `json:"title"`
+	Genre       string `json:"genre,omitempty"`
+	UrlLifetime int    `json:"url_lifetime"`
+}
+
+// easyjson:json
+type SaveReq struct {
+	Url    string `json:"url"`
+	Source string `json:"source"`
+	Name   string `json:"name"`
 }

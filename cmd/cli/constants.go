@@ -9,12 +9,13 @@ package main
    Copyright Ronak Software Group 2018
 */
 
-const (
-	baseUrl = "https://v2.blipapi.xyz"
+var (
+	baseUrl string
 )
 
 // Flag Names
 const (
+	FlagServerUrl     = "serverUrl"
 	FlagPhone         = "phone"
 	FlagPhoneCode     = "phoneCode"
 	FlagPhoneCodeHash = "phoneCodeHash"
@@ -34,4 +35,7 @@ const (
 	FlagStoreDsn      = "storeDSN"
 	FlagCapacity      = "capacity"
 	FlagRegion        = "region"
+	FlagUrl           = "url"
+	FlagName          = "name"
+	FlagSource        = "source"
 )

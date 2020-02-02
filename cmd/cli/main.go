@@ -71,6 +71,7 @@ func completer(d prompt.Document) []prompt.Suggest {
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		baseUrl = cmd.Flag(FlagServerUrl).Value.String()
 		accessTokenBytes, err := ioutil.ReadFile(".blip-accessToken")
 		if err == nil {
 			accessToken = tools.ByteToStr(accessTokenBytes)
@@ -84,6 +85,7 @@ var RootCmd = &cobra.Command{
 
 func init() {
 	fs := RootCmd.PersistentFlags()
+	fs.String(FlagServerUrl, "https://v2.blipapi.xyz", "")
 	fs.String(FlagPhone, "", "")
 	fs.String(FlagPhoneCode, "", "")
 	fs.String(FlagPhoneCodeHash, "", "")
