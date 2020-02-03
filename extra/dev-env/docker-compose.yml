@@ -4,6 +4,7 @@ services:
   api-01:
     restart: always
     image: registry.ronaksoftware.com/customers/ronakvision/server-blip/server-api:dev
+    container_name: api-01
     environment:
       - BLIP_LOG_LEVEL=-1
       - BLIP_MONGO_URL=mongodb://mongo-01:27017

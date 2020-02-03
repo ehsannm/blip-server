@@ -20,11 +20,13 @@ require (
 	github.com/facebookgo/stack v0.0.0-20160209184415-751773369052 // indirect
 	github.com/facebookgo/subset v0.0.0-20150612182917-8dac2c3c4870 // indirect
 	github.com/getsentry/sentry-go v0.3.0
+	github.com/go-sql-driver/mysql v1.4.0
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gobwas/pool v0.2.0
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce
 	github.com/jmhodges/levigo v1.0.0 // indirect
+	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.7 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
 	github.com/klauspost/compress v1.7.1 // indirect

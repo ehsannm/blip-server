@@ -16,3 +16,10 @@ type Unsubscribed struct {
 	Phone      string `json:"phone"`
 	StatusCode string `json:"status_code"`
 }
+
+// MigrateLegacyDB
+type MigrateLegacyDBReq struct {
+	MysqlHost string `json:"mysql_host"`
+	MysqlUser string `json:"mysql_user"`
+	MysqlPass string `json:"mysql_pass"`
+}

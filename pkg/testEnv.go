@@ -10,6 +10,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
+	"git.ronaksoftware.com/blip/server/pkg/store"
 	"git.ronaksoftware.com/blip/server/pkg/token"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"github.com/valyala/tcplisten"
@@ -60,6 +61,7 @@ func Init() {
 	crawler.InitMongo(mongoClient)
 	music.InitMongo(mongoClient)
 	session.InitMongo(mongoClient)
+	store.InitMongo(mongoClient)
 	token.InitMongo(mongoClient)
 	user.InitMongo(mongoClient)
 
@@ -76,6 +78,7 @@ func Init() {
 	crawler.Init()
 	music.Init()
 	session.Init()
+	store.Init()
 	token.Init()
 	user.Init()
 
