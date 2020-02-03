@@ -38,4 +38,5 @@ const (
 	FlagUrl           = "url"
 	FlagName          = "name"
 	FlagSource        = "source"
+	FlagSongID        = "songID"
 )

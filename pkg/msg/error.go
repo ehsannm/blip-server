@@ -26,6 +26,7 @@ var (
 	ErrWriteToCache            Item = "WRITE_TO_CACHE"
 	ErrReadFromCache           Item = "READ_FROM_CACHE"
 	ErrReadFromDb              Item = "READ_FROM_DB"
+	ErrReadFromSource          Item = "READ_FROM_SOURCE"
 	ErrCannotUnmarshalRequest  Item = "CANNOT_UNMARSHAL_JSON"
 	ErrAlreadyRegistered       Item = "ALREADY_REGISTERED"
 	ErrUsernameFormat          Item = "USERNAME_FORMAT"
@@ -40,4 +41,5 @@ var (
 	ErrCorruptData             Item = "CORRUPT_DATA"
 	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
 	ErrAlreadyServed           Item = "ALREADY_SERVED"
+	ErrInvalidDownloadID       Item = "INVALID_DOWNLOAD_ID"
 )

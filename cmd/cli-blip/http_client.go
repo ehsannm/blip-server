@@ -125,3 +125,26 @@ func sendFile(urlSuffix string, filename string, print bool) error {
 	}
 	return nil
 }
+
+func getFile(url string, filepath string) error {
+	c := http.Client{
+		Timeout: 30 * time.Second,
+	}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set(auth.HdrAccessKey, accessToken)
+	req.Header.Set(session.HdrSessionID, sessionID)
+	res, err := c.Do(req)
+	if err != nil {
+		return err
+	}
+	f, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	_ = f.Close()
+	_, _ = io.Copy(f, res.Body)
+	return res.Body.Close()
+}

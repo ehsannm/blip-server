@@ -20,10 +20,12 @@ import (
 
 func init() {
 	RootCmd.AddCommand(MusicCmd)
-	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResumeCmd)
+	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResumeCmd, DownloadCmd)
 
 	SearchByProxyCmd.Flags().String(FlagFilePath, "", "")
 	SearchByTextCmd.Flags().String(FlagKeyword, "", "")
+	DownloadCmd.Flags().String(FlagSongID, "", "")
+	DownloadCmd.Flags().String(FlagFilePath, "./song.mp3", "")
 }
 
 var MusicCmd = &cobra.Command{
@@ -63,6 +65,17 @@ var SearchResumeCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err)
 			return
+		}
+	},
+}
+
+var DownloadCmd = &cobra.Command{
+	Use: "Download",
+	Run: func(cmd *cobra.Command, args []string) {
+		url := fmt.Sprintf("%s/music/download/%s", baseUrl, cmd.Flag(FlagSongID).Value.String())
+		err := getFile(url, cmd.Flag(FlagFilePath).Value.String())
+		if err != nil {
+			fmt.Println(err)
 		}
 	},
 }

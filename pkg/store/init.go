@@ -2,6 +2,7 @@ package store
 
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -38,6 +39,7 @@ func Init() {
 	storesMtx.Lock()
 	defer storesMtx.Unlock()
 	stores = make(map[int64]*Store)
+	storeConns = make(map[int64]*mongo.Client)
 	cur, err := storeCol.Find(nil, bson.D{})
 	if err != nil {
 		log.Warn("Error On Initializing Stores", zap.Error(err))
@@ -60,17 +62,19 @@ func Init() {
 	go watchForStores()
 }
 func createStoreConnection(storeX *Store) error {
-	mongoClient, err := mongo.NewClient(options.Client().ApplyURI(storeX.Dsn))
-	if err != nil {
-		return err
-	}
-	err = mongoClient.Ping(nil, nil)
-	if err != nil {
-		return err
-	}
-	storeConns[storeX.ID] = mongoClient
-	stores[storeX.ID] = storeX
-	return nil
+	return tools.Try(5, time.Second, func() error {
+		mongoClient, err := mongo.Connect(nil, options.Client().ApplyURI(storeX.Dsn))
+		if err != nil {
+			return err
+		}
+		err = mongoClient.Ping(nil, nil)
+		if err != nil {
+			return err
+		}
+		storeConns[storeX.ID] = mongoClient
+		stores[storeX.ID] = storeX
+		return nil
+	})
 }
 func watchForStores() {
 	var resumeToken bson.Raw

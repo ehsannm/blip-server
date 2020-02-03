@@ -74,18 +74,27 @@ func updateSongIndex() {
 		log.Fatal("Error On Initializing Music", zap.Error(err))
 	}
 	cnt := 0
+	rateLimit := make(chan struct{}, 100)
+	waitGroup := sync.WaitGroup{}
 	for cur.Next(nil) {
 		songX := &Song{}
 		err = cur.Decode(songX)
 		if err == nil {
 			cnt++
-			err = UpdateLocalIndex(songX)
-			log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
+			waitGroup.Add(1)
+			rateLimit <- struct{}{}
+			go func(songX *Song) {
+				err = UpdateLocalIndex(songX)
+				log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
+				<- rateLimit
+				waitGroup.Done()
+			}(songX)
 			if cnt%1000 == 0 {
 				log.Info("Still indexing ...", zap.Int("Indexed", cnt))
 			}
 		}
 	}
+	waitGroup.Wait()
 	log.Info("Indexing songs done!.",
 		zap.Int("Indexed", cnt),
 		zap.Duration("Elapsed Time", time.Now().Sub(startTime)),

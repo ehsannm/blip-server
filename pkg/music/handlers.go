@@ -6,8 +6,11 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
+	"git.ronaksoftware.com/blip/server/pkg/store"
 	"github.com/kataras/iris"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
+	"io"
 	"net/http"
 	"strings"
 	"time"
@@ -135,7 +138,57 @@ MainLoop:
 }
 
 func Download(ctx iris.Context) {
-	// TODO:: implement it
+	downloadID := ctx.Params().GetString("downloadID")
+
+	songID, err := primitive.ObjectIDFromHex(downloadID)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrInvalidDownloadID)
+		return
+	}
+
+	songX, err := GetSongByID(songID)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusNotFound, msg.ErrInvalidDownloadID)
+		return
+	}
+
+	if songX.StoreID != 0 {
+		err = store.DownloadSong(songX.StoreID, songX.ID, ctx.ResponseWriter())
+		if err != nil {
+			log.Warn("Error On Download Song", zap.Error(err))
+		}
+	} else {
+		downloadFromSource(ctx, songX)
+	}
+	return
+}
+func downloadFromSource(ctx iris.Context, songX *Song) {
+	// download from source url
+	storeID, dbWriter, err := store.GetUploadStreamForSong(songX.ID)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+	writer := io.MultiWriter(dbWriter, ctx.ResponseWriter())
+	httpClient := http.Client{}
+	res, err := httpClient.Get(songX.OriginSongUrl)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusFailedDependency, msg.ErrReadFromSource)
+		return
+	}
+	switch res.StatusCode {
+	case http.StatusOK, http.StatusAccepted:
+		_, err = io.Copy(writer, res.Body)
+		if err != nil {
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			return
+		}
+	default:
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+	songX.StoreID = storeID
+	_, _ = SaveSong(songX)
 }
 
 func Upload(ctx iris.Context) {

@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/cmd_music.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/cmd_music.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/http_client.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/http_client.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/msg/error.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/msg/error.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,10 +126,10 @@
     <proxy>direct</proxy>
   </component>
   <component name="WindowStateProjectService">
-    <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580662469887">
+    <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580731812716">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1580662469887" />
+    <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1580731812716" />
     <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1580632469584">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

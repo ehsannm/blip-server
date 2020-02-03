@@ -59,3 +59,9 @@ func Get(ctx iris.Context) {
 
 	msg.WriteResponse(ctx, CStores, stores)
 }
+func get(storeID int64) *Store {
+	storesMtx.RLock()
+	s := stores[storeID]
+	storesMtx.RUnlock()
+	return s
+}

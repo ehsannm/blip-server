@@ -97,8 +97,8 @@ func initServer() *iris.Application {
 	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
 	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByText)
 	musicParty.Post("/search_resume", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursor)
-	musicParty.Post("/upload", auth.MustAdmin, music.Upload)
-	musicParty.Get("/download", session.MustHaveSession, user.MustVasEnabled, music.Download)
+	musicParty.Post("/upload/{songID}", auth.MustAdmin, music.Upload)
+	musicParty.Get("/download/{downloadID}", session.MustHaveSession, user.MustVasEnabled, music.Download)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")
