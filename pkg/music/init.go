@@ -37,7 +37,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	songCol = c.Database(config.GetString(config.MongoDB)).Collection(config.ColSong)
+	songCol = c.Database(config.Db).Collection(config.ColSong)
 }
 
 func Init() {

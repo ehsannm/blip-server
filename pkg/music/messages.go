@@ -20,7 +20,6 @@ type SearchReq struct {
 const CSearchResult = "SEARCH_RESULT"
 
 // easyjson:json
-// SearchResult
 type SearchResult struct {
 	Songs []*Song `json:"songs"`
 }

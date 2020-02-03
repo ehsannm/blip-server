@@ -2,7 +2,6 @@ package session
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
 )
@@ -23,7 +22,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	sessionCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColSession)
+	sessionCol = c.Database(config.Db).Collection(config.ColSession)
 }
 
 func Init() {

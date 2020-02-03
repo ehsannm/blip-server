@@ -36,10 +36,18 @@ type FoundSong struct {
 }
 
 // easyjson:json
+// @Returns CrawlerCreated
 type SaveReq struct {
 	ID             primitive.ObjectID `json:"id"`
 	Url            string             `json:"url"`
 	Source         string             `json:"source"`
 	Name           string             `json:"name"`
 	DownloaderJobs int                `json:"downloader_jobs"`
+}
+
+const CCrawlerCreated = "CRAWLER_CREATED"
+
+// easyjson:json
+type CrawlerCreated struct {
+	CrawlerID primitive.ObjectID `json:"crawler_id"`
 }

@@ -18,7 +18,6 @@ const (
 	TestMode       = "TEST_MODE"
 	LogLevel       = "LOG_LEVEL"
 	MongoUrl       = "MONGO_URL"
-	MongoDB        = "MONGO_DB"
 	RedisUrl       = "REDIS_URL"
 	RedisPass      = "REDIS_PASS"
 	MagicPhone     = "MAGIC_PHONE"
@@ -53,7 +52,6 @@ func init() {
 	pflag.Bool(TestMode, false, "")
 	pflag.Int(LogLevel, 0, "")
 	pflag.String(MongoUrl, "mongodb://localhost:27017", "")
-	pflag.String(MongoDB, "blip", "")
 	pflag.String(RedisUrl, "localhost:6379", "")
 	pflag.String(RedisPass, "ehsan2374", "")
 	pflag.String(MagicPhone, "2374002374", "")

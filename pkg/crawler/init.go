@@ -7,7 +7,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.uber.org/zap"
@@ -33,7 +32,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	crawlerCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColCrawler)
+	crawlerCol = c.Database(config.Db).Collection(config.ColCrawler)
 }
 
 func Init() {

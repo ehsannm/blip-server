@@ -38,7 +38,6 @@ func Init() {
 	log.InitLogger(log.DebugLevel, "")
 	config.Set(config.TestMode, true)
 	config.Set(config.MongoUrl, "mongodb://localhost:27001")
-	config.Set(config.MongoDB, "blip")
 	config.Set(config.RedisUrl, "localhost:6379")
 	config.Set(config.LogLevel, log.DebugLevel)
 	config.Set(config.SongsIndexDir, "./_hdd")

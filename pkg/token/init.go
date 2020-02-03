@@ -2,7 +2,6 @@ package token
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -16,7 +15,7 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	tokenCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColToken)
+	tokenCol = c.Database(config.Db).Collection(config.ColToken)
 }
 
 func Init() {

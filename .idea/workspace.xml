@@ -4,15 +4,24 @@
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmd/cli-blip/cmd_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/cmd_auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/cmd_store.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/cmd_store.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/messages_easyjson.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/crawler.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/crawler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/crawler/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/crawler/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/session/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/testEnv.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/testEnv.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/token/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/user/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/init.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

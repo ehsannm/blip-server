@@ -4,7 +4,6 @@ import (
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/tools"
-	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 
@@ -115,11 +114,6 @@ func unsubscribe(params *mciNotificationParams) {
 	err = user.Save(u)
 	if err != nil {
 		log.Error("Error On Subscription (Update User)", zap.Error(err), zap.String("Phone", params.CustomerNumber))
-		return
-	}
-	err = session.RemoveAll(u.ID)
-	if err != nil {
-		log.Error("Error On Subscription (Remove Sessions)", zap.Error(err), zap.String("Phone", params.CustomerNumber))
 		return
 	}
 	res, err := saba.SendMessage(params.CustomerNumber, GoodbyeMessage)

@@ -321,7 +321,6 @@ func LoginHandler(ctx iris.Context) {
 		otpID = verifyParams[1]
 		phoneCode = verifyParams[2]
 	}
-
 	if req.PhoneCodeHash != phoneCodeHash {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneCodeHashNotValid)
 		return
@@ -341,23 +340,25 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
+	appName := ctx.Values().GetString(CtxClientName)
 	u, err := user.GetByPhone(req.Phone)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
-	err = session.RemoveAll(u.ID)
+	err = session.RemoveAll(u.ID, appName)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
 	}
 	sessionID := tools.RandomID(64)
 	timeNow := time.Now().Unix()
-	err = session.Save(session.Session{
+	err = session.Save(&session.Session{
 		ID:         sessionID,
 		UserID:     u.ID,
 		CreatedOn:  timeNow,
 		LastAccess: timeNow,
+		App:        appName,
 	})
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
@@ -446,11 +447,12 @@ func RegisterHandler(ctx iris.Context) {
 	}
 
 	sessionID := tools.RandomID(64)
-	err = session.Save(session.Session{
+	err = session.Save(&session.Session{
 		ID:         sessionID,
 		UserID:     userID,
 		CreatedOn:  timeNow,
 		LastAccess: timeNow,
+		App:        ctx.Values().GetString(CtxClientName),
 	})
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
@@ -491,7 +493,7 @@ func LogoutHandler(ctx iris.Context) {
 			return
 		}
 	}
-	err = session.RemoveAll(s.UserID)
+	err = session.RemoveAll(s.UserID, ctx.Values().GetString(CtxClientName))
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return

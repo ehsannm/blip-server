@@ -5,7 +5,6 @@ import (
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/sms"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"sync"
@@ -32,7 +31,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	authCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColAuth)
+	authCol = c.Database(config.Db).Collection(config.ColAuth)
 }
 
 func InitRedisCache(c *redis.Cache) {

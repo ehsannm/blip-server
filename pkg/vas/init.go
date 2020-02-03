@@ -2,7 +2,6 @@ package vas
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -16,5 +15,5 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	vasLogCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColLogVas)
+	vasLogCol = c.Database(config.Db).Collection(config.ColLogVas)
 }

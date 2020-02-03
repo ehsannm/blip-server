@@ -23,7 +23,7 @@ func Add(ctx iris.Context) {
 		return
 	}
 
-	_, err = Save(&Crawler{
+	crawlerID, err := Save(&Crawler{
 		httpClient:     http.Client{},
 		ID:             req.ID,
 		Url:            req.Url,
@@ -37,8 +37,7 @@ func Add(ctx iris.Context) {
 		return
 	}
 
-	msg.WriteResponse(ctx, msg.CBool, msg.Bool{
-		Success: true,
+	msg.WriteResponse(ctx, CCrawlerCreated, CrawlerCreated{
+		CrawlerID: crawlerID,
 	})
-
 }

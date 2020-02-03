@@ -3,7 +3,6 @@ package user
 import (
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -17,7 +16,7 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	userCol = c.Database(viper.GetString(config.MongoDB)).Collection(config.ColUser)
+	userCol = c.Database(config.Db).Collection(config.ColUser)
 }
 
 func InitRedisCache(c *redis.Cache) {
