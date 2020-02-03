@@ -142,22 +142,23 @@ func getFile(url string, filepath string) error {
 	}
 	defer res.Body.Close()
 	switch res.StatusCode {
-	case http.StatusOK:
+	case http.StatusOK, http.StatusAccepted:
 		f, err := os.Create(filepath)
 		if err != nil {
 			return err
 		}
-		_ = f.Close()
 		_, _ = io.Copy(f, res.Body)
+		_ = f.Close()
 		return nil
 	default:
-		fmt.Println(res.Status, res.StatusCode)
-		bodyBytes, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return err
-		}
-		fmt.Println(tools.ByteToStr(bodyBytes))
+
 	}
+	fmt.Println(res.Status, res.StatusCode)
+	bodyBytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return err
+	}
+	fmt.Println(tools.ByteToStr(bodyBytes))
 	return nil
 
 }
