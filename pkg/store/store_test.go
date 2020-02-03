@@ -1,8 +1,7 @@
-package dev_test
+package store_test
 
 import (
 	testEnv "git.ronaksoftware.com/blip/server/pkg"
-	"git.ronaksoftware.com/blip/server/pkg/dev"
 	"git.ronaksoftware.com/blip/server/pkg/store"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -21,8 +20,8 @@ func init() {
 	testEnv.Init()
 }
 
-func TestMigrateLegacyDB(t *testing.T) {
-	Convey("Test Migrate From Legacy DB", t, func(c C) {
+func TestStore(t *testing.T) {
+	Convey("Test Store", t, func(c C) {
 		err := store.DropAll()
 		c.So(err, ShouldBeNil)
 		err = store.Save(&store.Store{
@@ -32,7 +31,5 @@ func TestMigrateLegacyDB(t *testing.T) {
 			Region:   "",
 		})
 		c.So(err, ShouldBeNil)
-		dev.MigrateLegacyDB()
 	})
-
 }

@@ -3,6 +3,7 @@ package store
 import (
 	"errors"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
@@ -28,11 +29,36 @@ type Store struct {
 	Region   string `bson:"region" json:"region"`
 }
 
+// DropAll drop all the stores from the database
+func DropAll() error {
+	err := storeCol.Drop(nil)
+	if err != nil {
+		return err
+	}
+	storesMtx.Lock()
+	for k := range stores {
+		delete(stores, k)
+		delete(storeConns, k)
+	}
+	storesMtx.Unlock()
+	return nil
+}
+
+func Save(storeX *Store) error {
+	_, err := storeCol.UpdateOne(nil, bson.M{"_id": storeX.ID}, bson.M{"$set": storeX}, options.Update().SetUpsert(true))
+	return err
+}
+
+func Delete(storeID int64) error {
+	_, err := storeCol.DeleteOne(nil, bson.M{"_id": storeID})
+	return err
+}
+
 func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *gridfs.UploadStream, error) {
 	var mongoClient *mongo.Client
 	var storeID int64
 	storesMtx.RLock()
-	for sID, x := range storeBuckets {
+	for sID, x := range storeConns {
 		if x != nil {
 			mongoClient = x
 			storeID = sID
@@ -53,7 +79,7 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 
 func Download(storeID int64, bucketName string, songID primitive.ObjectID, dst io.Writer) error {
 	storesMtx.RLock()
-	mongoClient := storeBuckets[storeID]
+	mongoClient := storeConns[storeID]
 	storesMtx.RUnlock()
 	if mongoClient == nil {
 		return errors.New("no connection exists")

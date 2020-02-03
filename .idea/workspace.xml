@@ -2,15 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/dev/dev_test.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/dev/functions.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/store_test.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/extra/dev-env/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/dev/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/dev/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/testEnv.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/testEnv.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/dev_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/dev_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/dev/functions.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

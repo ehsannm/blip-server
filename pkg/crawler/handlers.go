@@ -15,7 +15,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func Add(ctx iris.Context) {
+func SaveHandler(ctx iris.Context) {
 	req := &SaveReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {

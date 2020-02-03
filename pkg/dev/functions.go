@@ -2,6 +2,7 @@ package dev
 
 import (
 	"database/sql"
+	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -53,6 +54,7 @@ func MigrateLegacyDB() {
 		waitGroup.Add(1)
 		rateLimit <- struct{}{}
 		go func(artist, title, songUrl, coverUrl string) {
+			fmt.Println("Got", artist, title, songUrl, coverUrl)
 			defer waitGroup.Done()
 			defer func() {
 				<-rateLimit

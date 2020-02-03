@@ -84,20 +84,20 @@ func initServer() *iris.Application {
 
 	storeParty := app.Party("/store")
 	storeParty.Use(auth.MustHaveAccessKey)
-	storeParty.Post("/save", auth.MustAdmin, store.Save)
-	storeParty.Get("/get", auth.MustAdmin, store.Get)
+	storeParty.Post("/save", auth.MustAdmin, store.SaveHandler)
+	storeParty.Get("/get", auth.MustAdmin, store.GetHandler)
 
 	crawlerParty := app.Party("/crawler")
 	crawlerParty.Use(auth.MustHaveAccessKey)
-	crawlerParty.Post("/save", auth.MustAdmin, crawler.Add)
+	crawlerParty.Post("/save", auth.MustAdmin, crawler.SaveHandler)
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)
-	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxy)
-	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySound)
-	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByText)
-	musicParty.Post("/search_resume", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursor)
-	musicParty.Get("/download/{bucket}/{downloadID}", session.MustHaveSession, user.MustVasEnabled, music.Download)
+	musicParty.Post("/search_by_proxy", session.MustHaveSession, user.MustVasEnabled, music.SearchByProxyHandler)
+	musicParty.Post("/search_by_sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySoundHandler)
+	musicParty.Post("/search_by_text", session.MustHaveSession, user.MustVasEnabled, music.SearchByTextHandler)
+	musicParty.Post("/search_resume", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursorHandler)
+	musicParty.Get("/download/{bucket}/{downloadID}", session.MustHaveSession, user.MustVasEnabled, music.DownloadHandler)
 
 	// Value Added Services
 	vasParty := app.Party("/vas")

@@ -25,7 +25,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-func SearchByProxy(ctx iris.Context) {
+func SearchByProxyHandler(ctx iris.Context) {
 	if ce := log.Check(log.DebugLevel, "SearchByProxy"); ce != nil {
 		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
 		if ok {
@@ -38,7 +38,7 @@ func SearchByProxy(ctx iris.Context) {
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
 }
 
-func SearchBySound(ctx iris.Context) {
+func SearchBySoundHandler(ctx iris.Context) {
 	sound := ctx.PostValue("sound")
 	soundBytes, err := base64.StdEncoding.DecodeString(sound)
 	if err != nil {
@@ -65,7 +65,7 @@ func SearchBySound(ctx iris.Context) {
 	}
 }
 
-func SearchByText(ctx iris.Context) {
+func SearchByTextHandler(ctx iris.Context) {
 	req := &SearchReq{}
 	err := ctx.ReadJSON(req)
 	if err != nil {
@@ -108,7 +108,7 @@ func SearchByText(ctx iris.Context) {
 	})
 }
 
-func SearchByCursor(ctx iris.Context) {
+func SearchByCursorHandler(ctx iris.Context) {
 	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
 	if songChan == nil {
 		msg.WriteError(ctx, http.StatusAlreadyReported, msg.ErrAlreadyServed)
@@ -137,7 +137,7 @@ MainLoop:
 	})
 }
 
-func Download(ctx iris.Context) {
+func DownloadHandler(ctx iris.Context) {
 	downloadID := ctx.Params().GetString("downloadID")
 	bucketName := strings.ToLower(ctx.Params().GetString("bucket"))
 
