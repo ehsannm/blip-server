@@ -1,7 +1,6 @@
 package music
 
 import (
-	"crypto/tls"
 	"encoding/base64"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
@@ -140,6 +139,7 @@ MainLoop:
 
 func Download(ctx iris.Context) {
 	downloadID := ctx.Params().GetString("downloadID")
+	bucketName := strings.ToLower(ctx.Params().GetString("bucket"))
 
 	songID, err := primitive.ObjectIDFromHex(downloadID)
 	if err != nil {
@@ -154,25 +154,28 @@ func Download(ctx iris.Context) {
 	}
 
 	if songX.StoreID != 0 {
-		err = store.DownloadSong(songX.StoreID, songX.ID, ctx.ResponseWriter())
+		err = store.Download(songX.StoreID, bucketName, songX.ID, ctx.ResponseWriter())
 		if err != nil {
 			log.Warn("Error On Download Song", zap.Error(err))
+			ctx.ResetResponseWriter(ctx.ResponseWriter())
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+			return
 		}
 	} else {
-		downloadFromSource(ctx, songX)
+		downloadSongFromSource(ctx, bucketName, songX)
 	}
 	return
 }
-func downloadFromSource(ctx iris.Context, songX *Song) {
+func downloadSongFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	// download from source url
-	storeID, dbWriter, err := store.GetUploadStreamForSong(songX.ID)
+	storeID, dbWriter, err := store.GetUploadStream(bucketName, songX.ID)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
 	}
+	defer dbWriter.Close()
+
 	writer := io.MultiWriter(dbWriter, ctx.ResponseWriter())
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	httpClient := http.Client{}
 	res, err := httpClient.Get(songX.OriginSongUrl)
 	if err != nil {
 		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", songX.OriginSongUrl))
@@ -182,19 +185,20 @@ func downloadFromSource(ctx iris.Context, songX *Song) {
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusAccepted:
 		_, err = io.Copy(writer, res.Body)
+
 		if err != nil {
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
 		}
-		_ = dbWriter.Close()
+
 	default:
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
 	}
 	songX.StoreID = storeID
 	_, _ = SaveSong(songX)
-}
-
-func Upload(ctx iris.Context) {
-	// TODO:: implement it
+	log.Debug("Song Downloaded from Source",
+		zap.String("SongID", songX.ID.Hex()),
+		zap.Int64("StoreID", storeID),
+	)
 }

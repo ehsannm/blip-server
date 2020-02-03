@@ -6,7 +6,6 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 	"strings"
@@ -28,7 +27,7 @@ import (
 var (
 	storeCol     *mongo.Collection
 	stores       map[int64]*Store
-	storeBuckets map[int64]*gridfs.Bucket
+	storeBuckets map[int64]*mongo.Client
 	storesMtx    sync.RWMutex
 )
 
@@ -40,7 +39,7 @@ func Init() {
 	storesMtx.Lock()
 	defer storesMtx.Unlock()
 	stores = make(map[int64]*Store)
-	storeBuckets = make(map[int64]*gridfs.Bucket)
+	storeBuckets = make(map[int64]*mongo.Client)
 	cur, err := storeCol.Find(nil, bson.D{})
 	if err != nil {
 		log.Warn("Error On Initializing Stores", zap.Error(err))
@@ -72,11 +71,7 @@ func createStoreConnection(storeX *Store) error {
 		if err != nil {
 			return err
 		}
-		bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName("songs"))
-		if err != nil {
-			return err
-		}
-		storeBuckets[storeX.ID] = bucket
+		storeBuckets[storeX.ID] = mongoClient
 		stores[storeX.ID] = storeX
 		return nil
 	})

@@ -1,15 +1,15 @@
 package music
 
 import (
+	"crypto/tls"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"net/http"
 	"strings"
 	"sync"
 
 	"github.com/blevesearch/bleve"
-	"github.com/blevesearch/bleve/analysis/analyzer/keyword"
-	"github.com/blevesearch/bleve/mapping"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -34,6 +34,7 @@ var (
 	songCol           *mongo.Collection
 	searchContexts    map[string]*searchCtx
 	searchContextsMtx sync.RWMutex
+	httpClient        http.Client
 )
 
 func InitMongo(c *mongo.Client) {
@@ -41,6 +42,7 @@ func InitMongo(c *mongo.Client) {
 }
 
 func Init() {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	searchContexts = make(map[string]*searchCtx)
 	initSongIndex()
 	updateSongIndex()
@@ -117,30 +119,11 @@ func watchForSongs() {
 					continue
 				}
 
-				_ = UpdateLocalIndex(songX)
+				err = UpdateLocalIndex(songX)
+				log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
 				log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
 			}
 		}
 		_ = stream.Close(nil)
 	}
-}
-
-func indexMapForSongs() (mapping.IndexMapping, error) {
-	keywordFieldMapping := bleve.NewTextFieldMapping()
-	keywordFieldMapping.Analyzer = keyword.Name
-	keywordFieldMapping.DocValues = true
-	keywordFieldMapping.IncludeTermVectors = true
-
-	// Song
-	songMapping := bleve.NewDocumentStaticMapping()
-	songMapping.AddFieldMappingsAt("lyrics", keywordFieldMapping)
-	songMapping.AddFieldMappingsAt("title", keywordFieldMapping)
-	songMapping.AddFieldMappingsAt("artists", keywordFieldMapping)
-
-	indexMapping := bleve.NewIndexMapping()
-	indexMapping.AddDocumentMapping("song", songMapping)
-	indexMapping.TypeField = "type"
-	indexMapping.DefaultAnalyzer = keyword.Name
-
-	return indexMapping, nil
 }

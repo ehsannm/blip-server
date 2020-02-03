@@ -17,6 +17,9 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+// MustHaveSession is a middleware which make sure context has valid sessionID otherwise it stops
+// the context and response the client with appropriate message
+// On Error: http status is StatusForbidden (403) and the error message is SESSION_INVALID
 func MustHaveSession(ctx iris.Context) {
 	sessionID := ctx.GetHeader(HdrSessionID)
 	sessionCacheMtx.RLock()

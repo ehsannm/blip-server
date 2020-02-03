@@ -346,7 +346,7 @@ func LoginHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
-	err = session.RemoveAll(u.ID, appName)
+	err = session.Remove(u.ID, appName)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
@@ -493,7 +493,7 @@ func LogoutHandler(ctx iris.Context) {
 			return
 		}
 	}
-	err = session.RemoveAll(s.UserID, ctx.Values().GetString(CtxClientName))
+	err = session.Remove(s.UserID, ctx.Values().GetString(CtxClientName))
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
