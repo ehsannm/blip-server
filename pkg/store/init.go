@@ -6,6 +6,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 	"strings"
@@ -25,10 +26,10 @@ import (
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson store.go messages.go
 var (
-	storeCol   *mongo.Collection
-	stores     map[int64]*Store
-	storeConns map[int64]*mongo.Client
-	storesMtx  sync.RWMutex
+	storeCol     *mongo.Collection
+	stores       map[int64]*Store
+	storeBuckets map[int64]*gridfs.Bucket
+	storesMtx    sync.RWMutex
 )
 
 func InitMongo(c *mongo.Client) {
@@ -39,7 +40,7 @@ func Init() {
 	storesMtx.Lock()
 	defer storesMtx.Unlock()
 	stores = make(map[int64]*Store)
-	storeConns = make(map[int64]*mongo.Client)
+	storeBuckets = make(map[int64]*gridfs.Bucket)
 	cur, err := storeCol.Find(nil, bson.D{})
 	if err != nil {
 		log.Warn("Error On Initializing Stores", zap.Error(err))
@@ -71,7 +72,11 @@ func createStoreConnection(storeX *Store) error {
 		if err != nil {
 			return err
 		}
-		storeConns[storeX.ID] = mongoClient
+		bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName("songs"))
+		if err != nil {
+			return err
+		}
+		storeBuckets[storeX.ID] = bucket
 		stores[storeX.ID] = storeX
 		return nil
 	})

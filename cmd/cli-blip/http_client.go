@@ -140,11 +140,24 @@ func getFile(url string, filepath string) error {
 	if err != nil {
 		return err
 	}
-	f, err := os.Create(filepath)
-	if err != nil {
-		return err
+	defer res.Body.Close()
+	switch res.StatusCode {
+	case http.StatusOK:
+		f, err := os.Create(filepath)
+		if err != nil {
+			return err
+		}
+		_ = f.Close()
+		_, _ = io.Copy(f, res.Body)
+		return nil
+	default:
+		fmt.Println(res.Status, res.StatusCode)
+		bodyBytes, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return err
+		}
+		fmt.Println(tools.ByteToStr(bodyBytes))
 	}
-	_ = f.Close()
-	_, _ = io.Copy(f, res.Body)
-	return res.Body.Close()
+	return nil
+
 }

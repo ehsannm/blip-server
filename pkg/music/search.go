@@ -20,7 +20,10 @@ import (
 
 // UpdateLocalIndex updates the local index which will be used by search handlers
 func UpdateLocalIndex(s *Song) error {
-	return songIndex.Index(s.ID.Hex(), s)
+	if d, _ := songIndex.Document(s.ID.Hex()); d == nil {
+		return songIndex.Index(s.ID.Hex(), s)
+	}
+	return nil
 }
 
 // SearchLocalIndex

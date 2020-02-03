@@ -1,6 +1,7 @@
 package music
 
 import (
+	"crypto/tls"
 	"encoding/base64"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
@@ -170,9 +171,11 @@ func downloadFromSource(ctx iris.Context, songX *Song) {
 		return
 	}
 	writer := io.MultiWriter(dbWriter, ctx.ResponseWriter())
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	httpClient := http.Client{}
 	res, err := httpClient.Get(songX.OriginSongUrl)
 	if err != nil {
+		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", songX.OriginSongUrl))
 		msg.WriteError(ctx, http.StatusFailedDependency, msg.ErrReadFromSource)
 		return
 	}
@@ -183,6 +186,7 @@ func downloadFromSource(ctx iris.Context, songX *Song) {
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
 		}
+		_ = dbWriter.Close()
 	default:
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return

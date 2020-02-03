@@ -2,11 +2,8 @@ package store
 
 import (
 	"errors"
-	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
-	"go.mongodb.org/mongo-driver/mongo/options"
 	"io"
 )
 
@@ -29,23 +26,19 @@ type Store struct {
 }
 
 func GetUploadStreamForSong(songID primitive.ObjectID) (int64, *gridfs.UploadStream, error) {
-	var conn *mongo.Client
+	var bucket *gridfs.Bucket
 	var storeID int64
 	storesMtx.RLock()
-	for sID, x := range storeConns {
+	for sID, x := range storeBuckets {
 		if x != nil {
-			conn = x
+			bucket = x
 			storeID = sID
 			break
 		}
 	}
 	storesMtx.RUnlock()
-	if conn == nil {
+	if bucket == nil {
 		return storeID, nil, errors.New("no connection exists")
-	}
-	bucket, err := gridfs.NewBucket(conn.Database(config.DbStore), options.GridFSBucket().SetName("songs"))
-	if err != nil {
-		return storeID, nil, err
 	}
 	stream, err := bucket.OpenUploadStreamWithID(songID, songID.Hex())
 	return storeID, stream, err
@@ -53,15 +46,11 @@ func GetUploadStreamForSong(songID primitive.ObjectID) (int64, *gridfs.UploadStr
 
 func DownloadSong(storeID int64, songID primitive.ObjectID, dst io.Writer) error {
 	storesMtx.RLock()
-	conn := storeConns[storeID]
+	bucket := storeBuckets[storeID]
 	storesMtx.RUnlock()
-	if conn == nil {
+	if bucket == nil {
 		return errors.New("no connection exists")
 	}
-	bucket, err := gridfs.NewBucket(conn.Database(config.DbStore), options.GridFSBucket().SetName("songs"))
-	if err != nil {
-		return err
-	}
-	_, err = bucket.DownloadToStream(songID, dst)
+	_, err := bucket.DownloadToStream(songID, dst)
 	return err
 }
