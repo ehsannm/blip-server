@@ -162,11 +162,11 @@ func Download(ctx iris.Context) {
 			return
 		}
 	} else {
-		downloadSongFromSource(ctx, bucketName, songX)
+		downloadFromSource(ctx, bucketName, songX)
 	}
 	return
 }
-func downloadSongFromSource(ctx iris.Context, bucketName string, songX *Song) {
+func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	// download from source url
 	storeID, dbWriter, err := store.GetUploadStream(bucketName, songX.ID)
 	if err != nil {
