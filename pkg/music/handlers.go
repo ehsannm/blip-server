@@ -176,6 +176,7 @@ func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	// download from source url
 	storeID, dbWriter, err := store.GetUploadStream(bucketName, songX.ID)
 	if err != nil {
+		log.Warn("Error On GetUploadStream (Download From Source)", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
 	}
@@ -191,13 +192,14 @@ func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusAccepted:
 		_, err = io.Copy(writer, res.Body)
-
 		if err != nil {
+			log.Warn("Error On Copy (Download From Source)", zap.Error(err))
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
 		}
 
 	default:
+		log.Warn("Error On Http Status (Download From Source)", zap.Error(err), zap.String("Status", res.Status))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
 	}
