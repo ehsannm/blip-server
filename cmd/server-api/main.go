@@ -7,6 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
+	"git.ronaksoftware.com/blip/server/pkg/dev"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -68,6 +69,11 @@ func initModules() {
 
 func initServer() *iris.Application {
 	app := iris.New()
+
+	adminParty := app.Party("/admin")
+	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
+	adminParty.Post("/migrate_legacy_db", dev.MigrateLegacyDBHandler)
+	adminParty.Get("/migrate_legacy_db_stats", dev.MigrateLegacyDBStatsHandler)
 
 	tokenParty := app.Party("/token")
 	tokenParty.Use(auth.MustHaveAccessKey)

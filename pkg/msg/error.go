@@ -42,4 +42,5 @@ var (
 	ErrLocalIndexFailure       Item = "LOCAL_INDEX_FAILED"
 	ErrAlreadyServed           Item = "ALREADY_SERVED"
 	ErrInvalidDownloadID       Item = "INVALID_DOWNLOAD_ID"
+	ErrInvalidUrl              Item = "INVALID_URL"
 )

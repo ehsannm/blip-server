@@ -17,9 +17,11 @@ type Unsubscribed struct {
 	StatusCode string `json:"status_code"`
 }
 
-// MigrateLegacyDB
-type MigrateLegacyDBReq struct {
-	MysqlHost string `json:"mysql_host"`
-	MysqlUser string `json:"mysql_user"`
-	MysqlPass string `json:"mysql_pass"`
+const CMigrateStats = "MIGRATE_STATS"
+
+// easyjson:json
+type MigrateStats struct {
+	Scanned           int32 `json:"scanned"`
+	Downloaded        int32 `json:"downloaded"`
+	AlreadyDownloaded int32 `json:"already_downloaded"`
 }

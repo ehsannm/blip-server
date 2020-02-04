@@ -140,6 +140,12 @@ MainLoop:
 func DownloadHandler(ctx iris.Context) {
 	downloadID := ctx.Params().GetString("downloadID")
 	bucketName := strings.ToLower(ctx.Params().GetString("bucket"))
+	switch bucketName {
+	case store.BucketCovers, store.BucketSongs:
+	default:
+		msg.WriteError(ctx, http.StatusNotFound, msg.ErrInvalidUrl)
+		return
+	}
 
 	songID, err := primitive.ObjectIDFromHex(downloadID)
 	if err != nil {

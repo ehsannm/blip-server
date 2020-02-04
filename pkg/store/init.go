@@ -31,6 +31,11 @@ var (
 	storesMtx  sync.RWMutex
 )
 
+const (
+	BucketSongs  = "songs"
+	BucketCovers = "covers"
+)
+
 func InitMongo(c *mongo.Client) {
 	storeCol = c.Database(config.Db).Collection(config.ColStore)
 }

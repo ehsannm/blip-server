@@ -5,6 +5,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/kataras/iris"
 	"net/http"
+	"sync/atomic"
 )
 
 /*
@@ -34,4 +35,19 @@ func Unsubscribe(ctx iris.Context) {
 		StatusCode: res,
 	})
 
+}
+
+func MigrateLegacyDBHandler(ctx iris.Context) {
+	if !migrateRunning {
+		migrateRunning = true
+		go MigrateLegacyDB()
+	}
+}
+
+func MigrateLegacyDBStatsHandler(ctx iris.Context) {
+	msg.WriteResponse(ctx, CMigrateStats, MigrateStats{
+		Scanned:           atomic.LoadInt32(&migrateScanned),
+		Downloaded:        atomic.LoadInt32(&migrateDownloaded),
+		AlreadyDownloaded: atomic.LoadInt32(&migrateAlreadyDownloaded),
+	})
 }

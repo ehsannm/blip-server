@@ -2,7 +2,6 @@ package dev
 
 import (
 	"database/sql"
-	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -13,6 +12,7 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"sync/atomic"
 )
 
 /*
@@ -23,6 +23,13 @@ import (
    Auditor: Ehsan N. Moosa (E2)
    Copyright Ronak Software Group 2018
 */
+
+var (
+	migrateRunning           bool
+	migrateScanned           int32
+	migrateDownloaded        int32
+	migrateAlreadyDownloaded int32
+)
 
 func MigrateLegacyDB() {
 	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
@@ -36,12 +43,8 @@ func MigrateLegacyDB() {
 		return
 	}
 	waitGroup := sync.WaitGroup{}
-	rateLimit := make(chan struct{}, 10)
-	cnt := 0
+	rateLimit := make(chan struct{}, 25)
 	for rows.Next() {
-		if cnt++; cnt > 10 {
-			break
-		}
 		var artist, title, uriLocal, cover sql.NullString
 		err = rows.Scan(&artist, &title, &uriLocal, &cover)
 		if err != nil {
@@ -54,7 +57,7 @@ func MigrateLegacyDB() {
 		waitGroup.Add(1)
 		rateLimit <- struct{}{}
 		go func(artist, title, songUrl, coverUrl string) {
-			fmt.Println("Got", artist, title, songUrl, coverUrl)
+			atomic.AddInt32(&migrateScanned, 1)
 			defer waitGroup.Done()
 			defer func() {
 				<-rateLimit
@@ -82,25 +85,12 @@ func MigrateLegacyDB() {
 					)
 					return
 				}
-				downloadFromSource("songs", songID, songUrl)
-				downloadFromSource("covers", songID, coverUrl)
+				downloadFromSource(store.BucketSongs, songID, songUrl)
+				downloadFromSource(store.BucketCovers, songID, coverUrl)
+				atomic.AddInt32(&migrateDownloaded, 1)
 				return
 			}
-			songX.Artists = artist
-			songX.Title = title
-			songX.OriginSongUrl = songUrl
-			songX.OriginCoverUrl = coverUrl
-			songX.Source = "Archive"
-			songID, err := music.SaveSong(songX)
-			if err != nil {
-				log.Warn("Error On Save Search Result",
-					zap.Error(err),
-				)
-				return
-			}
-			downloadFromSource("songs", songID, songUrl)
-			downloadFromSource("covers", songID, coverUrl)
-
+			atomic.AddInt32(&migrateAlreadyDownloaded, 1)
 		}(artist.String, title.String, uriLocal.String, cover.String)
 	}
 	waitGroup.Wait()

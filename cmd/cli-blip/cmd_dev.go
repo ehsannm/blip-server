@@ -19,7 +19,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(DevCmd)
-	DevCmd.AddCommand(UnsubscribeCmd)
+	DevCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateLegacyDBStats)
 }
 
 var DevCmd = &cobra.Command{
@@ -35,6 +35,28 @@ var UnsubscribeCmd = &cobra.Command{
 			strings.NewReader(v.Encode()),
 			true,
 		)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+
+var MigrateLegacyDB = &cobra.Command{
+	Use: "MigrateLegacyDB",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := sendHttp(http.MethodPost, "admin/migrate_legacy_db", ContentTypeJSON, nil, true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+
+var MigrateLegacyDBStats = &cobra.Command{
+	Use: "MigrateLegacyDBStats",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := sendHttp(http.MethodGet, "admin/migrate_legacy_db_stats", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
