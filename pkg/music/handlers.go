@@ -159,6 +159,7 @@ func DownloadHandler(ctx iris.Context) {
 		return
 	}
 
+	startTime := time.Now()
 	if songX.StoreID != 0 {
 		err = store.Download(songX.StoreID, bucketName, songX.ID, ctx.ResponseWriter())
 		if err != nil {
@@ -170,6 +171,10 @@ func DownloadHandler(ctx iris.Context) {
 	} else {
 		downloadFromSource(ctx, bucketName, songX)
 	}
+	log.Debug("Song Downloaded",
+		zap.String("SongID", songX.ID.Hex()),
+		zap.Duration("Time", time.Now().Sub(startTime)),
+	)
 	return
 }
 func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
@@ -209,8 +214,4 @@ func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	}
 	songX.StoreID = storeID
 	_, _ = SaveSong(songX)
-	log.Debug("Song Downloaded from Source",
-		zap.String("SongID", songX.ID.Hex()),
-		zap.Int64("StoreID", storeID),
-	)
 }
