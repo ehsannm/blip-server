@@ -6,8 +6,10 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"github.com/blevesearch/bleve"
+	"github.com/blevesearch/bleve/search/query"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
+	"strings"
 	"time"
 )
 
@@ -41,7 +43,11 @@ func updateLocalIndex(s *Song) {
 
 // SearchLocalIndex
 func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
-	searchRequest := bleve.NewSearchRequest(bleve.NewQueryStringQuery(keyword))
+	qs := make([]query.Query, 0, 4)
+	for _, t := range strings.Fields(keyword) {
+		qs = append(qs, bleve.NewTermQuery(t))
+	}
+	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
