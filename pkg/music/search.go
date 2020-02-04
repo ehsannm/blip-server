@@ -72,6 +72,12 @@ MainLoop:
 			if ctx.ctx.Err() != nil {
 				break MainLoop
 			}
+			if ce := log.Check(log.DebugLevel, "Crawler Found Song"); ce != nil {
+				ce.Write(
+					zap.String("Title", foundSong.Title),
+					zap.String("Artist", foundSong.Artists),
+				)
+			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
 			if err != nil {
