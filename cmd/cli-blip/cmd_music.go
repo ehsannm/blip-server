@@ -7,6 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"github.com/spf13/cobra"
 	"net/http"
+	"time"
 )
 
 /*
@@ -73,9 +74,11 @@ var DownloadCmd = &cobra.Command{
 	Use: "Download",
 	Run: func(cmd *cobra.Command, args []string) {
 		url := fmt.Sprintf("%s/music/download/songs/%s", baseUrl, cmd.Flag(FlagSongID).Value.String())
+		timeStart := time.Now()
 		err := getFile(url, cmd.Flag(FlagFilePath).Value.String())
 		if err != nil {
 			fmt.Println(err)
 		}
+		fmt.Println("Download Time:", time.Now().Sub(timeStart))
 	},
 }
