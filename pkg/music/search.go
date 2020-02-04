@@ -53,8 +53,12 @@ type searchCtx struct {
 
 func (ctx *searchCtx) job() {
 	log.Debug("SearchContext started", zap.String("CursorID", ctx.cursorID))
+MainLoop:
 	for r := range ctx.resChan {
 		for _, foundSong := range r.Result {
+			if ctx.ctx.Err() != nil {
+				break MainLoop
+			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
 			if err != nil {
@@ -101,7 +105,6 @@ func (ctx *searchCtx) job() {
 				)
 			}
 		}
-
 	}
 	close(ctx.songChan)
 	ctx.done <- struct{}{}

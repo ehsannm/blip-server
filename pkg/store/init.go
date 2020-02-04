@@ -117,6 +117,7 @@ func watchForStores() {
 					continue
 				}
 				storesMtx.Unlock()
+				log.Info("Store Added/Updated", zap.Int64("StoreID", storeX.ID))
 			}
 		}
 		_ = stream.Close(nil)

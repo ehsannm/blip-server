@@ -72,7 +72,7 @@ var SearchResumeCmd = &cobra.Command{
 var DownloadCmd = &cobra.Command{
 	Use: "Download",
 	Run: func(cmd *cobra.Command, args []string) {
-		url := fmt.Sprintf("%s/music/download/%s", baseUrl, cmd.Flag(FlagSongID).Value.String())
+		url := fmt.Sprintf("%s/music/download/songs/%s", baseUrl, cmd.Flag(FlagSongID).Value.String())
 		err := getFile(url, cmd.Flag(FlagFilePath).Value.String())
 		if err != nil {
 			fmt.Println(err)

@@ -18,12 +18,12 @@ import (
 */
 
 func init() {
-	RootCmd.AddCommand(DevCmd)
-	DevCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateLegacyDBStats)
+	RootCmd.AddCommand(AdminCmd)
+	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateLegacyDBStats)
 }
 
-var DevCmd = &cobra.Command{
-	Use: "Dev",
+var AdminCmd = &cobra.Command{
+	Use: "Admin",
 }
 
 var UnsubscribeCmd = &cobra.Command{
