@@ -2,11 +2,13 @@ package music
 
 import (
 	"context"
+	"git.ronaksoftware.com/blip/server/internal/flusher"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"github.com/blevesearch/bleve"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
+	"time"
 )
 
 /*
@@ -18,12 +20,23 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-// UpdateLocalIndex updates the local index which will be used by search handlers
-func UpdateLocalIndex(s *Song) error {
-	if d, _ := songIndex.Document(s.ID.Hex()); d == nil {
-		return songIndex.Index(s.ID.Hex(), s)
+var songIndexer = flusher.New(100, 1, time.Millisecond, func(items []flusher.Entry) {
+	b := songIndex.NewBatch()
+	for _, item := range items {
+		song := item.Key.(*Song)
+		if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
+			_ = b.Index(song.ID.Hex(), song)
+		}
 	}
-	return nil
+	err := songIndex.Batch(b)
+	if err != nil {
+		log.Warn("Error On Indexing Song", zap.Error(err))
+	}
+})
+
+// updateLocalIndex updates the local index which will be used by search handlers
+func updateLocalIndex(s *Song) {
+	songIndexer.Enter(s, nil)
 }
 
 // SearchLocalIndex
@@ -86,23 +99,28 @@ MainLoop:
 				select {
 				case ctx.songChan <- songX:
 				default:
+					log.Warn("Could not write to song channel")
 				}
 				continue
 			}
-			songX.Artists = foundSong.Artists
-			songX.Title = foundSong.Title
-			songX.Genre = foundSong.Genre
-			songX.Lyrics = foundSong.Lyrics
-			songX.OriginSongUrl = foundSong.SongUrl
-			songX.OriginCoverUrl = foundSong.CoverUrl
-			songX.Source = r.Source
-			_, err = SaveSong(songX)
-			if err != nil {
-				log.Warn("Error On Save Search Result",
-					zap.Error(err),
-					zap.String("Source", r.Source),
-					zap.String("Title", foundSong.Title),
-				)
+
+			// If the song has not been downloaded from source yet, update the origin url
+			if songX.StoreID == 0 {
+				songX.Artists = foundSong.Artists
+				songX.Title = foundSong.Title
+				songX.Genre = foundSong.Genre
+				songX.Lyrics = foundSong.Lyrics
+				songX.OriginSongUrl = foundSong.SongUrl
+				songX.OriginCoverUrl = foundSong.CoverUrl
+				songX.Source = r.Source
+				_, err = SaveSong(songX)
+				if err != nil {
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Source", r.Source),
+						zap.String("Title", foundSong.Title),
+					)
+				}
 			}
 		}
 	}

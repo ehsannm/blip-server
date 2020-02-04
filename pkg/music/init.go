@@ -89,8 +89,7 @@ func updateSongIndex() {
 		err = cur.Decode(songX)
 		if err == nil {
 			cnt++
-			err = UpdateLocalIndex(songX)
-			log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
+			updateLocalIndex(songX)
 			if cnt%1000 == 0 {
 				log.Info("Still indexing ...", zap.Int("Indexed", cnt))
 			}
@@ -126,8 +125,7 @@ func watchForSongs() {
 					continue
 				}
 
-				err = UpdateLocalIndex(songX)
-				log.WarnOnError("Error On Indexing Song", err, zap.String("SongID", songX.ID.Hex()))
+				updateLocalIndex(songX)
 				log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
 			}
 		}
