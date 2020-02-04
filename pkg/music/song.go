@@ -57,10 +57,10 @@ func SaveSong(songX *Song) (primitive.ObjectID, error) {
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
-	err = UpdateLocalIndex(songX)
-	if err != nil {
-		return primitive.NilObjectID, err
-	}
+	// err = UpdateLocalIndex(songX)
+	// if err != nil {
+	// 	return primitive.NilObjectID, err
+	// }
 	return songX.ID, nil
 }
 
