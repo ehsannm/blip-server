@@ -110,16 +110,8 @@ MainLoop:
 					)
 					continue
 				}
-				select {
-				case ctx.songChan <- songX:
-				default:
-					log.Warn("Could not write to song channel")
-				}
-				continue
-			}
-
-			// If the song has not been downloaded from source yet, update the origin url
-			if songX.StoreID == 0 {
+			} else if songX.StoreID == 0 {
+				// If the song has not been downloaded from source yet, update the origin url
 				songX.Artists = foundSong.Artists
 				songX.Title = foundSong.Title
 				songX.Genre = foundSong.Genre
@@ -135,6 +127,11 @@ MainLoop:
 						zap.String("Title", foundSong.Title),
 					)
 				}
+			}
+			select {
+			case ctx.songChan <- songX:
+			default:
+				log.Warn("Could not write to song channel")
 			}
 		}
 	}
