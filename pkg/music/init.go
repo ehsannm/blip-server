@@ -43,7 +43,7 @@ func InitMongo(c *mongo.Client) {
 }
 
 func Init() {
-	if proxyURL, err := url.Parse("***REMOVED***"); err == nil {
+	if proxyURL, err := url.Parse(config.GetString(config.HttpProxy)); err == nil {
 		http.DefaultTransport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
 	} else {
 		log.Warn("Error On Set HTTP Proxy", zap.Error(err))

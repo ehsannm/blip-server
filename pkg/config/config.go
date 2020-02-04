@@ -16,6 +16,7 @@ import (
 
 const (
 	TestMode       = "TEST_MODE"
+	HttpProxy      = "HTTP_PROXY"
 	LogLevel       = "LOG_LEVEL"
 	MongoUrl       = "MONGO_URL"
 	RedisUrl       = "REDIS_URL"
@@ -49,6 +50,7 @@ func init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
+	pflag.String(HttpProxy, "***REMOVED***", "")
 	pflag.Bool(TestMode, false, "")
 	pflag.Int(LogLevel, 0, "")
 	pflag.String(MongoUrl, "mongodb://localhost:27017", "")
