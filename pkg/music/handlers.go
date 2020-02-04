@@ -199,7 +199,11 @@ func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 		}
 
 	default:
-		log.Warn("Error On Http Status (Download From Source)", zap.Error(err), zap.String("Status", res.Status))
+		log.Warn("Error On Http Status (Download From Source)",
+			zap.Error(err),
+			zap.String("Url", songX.OriginSongUrl),
+			zap.String("Status", res.Status),
+		)
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
 		return
 	}
