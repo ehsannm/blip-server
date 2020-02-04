@@ -6,6 +6,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"
+	"net/url"
 	"strings"
 	"sync"
 
@@ -42,7 +43,13 @@ func InitMongo(c *mongo.Client) {
 }
 
 func Init() {
+	if proxyURL, err := url.Parse("***REMOVED***"); err == nil {
+		http.DefaultTransport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
+	} else {
+		log.Warn("Error On Set HTTP Proxy", zap.Error(err))
+	}
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
+
 	searchContexts = make(map[string]*searchCtx)
 	initSongIndex()
 	updateSongIndex()
