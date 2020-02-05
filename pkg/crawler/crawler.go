@@ -7,14 +7,13 @@ import (
 	"git.ronaksoftware.com/blip/server/internal/pools"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
-	"go.uber.org/zap"
-	"net/url"
-
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 /*
@@ -135,7 +134,8 @@ func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchRespo
 	}
 	c.httpClient.Timeout = config.HttpRequestTimeout
 
-	crawlerUrl := fmt.Sprintf("%s/%s/%s", c.Url, tools.RandomID(24), url.QueryEscape(keyword))
+
+	crawlerUrl := url.PathEscape(fmt.Sprintf("%s/%s/%s", c.Url, tools.RandomID(24), keyword))
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodGet, crawlerUrl, nil)
 	if err != nil {
 		return nil, err

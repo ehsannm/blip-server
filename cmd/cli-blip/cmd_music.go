@@ -52,7 +52,7 @@ var SearchByTextCmd = &cobra.Command{
 			Keyword: cmd.Flag(FlagKeyword).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		res, err := sendHttp(http.MethodPost, "music/search_by_text", ContentTypeJSON, bytes.NewBuffer(reqBytes),  false)
+		res, err := sendHttp(http.MethodPost, "music/search_by_text", ContentTypeJSON, bytes.NewBuffer(reqBytes), false)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -62,20 +62,20 @@ var SearchByTextCmd = &cobra.Command{
 			color.Green("Result: %s", res.Constructor)
 			for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
 				songX := s.(map[string]interface{})
-				color.Blue("%s (%s) --> %s", songX["title"], songX["artist"], songX["id"])
+				color.HiCyan("%s (%s) --> %s", songX["title"].(string), songX["artists"].(string), songX["id"])
 			}
 		default:
 			color.Red("%s %v", res.Constructor, res.Payload)
 		}
 
 		for {
-			res, _ := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, true)
+			res, _ := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, false)
 			switch res.Constructor {
 			case music.CSearchResult:
 				color.Green("Result: %s", res.Constructor)
 				for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
 					songX := s.(map[string]interface{})
-					color.Blue("%s (%s) --> %s", songX["title"], songX["artist"], songX["id"])
+					color.HiBlue("%s (%s) --> %s", songX["title"].(string), songX["artists"].(string), songX["id"])
 				}
 			default:
 				color.Red("%s %v", res.Constructor, res.Payload)
