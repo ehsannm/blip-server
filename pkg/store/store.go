@@ -92,22 +92,6 @@ func GetDownloadStream(bucketName string, songID primitive.ObjectID, storeID int
 	return bucket.OpenDownloadStream(songID)
 }
 
-func Download(storeID int64, bucketName string, songID primitive.ObjectID, dst io.Writer) error {
-	storesMtx.RLock()
-	mongoClient := storeConns[storeID]
-	storesMtx.RUnlock()
-	if mongoClient == nil {
-		return errors.New("no connection exists")
-	}
-	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
-	if err != nil {
-		return err
-	}
-	_, err = bucket.DownloadToStream(songID, dst)
-
-	return err
-}
-
 func Copy(dst io.Writer, src io.Reader, flushFunc func()) (written int64, err error) {
 	size := 32 * 1024
 	if l, ok := src.(*io.LimitedReader); ok && int64(size) > l.N {
