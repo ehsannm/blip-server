@@ -4,10 +4,10 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
+	"git.ronaksoftware.com/blip/server/pkg/admin"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
-	"git.ronaksoftware.com/blip/server/pkg/dev"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -72,8 +72,8 @@ func initServer() *iris.Application {
 
 	adminParty := app.Party("/admin")
 	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
-	adminParty.Post("/migrate_legacy_db", dev.MigrateLegacyDBHandler)
-	adminParty.Get("/migrate_legacy_db_stats", dev.MigrateLegacyDBStatsHandler)
+	adminParty.Post("/migrate_legacy_db", admin.MigrateLegacyDBHandler)
+	adminParty.Get("/migrate_legacy_db_stats", admin.MigrateLegacyDBStatsHandler)
 
 	tokenParty := app.Party("/token")
 	tokenParty.Use(auth.MustHaveAccessKey)

@@ -1,8 +1,8 @@
-package dev_test
+package admin_test
 
 import (
 	testEnv "git.ronaksoftware.com/blip/server/pkg"
-	"git.ronaksoftware.com/blip/server/pkg/dev"
+	"git.ronaksoftware.com/blip/server/pkg/admin"
 	"git.ronaksoftware.com/blip/server/pkg/store"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -32,7 +32,7 @@ func TestMigrateLegacyDB(t *testing.T) {
 			Region:   "",
 		})
 		c.So(err, ShouldBeNil)
-		dev.MigrateLegacyDB()
+		admin.MigrateLegacyDB()
 	})
 
 }

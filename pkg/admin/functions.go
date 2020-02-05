@@ -1,4 +1,4 @@
-package dev
+package admin
 
 import (
 	"database/sql"
@@ -43,7 +43,7 @@ func MigrateLegacyDB() {
 		return
 	}
 	waitGroup := sync.WaitGroup{}
-	rateLimit := make(chan struct{}, 25)
+	rateLimit := make(chan struct{}, 50)
 	for rows.Next() {
 		var artist, title, uriLocal, cover sql.NullString
 		err = rows.Scan(&artist, &title, &uriLocal, &cover)
@@ -91,6 +91,15 @@ func MigrateLegacyDB() {
 					_, _ = music.SaveSong(songX)
 				}
 				downloadFromSource(store.BucketCovers, songID, coverUrl)
+				atomic.AddInt32(&migrateDownloaded, 1)
+				return
+			} else if songX.StoreID == 0 {
+				storeID := downloadFromSource(store.BucketSongs, songX.ID, songUrl)
+				if storeID != 0 {
+					songX.StoreID = storeID
+					_, _ = music.SaveSong(songX)
+				}
+				downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
 				atomic.AddInt32(&migrateDownloaded, 1)
 				return
 			}

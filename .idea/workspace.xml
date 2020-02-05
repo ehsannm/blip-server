@@ -3,7 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/dev_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/dev_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/functions.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/dev/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/messages.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -134,10 +138,10 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580244430983" />
-    <state x="498" y="282" width="837" height="550" key="find.popup" timestamp="1580672947281">
+    <state x="498" y="282" width="837" height="550" key="find.popup" timestamp="1580907903532">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580672947281" />
+    <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1580907903532" />
     <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1580659478878">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

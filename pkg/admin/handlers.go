@@ -1,4 +1,4 @@
-package dev
+package admin
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
