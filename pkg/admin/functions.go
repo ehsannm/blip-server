@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"sync"
 	"sync/atomic"
+	"time"
 )
 
 /*
@@ -107,6 +108,10 @@ func MigrateLegacyDB() {
 		}(artist.String, title.String, uriLocal.String, cover.String)
 	}
 	waitGroup.Wait()
+	log.Info("Migration Finished",
+		zap.Int32("Scanned", migrateScanned),
+		zap.Int32("Downloaded", migrateDownloaded),
+	)
 
 }
 func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
@@ -125,6 +130,7 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 	}
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusAccepted:
+		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
 		_, err = io.Copy(dbWriter, res.Body)
 		if err != nil {
 			log.Warn("Error On Copy", zap.Error(err))
