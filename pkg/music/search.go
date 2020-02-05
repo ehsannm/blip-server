@@ -44,8 +44,9 @@ func updateLocalIndex(s *Song) {
 // SearchLocalIndex
 func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	qs := make([]query.Query, 0, 4)
-	for _, t := range strings.Fields(keyword) {
-		qs = append(qs, bleve.NewTermQuery(t))
+	terms := strings.Fields(keyword)
+	for _, t := range terms {
+		qs = append(qs, bleve.NewMatchQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.SortBy([]string{"_score"})
@@ -73,7 +74,7 @@ type searchCtx struct {
 }
 
 func (ctx *searchCtx) job() {
-	log.Debug("SearchContext started", zap.String("CursorID", ctx.cursorID))
+	log.Debug("SearchCtx started", zap.String("CursorID", ctx.cursorID))
 MainLoop:
 	for r := range ctx.resChan {
 		for _, foundSong := range r.Result {
@@ -84,6 +85,7 @@ MainLoop:
 				ce.Write(
 					zap.String("Title", foundSong.Title),
 					zap.String("Artist", foundSong.Artists),
+					zap.String("Source", r.Source),
 				)
 			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
@@ -131,13 +133,13 @@ MainLoop:
 			select {
 			case ctx.songChan <- songX:
 			default:
-				log.Warn("Could not write to song channel")
+				log.Warn("SearchCtx Could not write to song channel")
 			}
 		}
 	}
 	close(ctx.songChan)
 	ctx.done <- struct{}{}
-	log.Debug("SearchContext done", zap.String("CursorID", ctx.cursorID))
+	log.Debug("SearchCtx done", zap.String("CursorID", ctx.cursorID))
 }
 
 // StartSearch creates a new context and send the request to all the crawlers and waits for them to finish. If a context
