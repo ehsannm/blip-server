@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/music"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"net/http"
 	"time"
@@ -51,10 +52,37 @@ var SearchByTextCmd = &cobra.Command{
 			Keyword: cmd.Flag(FlagKeyword).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		_, err := sendHttp(http.MethodPost, "music/search_by_text", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		res, err := sendHttp(http.MethodPost, "music/search_by_text", ContentTypeJSON, bytes.NewBuffer(reqBytes),  false)
 		if err != nil {
 			fmt.Println(err)
 			return
+		}
+		switch res.Constructor {
+		case music.CSearchResult:
+			color.Green("Result: %s", res.Constructor)
+			for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
+				songX := s.(map[string]interface{})
+				color.Blue("%s (%s) --> %s", songX["title"], songX["artist"], songX["id"])
+			}
+		default:
+			color.Red("%s %v", res.Constructor, res.Payload)
+		}
+
+		for {
+			res, _ := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, true)
+			switch res.Constructor {
+			case music.CSearchResult:
+				color.Green("Result: %s", res.Constructor)
+				for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
+					songX := s.(map[string]interface{})
+					color.Blue("%s (%s) --> %s", songX["title"], songX["artist"], songX["id"])
+				}
+			default:
+				color.Red("%s %v", res.Constructor, res.Payload)
+			}
+			if res.Constructor == "err" {
+				break
+			}
 		}
 	},
 }

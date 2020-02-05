@@ -15,14 +15,12 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
-
-	"go.uber.org/zap/zapcore"
-
 	"github.com/kataras/iris"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
 )
 
 func initModules() {
