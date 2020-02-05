@@ -161,11 +161,16 @@ func DownloadHandler(ctx iris.Context) {
 
 	startTime := time.Now()
 	if songX.StoreID != 0 {
-		err = store.Download(songX.StoreID, bucketName, songX.ID, ctx.ResponseWriter())
+		dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.StoreID)
 		if err != nil {
-			log.Warn("Error On Download Song", zap.Error(err))
-			ctx.ResetResponseWriter(ctx.ResponseWriter())
+			log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+			return
+		}
+		_, err = store.Copy(ctx.ResponseWriter(), dbReader, ctx.ResponseWriter().Flush)
+		if err != nil {
+			log.Warn("Error On Download Song (Copy)", zap.Error(err))
+			ctx.StatusCode(http.StatusServiceUnavailable)
 			return
 		}
 	} else {
@@ -196,10 +201,10 @@ func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
 	}
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusAccepted:
-		_, err = io.Copy(writer, res.Body)
+		_, err = store.Copy(writer, res.Body, ctx.ResponseWriter().Flush)
 		if err != nil {
 			log.Warn("Error On Copy (Download From Source)", zap.Error(err))
-			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			ctx.StatusCode(http.StatusServiceUnavailable)
 			return
 		}
 

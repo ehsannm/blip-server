@@ -3,6 +3,7 @@ package store
 import (
 	"errors"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"github.com/gobwas/pool/pbytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -77,6 +78,20 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 	return storeID, stream, err
 }
 
+func GetDownloadStream(bucketName string, songID primitive.ObjectID, storeID int64) (*gridfs.DownloadStream, error) {
+	storesMtx.RLock()
+	mongoClient := storeConns[storeID]
+	storesMtx.RUnlock()
+	if mongoClient == nil {
+		return nil, errors.New("no connection exists")
+	}
+	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
+	if err != nil {
+		return nil, err
+	}
+	return bucket.OpenDownloadStream(songID)
+}
+
 func Download(storeID int64, bucketName string, songID primitive.ObjectID, dst io.Writer) error {
 	storesMtx.RLock()
 	mongoClient := storeConns[storeID]
@@ -89,5 +104,46 @@ func Download(storeID int64, bucketName string, songID primitive.ObjectID, dst i
 		return err
 	}
 	_, err = bucket.DownloadToStream(songID, dst)
+
 	return err
+}
+
+func Copy(dst io.Writer, src io.Reader, flushFunc func()) (written int64, err error) {
+	size := 32 * 1024
+	if l, ok := src.(*io.LimitedReader); ok && int64(size) > l.N {
+		if l.N < 1 {
+			size = 1
+		} else {
+			size = int(l.N)
+		}
+	}
+	buf := pbytes.GetLen(size)
+	defer pbytes.Put(buf)
+	for {
+		nr, er := src.Read(buf)
+		if nr > 0 {
+			nw, ew := dst.Write(buf[0:nr])
+			if nw > 0 {
+				written += int64(nw)
+				if flushFunc != nil {
+					flushFunc()
+				}
+			}
+			if ew != nil {
+				err = ew
+				break
+			}
+			if nr != nw {
+				err = io.ErrShortWrite
+				break
+			}
+		}
+		if er != nil {
+			if er != io.EOF {
+				err = er
+			}
+			break
+		}
+	}
+	return written, err
 }
