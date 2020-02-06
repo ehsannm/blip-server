@@ -24,6 +24,7 @@ import (
 )
 
 func initModules() {
+	config.Init()
 	log.InitLogger(zapcore.Level(config.GetInt(config.LogLevel)), "")
 
 	// Initialize MongoDB

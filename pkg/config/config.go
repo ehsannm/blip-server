@@ -46,7 +46,7 @@ const (
 	SmsPayamakPhone = "SMS_PAYAMAK_PHONE"
 )
 
-func init() {
+func Init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
