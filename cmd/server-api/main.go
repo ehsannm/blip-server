@@ -95,6 +95,7 @@ func initServer() *iris.Application {
 	crawlerParty := app.Party("/crawler")
 	crawlerParty.Use(auth.MustHaveAccessKey)
 	crawlerParty.Post("/save", auth.MustAdmin, crawler.SaveHandler)
+	crawlerParty.Get("/list", auth.MustAdmin, crawler.ListHandler)
 
 	musicParty := app.Party("/music")
 	musicParty.Use(auth.MustHaveAccessKey)

@@ -406,7 +406,7 @@ func (v *FoundSong) UnmarshalJSON(data []byte) error {
 func (v *FoundSong) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler3(l, v)
 }
-func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler4(in *jlexer.Lexer, out *CrawlerCreated) {
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler4(in *jlexer.Lexer, out *CrawlersCreated) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -439,7 +439,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler4(in *jlexer.L
 		in.Consumed()
 	}
 }
-func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler4(out *jwriter.Writer, in CrawlerCreated) {
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler4(out *jwriter.Writer, in CrawlersCreated) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -452,25 +452,25 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler4(out *jwriter
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v CrawlerCreated) MarshalJSON() ([]byte, error) {
+func (v CrawlersCreated) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler4(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v CrawlerCreated) MarshalEasyJSON(w *jwriter.Writer) {
+func (v CrawlersCreated) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgCrawler4(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *CrawlerCreated) UnmarshalJSON(data []byte) error {
+func (v *CrawlersCreated) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler4(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *CrawlerCreated) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *CrawlersCreated) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgCrawler4(l, v)
 }

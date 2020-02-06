@@ -37,7 +37,14 @@ func SaveHandler(ctx iris.Context) {
 		return
 	}
 
-	msg.WriteResponse(ctx, CCrawlerCreated, CrawlerCreated{
+	msg.WriteResponse(ctx, CCrawlersCreated, CrawlersCreated{
 		CrawlerID: crawlerID,
+	})
+}
+
+func ListHandler(ctx iris.Context) {
+	crawlers := GetAll()
+	msg.WriteResponse(ctx, CCrawlersMany, CrawlersMany{
+		Crawlers: crawlers,
 	})
 }
