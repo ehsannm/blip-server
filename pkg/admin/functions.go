@@ -43,88 +43,99 @@ func MigrateLegacyDB() {
 		log.Warn("Error On Connect MySql", zap.Error(err))
 		return
 	}
-	rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
-	if err != nil {
-		log.Warn("Error On Query", zap.Error(err))
-		return
-	}
-	defer rows.Close()
+
 	waitGroup := sync.WaitGroup{}
 	rateLimit := make(chan struct{}, 50)
-	for rows.Next() {
-		var artist, title, uriLocal, cover sql.NullString
-		err = rows.Scan(&artist, &title, &uriLocal, &cover)
+	for {
+		rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
 		if err != nil {
-			log.Warn("Error On Scan Legacy DB", zap.Error(err))
-			continue
+			log.Warn("Error On Query", zap.Error(err))
+			return
 		}
-		if !artist.Valid || !title.Valid || !uriLocal.Valid || !cover.Valid {
-			continue
-		}
-		waitGroup.Add(1)
-		rateLimit <- struct{}{}
-		go func(artist, title, songUrl, coverUrl string) {
-			atomic.AddInt32(&migrateScanned, 1)
-			defer waitGroup.Done()
-			defer func() {
-				<-rateLimit
-			}()
-			uniqueKey := music.GenerateUniqueKey(title, artist)
-			songX, err := music.GetSongByUniqueKey(uniqueKey)
+		for rows.Next() {
+			var artist, title, uriLocal, cover sql.NullString
+			err = rows.Scan(&artist, &title, &uriLocal, &cover)
 			if err != nil {
-				songX = &music.Song{
-					ID:             primitive.NilObjectID,
-					UniqueKey:      uniqueKey,
-					Title:          title,
-					Genre:          "",
-					Lyrics:         "",
-					Artists:        artist,
-					StoreID:        0,
-					OriginCoverUrl: coverUrl,
-					OriginSongUrl:  songUrl,
-					Source:         "Archive",
-				}
-				songID, err := music.SaveSong(songX)
+				log.Warn("Error On Scan Legacy DB", zap.Error(err))
+				continue
+			}
+			if !artist.Valid || !title.Valid || !uriLocal.Valid || !cover.Valid {
+				continue
+			}
+			waitGroup.Add(1)
+			rateLimit <- struct{}{}
+			go func(artist, title, songUrl, coverUrl string) {
+				atomic.AddInt32(&migrateScanned, 1)
+				defer waitGroup.Done()
+				defer func() {
+					<-rateLimit
+				}()
+				uniqueKey := music.GenerateUniqueKey(title, artist)
+				songX, err := music.GetSongByUniqueKey(uniqueKey)
 				if err != nil {
-					log.Warn("Error On Save Search Result",
-						zap.Error(err),
-						zap.String("Title", title),
-					)
+					songX = &music.Song{
+						ID:             primitive.NilObjectID,
+						UniqueKey:      uniqueKey,
+						Title:          title,
+						Genre:          "",
+						Lyrics:         "",
+						Artists:        artist,
+						StoreID:        0,
+						OriginCoverUrl: coverUrl,
+						OriginSongUrl:  songUrl,
+						Source:         "Archive",
+					}
+					songID, err := music.SaveSong(songX)
+					if err != nil {
+						log.Warn("Error On Save Search Result",
+							zap.Error(err),
+							zap.String("Title", title),
+						)
+						return
+					}
+					storeID := downloadFromSource(store.BucketSongs, songID, songUrl)
+					if storeID != 0 {
+						songX.StoreID = storeID
+						_, _ = music.SaveSong(songX)
+						downloadFromSource(store.BucketCovers, songID, coverUrl)
+						atomic.AddInt32(&migrateDownloaded, 1)
+					} else {
+						atomic.AddInt32(&migrateDownloadFailed, 1)
+					}
+
+					return
+				} else if songX.StoreID == 0 {
+					storeID := downloadFromSource(store.BucketSongs, songX.ID, songUrl)
+					if storeID != 0 {
+						songX.StoreID = storeID
+						_, _ = music.SaveSong(songX)
+						downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
+						atomic.AddInt32(&migrateDownloaded, 1)
+					} else {
+						_ = music.DeleteSong(songX.ID)
+						atomic.AddInt32(&migrateDownloadFailed, 1)
+					}
 					return
 				}
-				storeID := downloadFromSource(store.BucketSongs, songID, songUrl)
-				if storeID != 0 {
-					songX.StoreID = storeID
-					_, _ = music.SaveSong(songX)
-					downloadFromSource(store.BucketCovers, songID, coverUrl)
-					atomic.AddInt32(&migrateDownloaded, 1)
-				} else {
-					atomic.AddInt32(&migrateDownloadFailed, 1)
-				}
-
-				return
-			} else if songX.StoreID == 0 {
-				storeID := downloadFromSource(store.BucketSongs, songX.ID, songUrl)
-				if storeID != 0 {
-					songX.StoreID = storeID
-					_, _ = music.SaveSong(songX)
-					downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
-					atomic.AddInt32(&migrateDownloaded, 1)
-				} else {
-					_ = music.DeleteSong(songX.ID)
-					atomic.AddInt32(&migrateDownloadFailed, 1)
-				}
-				return
-			}
-			atomic.AddInt32(&migrateAlreadyDownloaded, 1)
-		}(artist.String, title.String, uriLocal.String, cover.String)
+				atomic.AddInt32(&migrateAlreadyDownloaded, 1)
+			}(artist.String, title.String, uriLocal.String, cover.String)
+		}
+		waitGroup.Wait()
+		if rows.Err() == nil {
+			_ = rows.Close()
+			break
+		}
+		migrateScanned = 0
+		migrateDownloaded = 0
+		migrateDownloadFailed = 0
+		migrateAlreadyDownloaded = 0
+		_ = rows.Close()
 	}
-	waitGroup.Wait()
+
 	migrateRunning = false
 	log.Info("Migration Finished",
 		zap.Int32("Scanned", migrateScanned),
 		zap.Int32("Downloaded", migrateDownloaded),
-		zap.Error(rows.Err()),
 	)
 
 }
