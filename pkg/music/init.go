@@ -51,7 +51,9 @@ func Init() {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 	searchContexts = make(map[string]*searchCtx)
+	log.Info("Initialize Songs Index ...")
 	initSongIndex()
+	log.Info("Songs Index Initialized. ")
 	// updateSongIndex()
 	go watchForSongs()
 }
