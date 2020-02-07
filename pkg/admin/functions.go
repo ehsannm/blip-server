@@ -43,11 +43,12 @@ func MigrateLegacyDB() {
 		log.Warn("Error On Connect MySql", zap.Error(err))
 		return
 	}
-	rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != ''")
+	rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
 	if err != nil {
 		log.Warn("Error On Query", zap.Error(err))
 		return
 	}
+	defer rows.Close()
 	waitGroup := sync.WaitGroup{}
 	rateLimit := make(chan struct{}, 50)
 	for rows.Next() {
@@ -123,6 +124,7 @@ func MigrateLegacyDB() {
 	log.Info("Migration Finished",
 		zap.Int32("Scanned", migrateScanned),
 		zap.Int32("Downloaded", migrateDownloaded),
+		zap.Error(rows.Err()),
 	)
 
 }
