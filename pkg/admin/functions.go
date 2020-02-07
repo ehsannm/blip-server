@@ -74,7 +74,7 @@ func MigrateLegacyDB() {
 				songX, err := music.GetSongByUniqueKey(uniqueKey)
 				if err != nil {
 					songX = &music.Song{
-						ID:             primitive.NilObjectID,
+						ID:             primitive.NewObjectID(),
 						UniqueKey:      uniqueKey,
 						Title:          title,
 						Genre:          "",
@@ -85,19 +85,19 @@ func MigrateLegacyDB() {
 						OriginSongUrl:  songUrl,
 						Source:         "Archive",
 					}
-					songID, err := music.SaveSong(songX)
-					if err != nil {
-						log.Warn("Error On Save Search Result",
-							zap.Error(err),
-							zap.String("Title", title),
-						)
-						return
-					}
-					storeID := downloadFromSource(store.BucketSongs, songID, songUrl)
+
+					storeID := downloadFromSource(store.BucketSongs, songX.ID, songUrl)
 					if storeID != 0 {
 						songX.StoreID = storeID
-						_, _ = music.SaveSong(songX)
-						downloadFromSource(store.BucketCovers, songID, coverUrl)
+						_, err := music.SaveSong(songX)
+						if err != nil {
+							log.Warn("Error On Save Search Result",
+								zap.Error(err),
+								zap.String("Title", title),
+							)
+							return
+						}
+						downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
 						atomic.AddInt32(&migrateDownloaded, 1)
 					} else {
 						atomic.AddInt32(&migrateDownloadFailed, 1)
