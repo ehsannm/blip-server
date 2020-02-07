@@ -29,7 +29,10 @@ func initModules() {
 
 	// Initialize MongoDB
 	if mongoClient, err := mongo.Connect(nil,
-		options.Client().ApplyURI(config.GetString(config.MongoUrl)),
+		options.Client().
+			ApplyURI(config.GetString(config.MongoUrl)).
+			SetMaxPoolSize(500).
+			SetMinPoolSize(1),
 	); err != nil {
 		log.Fatal("Error On Mongo Connect", zap.Error(err))
 	} else {

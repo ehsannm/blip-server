@@ -23,6 +23,7 @@ const (
 	ColSong    = "song"
 	ColCrawler = "crawler"
 	ColStore   = "store"
+	ColHelp    = "help"
 )
 
 // Redis Keys
