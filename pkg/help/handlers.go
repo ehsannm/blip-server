@@ -1,5 +1,7 @@
 package help
 
+import "github.com/kataras/iris"
+
 /*
    Creation Time: 2020 - Feb - 07
    Created by:  (ehsan)
@@ -8,3 +10,8 @@ package help
    Auditor: Ehsan N. Moosa (E2)
    Copyright Ronak Software Group 2018
 */
+
+
+func GetInfo(ctx iris.Context) {
+
+}

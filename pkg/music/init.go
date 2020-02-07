@@ -52,7 +52,7 @@ func Init() {
 
 	searchContexts = make(map[string]*searchCtx)
 	initSongIndex()
-	updateSongIndex()
+	// updateSongIndex()
 	go watchForSongs()
 }
 func initSongIndex() {
