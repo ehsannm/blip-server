@@ -48,6 +48,12 @@ func DropAllSongs() error {
 	return songCol.Drop(nil)
 }
 
+// DeleteSong deletes song from the database
+func DeleteSong(songID primitive.ObjectID) error {
+	_, err := songCol.DeleteOne(nil, bson.M{"_id": songID})
+	return err
+}
+
 // SaveSong saves/replaces the song 's' to the database
 func SaveSong(songX *Song) (primitive.ObjectID, error) {
 	if songX.ID == primitive.NilObjectID {
