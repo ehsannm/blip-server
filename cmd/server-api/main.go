@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
@@ -17,14 +16,12 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/vas"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 	"github.com/kataras/iris"
+	"github.com/kataras/iris/middleware/pprof"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"net/http"
-	"net/http/pprof"
-	"runtime"
 )
 
 func initModules() {
@@ -117,31 +114,21 @@ func initServer() *iris.Application {
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
+
+	if config.GetBool(config.ProfilerEnabled) {
+		p := pprof.New()
+		app.Any("/debug/pprof", p)
+		app.Any("/debug/pprof/{action:path}", p)
+	}
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")
 	return app
 }
 
-func initProfiler() {
-	// Run Profiler
-	if config.GetBool(config.ProfilerEnabled) {
-		go func() {
-			runtime.SetCPUProfileRate(10)
-			r := http.NewServeMux()
-			r.HandleFunc("/debug/pprof/", pprof.Index)
-			r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-			r.HandleFunc("/debug/pprof/profile", pprof.Profile)
-			r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-			r.HandleFunc("/debug/pprof/trace", pprof.Trace)
-			_ = http.ListenAndServe(fmt.Sprintf(":%d", config.GetInt(config.ProfilerPort)), r)
-		}()
-	}
-}
 
 func main() {
 	// Initialize all the required modules and packages
 	initModules()
-	initProfiler()
 	Root.AddCommand(InitDB)
 	_ = Root.Execute()
 }

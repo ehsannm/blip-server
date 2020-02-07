@@ -107,9 +107,9 @@ func MigrateLegacyDB() {
 				if storeID != 0 {
 					songX.StoreID = storeID
 					_, _ = music.SaveSong(songX)
+					downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
+					atomic.AddInt32(&migrateDownloaded, 1)
 				}
-				downloadFromSource(store.BucketCovers, songX.ID, coverUrl)
-				atomic.AddInt32(&migrateDownloaded, 1)
 				return
 			}
 			atomic.AddInt32(&migrateAlreadyDownloaded, 1)
