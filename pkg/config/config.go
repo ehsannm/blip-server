@@ -15,15 +15,17 @@ import (
 */
 
 const (
-	TestMode       = "TEST_MODE"
-	HttpProxy      = "HTTP_PROXY"
-	LogLevel       = "LOG_LEVEL"
-	MongoUrl       = "MONGO_URL"
-	RedisUrl       = "REDIS_URL"
-	RedisPass      = "REDIS_PASS"
-	MagicPhone     = "MAGIC_PHONE"
-	MagicPhoneCode = "MAGIC_PHONE_CODE"
-	SongsIndexDir  = "SONGS_INDEX_DIR"
+	TestMode        = "TEST_MODE"
+	HttpProxy       = "HTTP_PROXY"
+	LogLevel        = "LOG_LEVEL"
+	MongoUrl        = "MONGO_URL"
+	RedisUrl        = "REDIS_URL"
+	RedisPass       = "REDIS_PASS"
+	MagicPhone      = "MAGIC_PHONE"
+	MagicPhoneCode  = "MAGIC_PHONE_CODE"
+	SongsIndexDir   = "SONGS_INDEX_DIR"
+	ProfilerEnabled = "PROFILER_ENABLED"
+	ProfilerPort    = "PROFILER_PORT"
 
 	// VAS Saba Configs
 	VasSabaServiceBaseUrl = "VAS_SABA_SERVICE_BASE_URL"
@@ -50,6 +52,8 @@ func Init() {
 	viper.SetEnvPrefix("BLIP")
 	viper.AutomaticEnv()
 
+	pflag.Bool(ProfilerEnabled, false, "")
+	pflag.Int(ProfilerPort, 6060, "")
 	pflag.String(HttpProxy, "***REMOVED***", "")
 	pflag.Bool(TestMode, false, "")
 	pflag.Int(LogLevel, 0, "")
