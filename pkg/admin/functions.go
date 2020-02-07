@@ -41,7 +41,6 @@ func MigrateLegacyDB() {
 		log.Warn("Error On Connect MySql", zap.Error(err))
 		return
 	}
-	db.QueryRowx()
 	rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != ''")
 	if err != nil {
 		log.Warn("Error On Query", zap.Error(err))

@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"git.ronaksoftware.com/blip/server/pkg/admin"
+	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"net/http"
 	"net/url"
@@ -56,10 +58,20 @@ var MigrateLegacyDB = &cobra.Command{
 var MigrateLegacyDBStats = &cobra.Command{
 	Use: "MigrateLegacyDBStats",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodGet, "admin/migrate_legacy_db_stats", ContentTypeJSON, nil, true)
+		res, err := sendHttp(http.MethodGet, "admin/migrate_legacy_db_stats", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		switch res.Constructor {
+		case admin.CMigrateStats:
+			v := res.Payload.(map[string]interface{})
+			color.HiGreen("Scanned: %s, Downloaded: %s",
+				color.BlueString("%d", v["scanned"]),
+				color.BlackString("%d", v["downloaded"]),
+			)
+
+		}
+
 	},
 }

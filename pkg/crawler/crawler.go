@@ -134,7 +134,6 @@ func (c *Crawler) SendRequest(ctx context.Context, keyword string) (*SearchRespo
 	}
 	c.httpClient.Timeout = config.HttpRequestTimeout
 
-
 	crawlerUrl := fmt.Sprintf("%s/%s/%s", c.Url, tools.RandomID(24), url.PathEscape(keyword))
 	httpReq, err := http.NewRequestWithContext(ctx, http.MethodGet, crawlerUrl, nil)
 	if err != nil {
