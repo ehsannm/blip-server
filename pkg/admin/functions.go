@@ -47,7 +47,7 @@ func MigrateLegacyDB() {
 		return
 	}
 	waitGroup := sync.WaitGroup{}
-	rateLimit := make(chan struct{}, 50)
+	rateLimit := make(chan struct{}, 200)
 	for rows.Next() {
 		var artist, title, uriLocal, cover sql.NullString
 		err = rows.Scan(&artist, &title, &uriLocal, &cover)
