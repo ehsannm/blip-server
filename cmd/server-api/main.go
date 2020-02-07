@@ -114,7 +114,6 @@ func initServer() *iris.Application {
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
 
-
 	if config.GetBool(config.ProfilerEnabled) {
 		p := pprof.New()
 		app.Any("/debug/pprof", p)
@@ -124,7 +123,6 @@ func initServer() *iris.Application {
 	// shopParty.Post("/sep/")
 	return app
 }
-
 
 func main() {
 	// Initialize all the required modules and packages
