@@ -39,7 +39,7 @@ func InitRedisCache(c *redis.Cache) {
 }
 
 func Init() {
-	authCache = make(map[string]*Auth, 100000)
+	authCache = make(map[string]*Auth, 10000)
 	smsProvider = sms.NewPayamak(
 		config.GetString(config.SmsPayamakUser),
 		config.GetString(config.SmsPayamakPass),
