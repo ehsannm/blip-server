@@ -68,6 +68,7 @@ var MigrateLegacyDBStats = &cobra.Command{
 			v := res.Payload.(map[string]interface{})
 			color.HiGreen("Scanned: %s", color.BlueString("%d", int(v["scanned"].(float64))))
 			color.HiGreen("Downloaded: %s", color.BlueString("%d", int(v["downloaded"].(float64))))
+			color.HiRed("Failed Downloads: %s", color.BlueString("%d", int(v["download_failed"].(float64))))
 			color.HiGreen("Already Downloaded: %s", color.BlueString("%d", int(v["already_downloaded"].(float64))))
 		}
 
