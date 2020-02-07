@@ -52,7 +52,7 @@ var SearchByTextCmd = &cobra.Command{
 			Keyword: cmd.Flag(FlagKeyword).Value.String(),
 		}
 		reqBytes, _ := json.Marshal(req)
-		res, err := sendHttp(http.MethodPost, "music/search_by_text", ContentTypeJSON, bytes.NewBuffer(reqBytes), false)
+		res, err := sendHttp(http.MethodPost, "music/search/text", ContentTypeJSON, bytes.NewBuffer(reqBytes), false)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -90,7 +90,7 @@ var SearchByTextCmd = &cobra.Command{
 var SearchResumeCmd = &cobra.Command{
 	Use: "SearchResume",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, true)
+		_, err := sendHttp(http.MethodGet, "music/search", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return

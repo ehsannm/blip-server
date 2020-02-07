@@ -33,11 +33,15 @@ var (
 )
 
 func MigrateLegacyDB() {
+	migrateScanned = 0
+	migrateDownloaded = 0
+	migrateAlreadyDownloaded = 0
 	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
 	if err != nil {
 		log.Warn("Error On Connect MySql", zap.Error(err))
 		return
 	}
+	db.QueryRowx()
 	rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != ''")
 	if err != nil {
 		log.Warn("Error On Query", zap.Error(err))

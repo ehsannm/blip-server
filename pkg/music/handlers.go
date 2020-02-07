@@ -38,6 +38,14 @@ func SearchByProxyHandler(ctx iris.Context) {
 	reverseProxy.ServeHTTP(ctx.ResponseWriter(), ctx.Request())
 }
 
+// SearchBySoundHandler is API Handler
+// Http Method: POST  /music/search/sound
+// Inputs: POST VALUES:
+//	1. "sound" ->  Based64 Standard Encoded
+// Returns: SearchResult
+// Possible Errors:
+//	1. 400: BAD_SOUND_FILE
+//	2. 406: error text
 func SearchBySoundHandler(ctx iris.Context) {
 	sound := ctx.PostValue("sound")
 	soundBytes, err := base64.StdEncoding.DecodeString(sound)
@@ -56,15 +64,53 @@ func SearchBySoundHandler(ctx iris.Context) {
 		return
 	}
 
-	// TODO: We must do the following steps
-	// #1. Search Local Database for musics and return a result with with a cursorID to the client
-	// #2. For each crawler send search request
-	// #3. Create an in memory object holding information about pending request
-	for _, m := range foundMusic.Metadata.Music {
-		_ = m
+	if len(foundMusic.Metadata.Music) == 0 {
+		msg.WriteError(ctx, http.StatusNotFound, msg.ErrSongNotFound)
+		return
 	}
+	keyword := foundMusic.Metadata.Music[0].Title
+	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
+	songIDs, err := SearchLocalIndex(keyword)
+	if err != nil {
+		log.Warn("Error On LocalIndex", zap.Error(err))
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		return
+	}
+	songs, err := GetManySongs(songIDs)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
+	if len(songs) == 0 {
+		songX, ok := <-songChan
+		if ok {
+			songs = append(songs, songX)
+		MainLoop:
+			for {
+				select {
+				case songX, ok := <-songChan:
+					if !ok {
+						break MainLoop
+					}
+					songs = append(songs, songX)
+				default:
+
+				}
+			}
+		}
+	}
+	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
+		Songs: songs,
+	})
 }
 
+// SearchByTextHandler is API Handler
+// Http Method: POST /music/search/text
+// Inputs: JSON - SearchReq
+// Returns: SearchResult
+// Possible Errors:
+//	1. 400: if could not parse request
+//	2. 500: identifies something wrong happened on the server side
 func SearchByTextHandler(ctx iris.Context) {
 	req := &SearchReq{}
 	err := ctx.ReadJSON(req)
@@ -108,6 +154,13 @@ func SearchByTextHandler(ctx iris.Context) {
 	})
 }
 
+// SearchByCursorHandler is API handler
+// API: /music/search
+// Http Method: GET
+// Inputs: N/A
+// Returns: SearchResult
+// Possible Errors:
+//	1. 208: if there is no cursor
 func SearchByCursorHandler(ctx iris.Context) {
 	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
 	if songChan == nil {
@@ -137,6 +190,10 @@ MainLoop:
 	})
 }
 
+// DownloadHandler is API handler
+// Http Method: GET /music/download/{bucket}/{downloadID}
+// Inputs:	URL
+// Possible Bucket Values: songs, covers
 func DownloadHandler(ctx iris.Context) {
 	downloadID := ctx.Params().GetString("downloadID")
 	bucketName := strings.ToLower(ctx.Params().GetString("bucket"))
