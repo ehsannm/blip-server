@@ -23,5 +23,6 @@ const CMigrateStats = "MIGRATE_STATS"
 type MigrateStats struct {
 	Scanned           int32 `json:"scanned"`
 	Downloaded        int32 `json:"downloaded"`
+	DownloadFailed    int32 `json:"download_failed"`
 	AlreadyDownloaded int32 `json:"already_downloaded"`
 }

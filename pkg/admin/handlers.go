@@ -49,5 +49,6 @@ func MigrateLegacyDBStatsHandler(ctx iris.Context) {
 		Scanned:           atomic.LoadInt32(&migrateScanned),
 		Downloaded:        atomic.LoadInt32(&migrateDownloaded),
 		AlreadyDownloaded: atomic.LoadInt32(&migrateAlreadyDownloaded),
+		DownloadFailed:    atomic.LoadInt32(&migrateDownloadFailed),
 	})
 }

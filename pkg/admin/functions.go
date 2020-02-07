@@ -29,12 +29,14 @@ var (
 	migrateRunning           bool
 	migrateScanned           int32
 	migrateDownloaded        int32
+	migrateDownloadFailed    int32
 	migrateAlreadyDownloaded int32
 )
 
 func MigrateLegacyDB() {
 	migrateScanned = 0
 	migrateDownloaded = 0
+	migrateDownloadFailed = 0
 	migrateAlreadyDownloaded = 0
 	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
 	if err != nil {
@@ -93,9 +95,12 @@ func MigrateLegacyDB() {
 				if storeID != 0 {
 					songX.StoreID = storeID
 					_, _ = music.SaveSong(songX)
+					downloadFromSource(store.BucketCovers, songID, coverUrl)
+					atomic.AddInt32(&migrateDownloaded, 1)
+				} else {
+					atomic.AddInt32(&migrateDownloadFailed, 1)
 				}
-				downloadFromSource(store.BucketCovers, songID, coverUrl)
-				atomic.AddInt32(&migrateDownloaded, 1)
+
 				return
 			} else if songX.StoreID == 0 {
 				storeID := downloadFromSource(store.BucketSongs, songX.ID, songUrl)
