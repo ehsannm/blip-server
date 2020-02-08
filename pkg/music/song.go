@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"sync"
+	"time"
 )
 
 /*
@@ -64,7 +65,10 @@ func SaveSong(songX *Song) (primitive.ObjectID, error) {
 	if songX.ID == primitive.NilObjectID {
 		songX.ID = primitive.NewObjectID()
 	}
-	_, err := songCol.UpdateOne(nil, bson.M{"_id": songX.ID}, bson.M{"$set": songX}, options.Update().SetUpsert(true))
+	ctx, _ := context.WithTimeout(context.Background(), time.Second * 20)
+	_, err := songCol.UpdateOne(
+		ctx,
+		bson.M{"_id": songX.ID}, bson.M{"$set": songX}, options.Update().SetUpsert(true))
 	if err != nil {
 		return primitive.NilObjectID, err
 	}
