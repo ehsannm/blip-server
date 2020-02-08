@@ -54,7 +54,6 @@ func Init() {
 	log.Info("Initialize Songs Index ...")
 	initSongIndex()
 	log.Info("Songs Index Initialized. ")
-	// updateSongIndex()
 	go watchForSongs()
 }
 func initSongIndex() {
@@ -76,31 +75,6 @@ func initSongIndex() {
 	} else {
 		songIndex = index
 	}
-}
-func updateSongIndex() {
-	startTime := time.Now()
-	log.Info("Indexing songs, this may take time ...")
-	cur, err := songCol.Find(nil, bson.D{})
-	if err != nil {
-		log.Fatal("Error On Initializing Music", zap.Error(err))
-	}
-	cnt := 0
-
-	for cur.Next(nil) {
-		songX := &Song{}
-		err = cur.Decode(songX)
-		if err == nil {
-			cnt++
-			updateLocalIndex(songX)
-			if cnt%1000 == 0 {
-				log.Info("Still indexing ...", zap.Int("Indexed", cnt))
-			}
-		}
-	}
-	log.Info("Indexing songs done!.",
-		zap.Int("Indexed", cnt),
-		zap.Duration("Elapsed Time", time.Now().Sub(startTime)),
-	)
 }
 func watchForSongs() {
 	var resumeToken bson.Raw

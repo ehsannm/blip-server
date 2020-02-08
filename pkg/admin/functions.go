@@ -147,7 +147,6 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 		return 0
 	}
 	defer dbWriter.Close()
-
 	res, err := http.DefaultClient.Get(url)
 	if err != nil {
 		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", url))
@@ -163,7 +162,10 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 		}
 
 	default:
-		log.Warn("Invalid HTTP Status", zap.String("Status", res.Status))
+		log.Warn("Invalid HTTP Status",
+			zap.String("Status", res.Status),
+			zap.String("Url", url),
+		)
 		return 0
 	}
 
