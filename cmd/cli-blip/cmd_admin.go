@@ -21,7 +21,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateLegacyDBStats)
+	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats)
 }
 
 var AdminCmd = &cobra.Command{
@@ -55,10 +55,21 @@ var MigrateLegacyDB = &cobra.Command{
 	},
 }
 
+var MigrateFiles = &cobra.Command{
+	Use: "MigrateFiles",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := sendHttp(http.MethodPost, "admin/migrate_files", ContentTypeJSON, nil, true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+
 var MigrateLegacyDBStats = &cobra.Command{
 	Use: "MigrateLegacyDBStats",
 	Run: func(cmd *cobra.Command, args []string) {
-		res, err := sendHttp(http.MethodGet, "admin/migrate_legacy_db_stats", ContentTypeJSON, nil, false)
+		res, err := sendHttp(http.MethodGet, "admin/migrate_stats", ContentTypeJSON, nil, false)
 		if err != nil {
 			fmt.Println(err)
 			return
