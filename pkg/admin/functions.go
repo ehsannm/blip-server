@@ -89,6 +89,7 @@ func MigrateLegacyDB() {
 		}(artist.String, title.String, uriLocal.String, cover.String)
 	}
 	waitGroup.Wait()
+	migrateRunning = false
 	log.Info("Migration Finished",
 		zap.Int32("Scanned", migrateScanned),
 		zap.Error(rows.Err()),
