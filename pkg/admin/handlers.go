@@ -44,7 +44,14 @@ func MigrateLegacyDBHandler(ctx iris.Context) {
 	}
 }
 
-func MigrateLegacyDBStatsHandler(ctx iris.Context) {
+func MigrateFilesHandler(ctx iris.Context) {
+	if !migrateRunning {
+		migrateRunning = true
+		go MigrateFiles()
+	}
+}
+
+func MigrateStatsHandler(ctx iris.Context) {
 	msg.WriteResponse(ctx, CMigrateStats, MigrateStats{
 		Scanned:           atomic.LoadInt32(&migrateScanned),
 		Downloaded:        atomic.LoadInt32(&migrateDownloaded),
