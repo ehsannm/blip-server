@@ -127,10 +127,6 @@ func MigrateLegacyDB() {
 			break
 		}
 		log.Warn("Error On Rows", zap.Error(rows.Err()))
-		migrateScanned = 0
-		migrateDownloaded = 0
-		migrateDownloadFailed = 0
-		migrateAlreadyDownloaded = 0
 		_ = rows.Close()
 		rows, err = db.Query(fmt.Sprintf(
 			"SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' AND uid >= '%s' ORDER by uid ASC", uid.String,
