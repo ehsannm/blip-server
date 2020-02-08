@@ -73,7 +73,7 @@ func IdentifyByFile(fileAddr string) (*Music, error) {
 		return nil, err
 	}
 
-	music := new(Music)
+	music := &Music{}
 	err = json.Unmarshal(resBytes, music)
 	if err != nil {
 		return nil, err

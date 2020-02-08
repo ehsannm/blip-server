@@ -5,6 +5,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/redis"
 	"git.ronaksoftware.com/blip/server/internal/tools"
+	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
@@ -37,9 +38,11 @@ import (
 
 func Init() {
 	log.InitLogger(log.DebugLevel, "")
+	config.Init()
 	config.Set(config.TestMode, true)
 	config.Set(config.MongoUrl, "mongodb://localhost:27001")
 	config.Set(config.RedisUrl, "localhost:6379")
+	config.Set(config.RedisPass, "ehsan2374")
 	config.Set(config.LogLevel, log.DebugLevel)
 	config.Set(config.SongsIndexDir, "./_hdd")
 
@@ -48,7 +51,7 @@ func Init() {
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
 		nil,
-		options.Client().ApplyURI(config.GetString(config.MongoUrl)).SetDirect(true),
+		options.Client().ApplyURI(config.GetString(config.MongoUrl)),
 	)
 	if err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
@@ -75,6 +78,7 @@ func Init() {
 
 	// Initialize Modules
 	auth.Init()
+	acr.Init()
 	crawler.Init()
 	music.Init()
 	session.Init()

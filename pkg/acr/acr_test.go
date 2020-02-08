@@ -1,6 +1,7 @@
 package acr_test
 
 import (
+	testEnv "git.ronaksoftware.com/blip/server/pkg"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"github.com/kr/pretty"
 	"testing"
@@ -15,8 +16,11 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+func init() {
+	testEnv.Init()
+}
+
 func TestIdentifyByFile(t *testing.T) {
-	acr.Init()
 	music, err := acr.IdentifyByFile("./testdata/test2.m4a")
 	if err != nil {
 		t.Error(err)
