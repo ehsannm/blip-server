@@ -2,6 +2,7 @@ package admin
 
 import (
 	"database/sql"
+	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -46,15 +47,15 @@ func MigrateLegacyDB() {
 
 	waitGroup := sync.WaitGroup{}
 	rateLimit := make(chan struct{}, 50)
+	rows, err := db.Query("SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
+	if err != nil {
+		log.Warn("Error On Query", zap.Error(err))
+		return
+	}
+	var uid, artist, title, uriLocal, cover sql.NullString
 	for {
-		rows, err := db.Query("SELECT artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
-		if err != nil {
-			log.Warn("Error On Query", zap.Error(err))
-			return
-		}
 		for rows.Next() {
-			var artist, title, uriLocal, cover sql.NullString
-			err = rows.Scan(&artist, &title, &uriLocal, &cover)
+			err = rows.Scan(&uid, &artist, &title, &uriLocal, &cover)
 			if err != nil {
 				log.Warn("Error On Scan Legacy DB", zap.Error(err))
 				continue
@@ -125,11 +126,19 @@ func MigrateLegacyDB() {
 			_ = rows.Close()
 			break
 		}
+		log.Warn("Error On Rows", zap.Error(rows.Err()))
 		migrateScanned = 0
 		migrateDownloaded = 0
 		migrateDownloadFailed = 0
 		migrateAlreadyDownloaded = 0
 		_ = rows.Close()
+		rows, err = db.Query(fmt.Sprintf(
+			"SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' AND uid >= '%s' ORDER by uid ASC", uid.String,
+		))
+		if err != nil {
+			log.Warn("Error On Query", zap.Error(err))
+			return
+		}
 	}
 
 	migrateRunning = false
