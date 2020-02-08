@@ -65,7 +65,8 @@ func SaveSong(songX *Song) (primitive.ObjectID, error) {
 	if songX.ID == primitive.NilObjectID {
 		songX.ID = primitive.NewObjectID()
 	}
-	ctx, _ := context.WithTimeout(context.Background(), time.Second * 20)
+	ctx, cancelFunc := context.WithTimeout(context.Background(), time.Second*20)
+	defer cancelFunc()
 	_, err := songCol.UpdateOne(
 		ctx,
 		bson.M{"_id": songX.ID}, bson.M{"$set": songX}, options.Update().SetUpsert(true))

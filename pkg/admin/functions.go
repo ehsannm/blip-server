@@ -2,6 +2,7 @@ package admin
 
 import (
 	"database/sql"
+	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -43,11 +44,15 @@ func MigrateLegacyDB() {
 	rows, err := db.Query("SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
 	if err != nil {
 		log.Warn("Error On Query", zap.Error(err))
+		migrateRunning = false
+		return
 	}
 	var uid, artist, title, uriLocal, cover sql.NullString
 
 	waitGroup := sync.WaitGroup{}
 	rateLimit := make(chan struct{}, 50)
+
+MainLoop:
 	for rows.Next() {
 		err = rows.Scan(&uid, &artist, &title, &uriLocal, &cover)
 		if err != nil {
@@ -89,6 +94,17 @@ func MigrateLegacyDB() {
 		}(artist.String, title.String, uriLocal.String, cover.String)
 	}
 	waitGroup.Wait()
+
+	if rows.Err() != nil {
+		rows, err = db.Query(fmt.Sprintf(
+			"SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' AND uid > '%s' ORDER by uid ASC", uid.String,
+		))
+		if err != nil {
+			log.Warn("Error On Query", zap.Error(err))
+		} else {
+			goto MainLoop
+		}
+	}
 	migrateRunning = false
 	log.Info("Migration Finished",
 		zap.Int32("Scanned", migrateScanned),
