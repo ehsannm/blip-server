@@ -22,7 +22,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var songIndexer = flusher.New(100, 1, time.Millisecond, func(items []flusher.Entry) {
+var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.Entry) {
 	b := songIndex.NewBatch()
 	for _, item := range items {
 		song := item.Key.(*Song)
