@@ -43,13 +43,15 @@ func InitMongo(c *mongo.Client) {
 }
 
 func Init() {
-	if proxyURL, err := url.Parse(config.GetString(config.HttpProxy)); err == nil {
-		http.DefaultTransport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
-	} else {
-		log.Warn("Error On Set HTTP Proxy", zap.Error(err))
+	if config.GetString(config.HttpProxy) != "" {
+		if proxyURL, err := url.Parse(config.GetString(config.HttpProxy)); err == nil {
+			http.DefaultTransport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
+		} else {
+			log.Warn("Error On Set HTTP Proxy", zap.Error(err))
+		}
 	}
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	searchContexts = make(map[string]*searchCtx)
 	log.Info("Initialize Songs Index ...")
 	initSongIndex()
