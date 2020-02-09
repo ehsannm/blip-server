@@ -3,11 +3,13 @@ package music
 import (
 	"context"
 	"encoding/hex"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"github.com/gobwas/pool/pbytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"sync"
 	"time"
 )
@@ -125,6 +127,7 @@ func GetManySongs(songIDs []primitive.ObjectID) ([]*Song, error) {
 }
 
 func ForEachSong(f func(songX *Song) bool) error {
+	var lastID primitive.ObjectID
 	cur, err := songCol.Find(context.Background(), bson.D{}, options.Find().SetNoCursorTimeout(true))
 	if err != nil {
 		return err
@@ -132,21 +135,37 @@ func ForEachSong(f func(songX *Song) bool) error {
 	waitGroup := sync.WaitGroup{}
 	defer waitGroup.Wait()
 	rateLimit := make(chan struct{}, 20)
-	for cur.Next(nil) {
-		songX := &Song{}
-		err = cur.Decode(songX)
+	for {
+		for cur.Next(nil) {
+			songX := &Song{}
+			err = cur.Decode(songX)
+			if err != nil {
+				return err
+			}
+			lastID = songX.ID
+			waitGroup.Add(1)
+			rateLimit <- struct{}{}
+			go func(songX *Song) {
+				f(songX)
+				waitGroup.Done()
+				<-rateLimit
+			}(songX)
+		}
+		if cur.Err() == nil {
+			_ = cur.Close(nil)
+			break
+		}
+		log.Warn("Error On Cursor", zap.Error(err))
+		_ = cur.Close(nil)
+		cur, err = songCol.Find(
+			context.Background(),
+			bson.M{"_id": bson.M{"$gt": lastID}},
+			options.Find().SetNoCursorTimeout(true),
+		)
 		if err != nil {
 			return err
 		}
-		waitGroup.Add(1)
-		rateLimit <- struct{}{}
-		go func(songX *Song) {
-			f(songX)
-			waitGroup.Done()
-			<-rateLimit
-		}(songX)
 	}
-	cur.Close(nil)
 
 	return nil
 }
