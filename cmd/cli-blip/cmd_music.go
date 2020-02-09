@@ -22,9 +22,10 @@ import (
 
 func init() {
 	RootCmd.AddCommand(MusicCmd)
-	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResumeCmd, DownloadCmd)
+	MusicCmd.AddCommand(SearchByProxyCmd, SearchByTextCmd, SearchResumeCmd, SearchBySoundCmd, DownloadCmd)
 
 	SearchByProxyCmd.Flags().String(FlagFilePath, "", "")
+	SearchBySoundCmd.Flags().String(FlagFilePath, "", "")
 	SearchByTextCmd.Flags().String(FlagKeyword, "", "")
 	DownloadCmd.Flags().String(FlagSongID, "", "")
 	DownloadCmd.Flags().String(FlagFilePath, "./song.mp3", "")
@@ -37,7 +38,7 @@ var MusicCmd = &cobra.Command{
 var SearchByProxyCmd = &cobra.Command{
 	Use: "SearchByProxy",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := sendFile("music/search_by_proxy", cmd.Flag(FlagFilePath).Value.String(), true)
+		err := sendFile("music/search_by_proxy", "File", cmd.Flag(FlagFilePath).Value.String(), true)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -98,6 +99,16 @@ var SearchResumeCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err)
 			return
+		}
+	},
+}
+
+var SearchBySoundCmd = &cobra.Command{
+	Use: "SearchBySound",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := sendFile("music/search/sound", "sound", cmd.Flag(FlagFilePath).Value.String(), true)
+		if err != nil {
+			fmt.Println(err)
 		}
 	},
 }

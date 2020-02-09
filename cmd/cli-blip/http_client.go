@@ -75,7 +75,7 @@ func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, pr
 	return &x, nil
 }
 
-func sendFile(urlSuffix string, filename string, print bool) error {
+func sendFile(urlSuffix string, formField, filename string, print bool) error {
 	c := http.Client{
 		Timeout: 30 * time.Second,
 	}
@@ -84,7 +84,7 @@ func sendFile(urlSuffix string, filename string, print bool) error {
 	bodyWriter := multipart.NewWriter(bodyBuf)
 
 	// this step is very important
-	fileWriter, err := bodyWriter.CreateFormFile("File", filename)
+	fileWriter, err := bodyWriter.CreateFormFile(formField, filename)
 	if err != nil {
 		return err
 	}
