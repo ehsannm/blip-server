@@ -53,6 +53,10 @@ func SearchBySoundHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
 		return
 	}
+	log.Debug("Received Sound",
+		zap.Int("LenBase64", len(sound)),
+		zap.Int("Len", len(soundBytes)),
+	)
 
 	foundMusic, err := acr.IdentifyByByteString(soundBytes)
 	if err != nil {
