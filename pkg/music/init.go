@@ -5,6 +5,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"net"
 	"net/http"
 	"net/url"
 	"strings"
@@ -45,13 +46,25 @@ func InitMongo(c *mongo.Client) {
 func Init() {
 	if config.GetString(config.HttpProxy) != "" {
 		if proxyURL, err := url.Parse(config.GetString(config.HttpProxy)); err == nil {
-			http.DefaultTransport.(*http.Transport).Proxy = http.ProxyURL(proxyURL)
+			httpClient.Transport = &http.Transport{
+				Proxy: http.ProxyURL(proxyURL),
+				DialContext: (&net.Dialer{
+					Timeout:   30 * time.Second,
+					KeepAlive: 30 * time.Second,
+					DualStack: true,
+				}).DialContext,
+				ForceAttemptHTTP2:     true,
+				MaxIdleConns:          100,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+				TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+			}
 		} else {
 			log.Warn("Error On Set HTTP Proxy", zap.Error(err))
 		}
 	}
 
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	searchContexts = make(map[string]*searchCtx)
 	log.Info("Initialize Songs Index ...")
 	initSongIndex()
