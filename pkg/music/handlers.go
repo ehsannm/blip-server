@@ -1,7 +1,6 @@
 package music
 
 import (
-	"encoding/base64"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
@@ -11,6 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 	"time"
@@ -47,15 +47,18 @@ func SearchByProxyHandler(ctx iris.Context) {
 //	1. 400: BAD_SOUND_FILE
 //	2. 406: error text
 func SearchBySoundHandler(ctx iris.Context) {
-	sound := ctx.PostValue("sound")
-	soundBytes, err := base64.StdEncoding.DecodeString(sound)
+	soundFile, _, err := ctx.FormFile("sound")
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
+		return
+	}
+	soundBytes, err := ioutil.ReadAll(soundFile)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrBadSoundFile)
 		return
 	}
 
 	log.Debug("Received Sound",
-		zap.Int("LenBase64", len(sound)),
 		zap.Int("Len", len(soundBytes)),
 	)
 

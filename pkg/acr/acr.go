@@ -84,4 +84,3 @@ func IdentifyByByteString(fileBytes []byte) (*Music, error) {
 
 	return music, nil
 }
-

@@ -162,7 +162,6 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 		return 0
 	}
 
-
 	res, err := http.DefaultClient.Get(url)
 	if err != nil {
 		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", url))
