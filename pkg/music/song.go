@@ -131,7 +131,7 @@ func ForEachSong(f func(songX *Song) bool) error {
 	}
 	waitGroup := sync.WaitGroup{}
 	defer waitGroup.Wait()
-	rateLimit := make(chan struct{}, 100)
+	rateLimit := make(chan struct{}, 20)
 	for cur.Next(nil) {
 		songX := &Song{}
 		err = cur.Decode(songX)
