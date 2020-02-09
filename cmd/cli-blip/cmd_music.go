@@ -69,7 +69,11 @@ var SearchByTextCmd = &cobra.Command{
 		}
 
 		for {
-			res, _ := sendHttp(http.MethodPost, "music/search_resume", ContentTypeJSON, nil, false)
+			res, err := sendHttp(http.MethodGet, "music/search", ContentTypeJSON, nil, false)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
 			switch res.Constructor {
 			case music.CSearchResult:
 				color.Green("Result: %s", res.Constructor)

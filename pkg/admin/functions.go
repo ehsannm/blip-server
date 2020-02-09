@@ -156,11 +156,12 @@ func MigrateFiles() {
 func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
 	// download from source url
 	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
+	defer dbWriter.Close()
 	if err != nil {
 		log.Warn("Error On GetUploadStream", zap.Error(err))
 		return 0
 	}
-	defer dbWriter.Close()
+
 	res, err := http.DefaultClient.Get(url)
 	if err != nil {
 		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", url))

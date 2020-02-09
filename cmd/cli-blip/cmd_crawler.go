@@ -20,10 +20,11 @@ import (
 
 func init() {
 	RootCmd.AddCommand(CrawlerCmd)
-	CrawlerCmd.AddCommand(CrawlerSaveCmd, CrawlerListCmd)
+	CrawlerCmd.AddCommand(CrawlerSaveCmd, CrawlerListCmd, CrawlerRemoveCmd)
 	CrawlerSaveCmd.Flags().String(FlagSource, "MeloBit", "")
 	CrawlerSaveCmd.Flags().String(FlagName, "", "")
 	CrawlerSaveCmd.Flags().String(FlagUrl, "http://ws.blipapi.xyz/crowler/melobit/", "")
+	CrawlerRemoveCmd.Flags().String(FlagCrawlerID, "", "")
 }
 
 var CrawlerCmd = &cobra.Command{
@@ -58,5 +59,16 @@ var CrawlerListCmd = &cobra.Command{
 			return
 		}
 
+	},
+}
+
+var CrawlerRemoveCmd = &cobra.Command{
+	Use: "Remove",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := sendHttp(http.MethodDelete, fmt.Sprintf("crawler/%s", cmd.Flag(FlagCrawlerID).Value.String()), "", nil, true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	},
 }

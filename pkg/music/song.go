@@ -60,7 +60,7 @@ func DeleteSong(songID primitive.ObjectID) error {
 	return songIndex.Delete(songID.Hex())
 }
 
-// SaveSong saves/replaces the song 's' to the database
+// SaveSong saves/replaces the song 'songX' to the database
 func SaveSong(songX *Song) (primitive.ObjectID, error) {
 	if songX.ID == primitive.NilObjectID {
 		songX.ID = primitive.NewObjectID()
@@ -146,6 +146,7 @@ func ForEachSong(f func(songX *Song) bool) error {
 			<-rateLimit
 		}(songX)
 	}
+	cur.Close(nil)
 
 	return nil
 }

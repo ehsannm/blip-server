@@ -3,6 +3,7 @@ package crawler
 import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"github.com/kataras/iris"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 )
 
@@ -47,4 +48,20 @@ func ListHandler(ctx iris.Context) {
 	msg.WriteResponse(ctx, CCrawlersMany, CrawlersMany{
 		Crawlers: crawlers,
 	})
+}
+
+func RemoveHandler(ctx iris.Context) {
+	crawlerID, err := primitive.ObjectIDFromHex(ctx.Params().GetString("crawlerID"))
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.Item(err.Error()))
+		return
+	}
+
+	err = Remove(crawlerID)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.Item(err.Error()))
+		return
+	}
+
+	msg.WriteResponse(ctx, msg.CBool, msg.Bool{Success: true})
 }

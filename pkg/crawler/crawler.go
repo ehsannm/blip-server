@@ -64,6 +64,12 @@ func GetAll() []*Crawler {
 	return list
 }
 
+// Remove removes the crawler from the database
+func Remove(crawlerID primitive.ObjectID) error {
+	_, err := crawlerCol.DeleteOne(nil, bson.M{"_id": crawlerID})
+	return err
+}
+
 // Search sends search request to all the crawlers and pushes the result into the channel.
 // Crawlers are categorized with their 'Source' tag.
 func Search(ctx context.Context, keyword string) <-chan *SearchResponse {
