@@ -97,7 +97,7 @@ func watchForCrawlers() {
 				}
 				registeredCrawlersMtx.Unlock()
 			case "delete":
-				crawlerID := stream.Current.Lookup("documentKey").ObjectID()
+				crawlerID := stream.Current.Lookup("documentKey").Document().Lookup("_id").ObjectID()
 				registeredCrawlersMtx.Lock()
 				for idx, c := range registeredCrawlers[crawlerX.Source] {
 					if c.ID == crawlerID {
