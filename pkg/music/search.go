@@ -93,6 +93,8 @@ MainLoop:
 			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
+			// TODO:: remove this shit
+			updateLocalIndex(songX)
 			if err != nil {
 				songX = &Song{
 					ID:             primitive.NilObjectID,
