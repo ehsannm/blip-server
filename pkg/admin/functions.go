@@ -134,10 +134,8 @@ func MigrateFiles() {
 			}
 			downloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
 			atomic.AddInt32(&migrateDownloaded, 1)
-		} else if storeID == -1 {
-			_ = music.DeleteSong(songX.ID)
-			atomic.AddInt32(&migrateDownloadFailed, 1)
 		} else {
+			_ = music.DeleteSong(songX.ID)
 			atomic.AddInt32(&migrateDownloadFailed, 1)
 		}
 		return true
