@@ -134,10 +134,15 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580244430983" />
-    <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1581352414261">
+    <state x="100" y="100" width="1480" height="850" key="DiffContextDialog" timestamp="1581352526190">
+      <screen x="0" y="23" width="1680" height="951" />
+    </state>
+    <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
+    <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
+    <state x="680" y="266" key="VcsDiffUtil.ChangesDialog" timestamp="1581352512114">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352414261" />
+    <state x="680" y="266" key="VcsDiffUtil.ChangesDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352512114" />
     <state x="498" y="282" width="837" height="550" key="find.popup" timestamp="1581250883039">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
