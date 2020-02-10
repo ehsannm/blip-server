@@ -81,7 +81,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 	if len(foundMusic.Metadata.Music[0].Artists) > 0 {
 		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
 	}
-	keyword = fmt.Sprintf("%s %s", keyword, foundMusic.Metadata.Music[0].Title)
+	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
 	songIDs, err := SearchLocalIndex(keyword)
 	if err != nil {
