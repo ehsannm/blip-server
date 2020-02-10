@@ -48,7 +48,8 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	for _, t := range terms {
 		qs = append(qs, bleve.NewMatchQuery(t))
 	}
-	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
+	// searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
+	searchRequest := bleve.NewSearchRequest(bleve.NewMatchQuery(keyword))
 	searchRequest.SortBy([]string{"_score"})
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
