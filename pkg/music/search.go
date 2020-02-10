@@ -54,7 +54,8 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	terms := strings.Split(strings.ToLower(keyword), "+")
 	log.Debug("Terms", zap.Strings("Terms", terms))
 	for _, t := range terms {
-		qs = append(qs, bleve.NewTermQuery(strings.Trim(t, "()")))
+		t := strings.Trim(t, "()")
+		qs = append(qs, bleve.NewPrefixQuery(t), bleve.NewTermQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	res, err := songIndex.Search(searchRequest)
