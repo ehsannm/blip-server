@@ -26,6 +26,9 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 	b := songIndex.NewBatch()
 	for _, item := range items {
 		song := item.Key.(*Song)
+		if song == nil {
+			continue
+		}
 		song.Title = strings.ToLower(song.Title)
 		song.Artists = strings.ToLower(song.Artists)
 		song.Artists = strings.ToLower(song.Lyrics)
@@ -49,7 +52,7 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	qs := make([]query.Query, 0, 4)
 	terms := strings.Fields(strings.ToLower(keyword))
 	for _, t := range terms {
-		qs = append(qs, bleve.NewPrefixQuery(t))
+		qs = append(qs, bleve.NewFuzzyQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.SortBy([]string{"_score"})
@@ -93,8 +96,6 @@ MainLoop:
 			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
-			// TODO:: remove this shit
-			updateLocalIndex(songX)
 			if err != nil {
 				songX = &Song{
 					ID:             primitive.NilObjectID,
@@ -135,6 +136,9 @@ MainLoop:
 					)
 				}
 			}
+
+
+			updateLocalIndex(songX)
 			select {
 			case ctx.songChan <- songX:
 			default:
