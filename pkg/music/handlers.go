@@ -137,7 +137,7 @@ func SearchByTextHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
-	req.Keyword = strings.Trim(req.Keyword, "\"")
+	req.Keyword = strings.Join(strings.Fields(strings.Trim(req.Keyword, "\"")), "+")
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
 	songIDs, err := SearchLocalIndex(req.Keyword)
 	if err != nil {
