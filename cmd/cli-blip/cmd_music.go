@@ -69,26 +69,26 @@ var SearchByTextCmd = &cobra.Command{
 			color.Red("%s %v", res.Constructor, res.Payload)
 		}
 
-		for {
-			res, err := sendHttp(http.MethodGet, "music/search", ContentTypeJSON, nil, false)
-			if err != nil {
-				fmt.Println(err)
-				continue
-			}
-			switch res.Constructor {
-			case music.CSearchResult:
-				color.Green("Result: %s", res.Constructor)
-				for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
-					songX := s.(map[string]interface{})
-					color.HiBlue("%s (%s) --> %s", songX["title"].(string), songX["artists"].(string), songX["id"])
-				}
-			default:
-				color.Red("%s %v", res.Constructor, res.Payload)
-			}
-			if res.Constructor == "err" {
-				break
-			}
-		}
+		// for {
+		// 	res, err := sendHttp(http.MethodGet, "music/search", ContentTypeJSON, nil, false)
+		// 	if err != nil {
+		// 		fmt.Println(err)
+		// 		continue
+		// 	}
+		// 	switch res.Constructor {
+		// 	case music.CSearchResult:
+		// 		color.Green("Result: %s", res.Constructor)
+		// 		for _, s := range res.Payload.(map[string]interface{})["songs"].([]interface{}) {
+		// 			songX := s.(map[string]interface{})
+		// 			color.HiBlue("%s (%s) --> %s", songX["title"].(string), songX["artists"].(string), songX["id"])
+		// 		}
+		// 	default:
+		// 		color.Red("%s %v", res.Constructor, res.Payload)
+		// 	}
+		// 	if res.Constructor == "err" {
+		// 		break
+		// 	}
+		// }
 	},
 }
 
