@@ -32,9 +32,10 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 		song.Title = strings.ToLower(song.Title)
 		song.Artists = strings.ToLower(song.Artists)
 		song.Artists = strings.ToLower(song.Lyrics)
-		if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
-			_ = b.Index(song.ID.Hex(), song)
-		}
+		_ = b.Index(song.ID.Hex(), song)
+		// if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
+		//
+		// }
 	}
 	err := songIndex.Batch(b)
 	if err != nil {
