@@ -8,6 +8,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -49,8 +50,10 @@ var SearchByProxyCmd = &cobra.Command{
 var SearchByTextCmd = &cobra.Command{
 	Use: "SearchByText",
 	Run: func(cmd *cobra.Command, args []string) {
+		keyword := cmd.Flag(FlagKeyword).Value.String()
+		keyword = strings.Join(strings.Split(keyword, ","), " ")
 		req := music.SearchReq{
-			Keyword: cmd.Flag(FlagKeyword).Value.String(),
+			Keyword: keyword,
 		}
 		reqBytes, _ := json.Marshal(req)
 		res, err := sendHttp(http.MethodPost, "music/search/text", ContentTypeJSON, bytes.NewBuffer(reqBytes), false)
