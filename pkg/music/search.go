@@ -137,7 +137,7 @@ MainLoop:
 					)
 				}
 			}
-
+			updateLocalIndex(songX)
 			select {
 			case ctx.songChan <- songX:
 			default:
