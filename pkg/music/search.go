@@ -26,6 +26,9 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 	b := songIndex.NewBatch()
 	for _, item := range items {
 		song := item.Key.(*Song)
+		song.Title = strings.ToLower(song.Title)
+		song.Artists = strings.ToLower(song.Artists)
+		song.Artists = strings.ToLower(song.Lyrics)
 		if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
 			_ = b.Index(song.ID.Hex(), song)
 		}
@@ -112,7 +115,7 @@ MainLoop:
 					)
 					continue
 				}
-			} else if songX.StoreID == 0 {
+			} else {
 				// If the song has not been downloaded from source yet, update the origin url
 				songX.Artists = foundSong.Artists
 				songX.Title = foundSong.Title
