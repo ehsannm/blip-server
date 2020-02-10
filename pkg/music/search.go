@@ -57,13 +57,18 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 		return nil, err
 	}
 
-	songIDs := make([]primitive.ObjectID, 0, len(res.Hits))
+	songIDs := make(map[primitive.ObjectID]struct{})
 	for _, hit := range res.Hits {
 		if songID, err := primitive.ObjectIDFromHex(hit.ID); err == nil {
-			songIDs = append(songIDs, songID)
+			songIDs[songID] = struct{}{}
 		}
 	}
-	return songIDs, nil
+	songIDsArr := make([]primitive.ObjectID, 0, len(songIDs))
+	for songID := range songIDs {
+		songIDsArr = append(songIDsArr, songID)
+	}
+
+	return songIDsArr, nil
 }
 
 type searchCtx struct {
