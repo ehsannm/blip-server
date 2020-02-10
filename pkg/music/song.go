@@ -126,6 +126,7 @@ func GetManySongs(songIDs []primitive.ObjectID) ([]*Song, error) {
 	return songs, err
 }
 
+// ForEachSong iterates through all the songs, this is for INTERNAL use only.
 func ForEachSong(f func(songX *Song) bool) error {
 	var lastID primitive.ObjectID
 	cur, err := songCol.Find(context.Background(), bson.D{}, options.Find().SetNoCursorTimeout(true))

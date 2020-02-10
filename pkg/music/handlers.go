@@ -1,6 +1,7 @@
 package music
 
 import (
+	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
@@ -76,7 +77,11 @@ func SearchBySoundHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusNotFound, msg.ErrSongNotFound)
 		return
 	}
-	keyword := foundMusic.Metadata.Music[0].Title
+	var keyword string
+	if len(foundMusic.Metadata.Music[0].Artists) > 0 {
+		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
+	}
+	keyword = fmt.Sprintf("%s %s", keyword, foundMusic.Metadata.Music[0].Title)
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
 	songIDs, err := SearchLocalIndex(keyword)
 	if err != nil {
@@ -107,9 +112,15 @@ func SearchBySoundHandler(ctx iris.Context) {
 			}
 		}
 	}
-	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
+	res := &SoundSearchResult{
 		Songs: songs,
-	})
+	}
+	res.Info.Title = foundMusic.Metadata.Music[0].Title
+	res.Info.ReleaseDate = foundMusic.Metadata.Music[0].ReleaseDate
+	for _, artist := range foundMusic.Metadata.Music[0].Artists {
+		res.Info.Artists = append(res.Info.Artists, artist.Name)
+	}
+	msg.WriteResponse(ctx, CSoundSearchResult, res)
 }
 
 // SearchByTextHandler is API Handler

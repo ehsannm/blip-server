@@ -3,7 +3,6 @@ module git.ronaksoftware.com/blip/server
 go 1.12
 
 require (
-	github.com/DataDog/zstd v1.4.4 // indirect
 	github.com/RoaringBitmap/roaring v0.4.21 // indirect
 	github.com/blevesearch/bleve v0.8.1
 	github.com/blevesearch/blevex v0.0.0-20190916190636-152f0fe5c040 // indirect
@@ -22,7 +21,6 @@ require (
 	github.com/fatih/color v1.9.0
 	github.com/getsentry/sentry-go v0.3.0
 	github.com/go-sql-driver/mysql v1.4.0
-	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/gobwas/pool v0.2.0
 	github.com/google/go-cmp v0.3.0 // indirect
 	github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce
@@ -30,8 +28,6 @@ require (
 	github.com/jmoiron/sqlx v1.2.0
 	github.com/json-iterator/go v1.1.7 // indirect
 	github.com/kataras/iris v11.1.1+incompatible
-	github.com/klauspost/compress v1.7.1 // indirect
-	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/kr/pretty v0.1.0
 	github.com/mailru/easyjson v0.7.0
 	github.com/mattn/go-runewidth v0.0.4 // indirect
@@ -48,16 +44,13 @@ require (
 	github.com/steveyen/gtreap v0.0.0-20150807155958-0abe01ef9be2 // indirect
 	github.com/syndtr/goleveldb v1.0.0 // indirect
 	github.com/tecbot/gorocksdb v0.0.0-20191217155057-f0fad39f321c // indirect
-	github.com/tidwall/pretty v1.0.0 // indirect
 	github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a
-	github.com/xdg/scram v0.0.0-20180814205039-7eeb5667e42c // indirect
 	github.com/xdg/stringprep v1.0.0 // indirect
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	go.etcd.io/bbolt v1.3.3 // indirect
-	go.mongodb.org/mongo-driver v1.2.1
+	go.mongodb.org/mongo-driver v1.3.0
 	go.uber.org/atomic v1.3.2 // indirect
 	go.uber.org/multierr v1.1.0 // indirect
 	go.uber.org/zap v1.10.0
 	google.golang.org/grpc v1.22.1
-	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 )

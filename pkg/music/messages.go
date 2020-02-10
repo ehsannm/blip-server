@@ -23,3 +23,15 @@ const CSearchResult = "SEARCH_RESULT"
 type SearchResult struct {
 	Songs []*Song `json:"songs"`
 }
+
+const CSoundSearchResult = "SOUND_SEARCH_RESULT"
+
+// easyjson:json
+type SoundSearchResult struct {
+	Info struct {
+		Artists     []string `json:"artists"`
+		Title       string   `json:"title"`
+		ReleaseDate string   `json:"release_date"`
+	} `json:"info"`
+	Songs []*Song `json:"songs"`
+}
