@@ -32,10 +32,9 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 		song.Title = strings.ToLower(song.Title)
 		song.Artists = strings.ToLower(song.Artists)
 		song.Artists = strings.ToLower(song.Lyrics)
-		_ = b.Index(song.ID.Hex(), song)
-		// if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
-		//
-		// }
+		if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
+			_ = b.Index(song.ID.Hex(), song)
+		}
 	}
 	err := songIndex.Batch(b)
 	if err != nil {
@@ -55,7 +54,7 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	terms := strings.Split(strings.ToLower(keyword), "+")
 	log.Debug("Terms", zap.Strings("Terms", terms))
 	for _, t := range terms {
-		qs = append(qs, bleve.NewPrefixQuery(strings.Trim(t, "()")))
+		qs = append(qs, bleve.NewTermQuery(strings.Trim(t, "()")))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.SortBy([]string{"_score"})
