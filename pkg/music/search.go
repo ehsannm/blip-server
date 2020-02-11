@@ -41,6 +41,10 @@ func updateLocalIndex(s *Song) {
 	songIndexer.Enter(s, nil)
 }
 
+func deleteFromLocalIndex(songID primitive.ObjectID) error {
+	return songIndex.Delete(songID.Hex())
+}
+
 // SearchLocalIndex
 func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	qs := make([]query.Query, 0, 4)

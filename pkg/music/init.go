@@ -119,6 +119,12 @@ func watchForSongs() {
 
 				updateLocalIndex(songX)
 				log.Debug("Song Indexed", zap.String("ID", songX.ID.Hex()))
+			case "delete":
+				songID := stream.Current.Lookup("documentKey").Document().Lookup("_id").ObjectID()
+				err = deleteFromLocalIndex(songID)
+				if err != nil {
+					log.Warn("Error On Deleting Song From Index", zap.Error(err))
+				}
 			}
 		}
 		_ = stream.Close(nil)
