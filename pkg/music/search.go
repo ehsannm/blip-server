@@ -26,9 +26,7 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 	b := songIndex.NewBatch()
 	for _, item := range items {
 		song := item.Key.(*Song)
-		if d, _ := songIndex.Document(song.ID.Hex()); d == nil {
-			_ = b.Index(song.ID.Hex(), song)
-		}
+		_ = b.Index(song.ID.Hex(), song)
 	}
 	err := songIndex.Batch(b)
 	if err != nil {
@@ -36,7 +34,6 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 	}
 })
 
-// updateLocalIndex updates the local index which will be used by search handlers
 func updateLocalIndex(s *Song) {
 	songIndexer.Enter(s, nil)
 }
@@ -139,6 +136,7 @@ MainLoop:
 						zap.String("Source", r.Source),
 						zap.String("Title", foundSong.Title),
 					)
+					continue
 				}
 			}
 			updateLocalIndex(songX)
