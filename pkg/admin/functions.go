@@ -33,7 +33,9 @@ var (
 	migrateDownloaded        int32
 	migrateDownloadFailed    int32
 	migrateAlreadyDownloaded int32
+
 )
+
 
 func MigrateLegacyDB() {
 	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
@@ -168,7 +170,7 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 		return 0
 	}
 
-	res, err := http.DefaultClient.Get(url)
+	res, err := httpClient.Get(url)
 	if err != nil {
 		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", url))
 		return 0
