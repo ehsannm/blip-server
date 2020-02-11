@@ -47,16 +47,29 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	qs := make([]query.Query, 0, 4)
 
 	terms := strings.Split(strings.ToLower(keyword), "+")
-	log.Debug("Terms", zap.Strings("Terms", terms))
 	for _, t := range terms {
 		t := strings.Trim(t, "()")
-		qs = append(qs, bleve.NewPrefixQuery(t), bleve.NewTermQuery(t))
+		qs = append(qs, bleve.NewTermQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
+	searchRequest.Explain = true
+	searchRequest.Size = 100
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
 	}
+
+	log.Debug("Local Index Search Finished",
+		zap.Strings("Terms", terms),
+		zap.Duration("Time", res.Took),
+		zap.Uint64("Total", res.Total),
+		zap.Float64("MaxScore", res.MaxScore),
+	)
+	log.Debug("Index Search Info",
+		zap.Int("Total", res.Status.Total),
+		zap.Int("Successful", res.Status.Successful),
+		zap.Int("Failed", res.Status.Failed),
+	)
 
 	songIDs := make(map[primitive.ObjectID]struct{})
 	for _, hit := range res.Hits {
