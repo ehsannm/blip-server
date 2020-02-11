@@ -54,6 +54,7 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.Explain = true
 	searchRequest.Size = 100
+	searchRequest.SortBy([]string{"-_score"})
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
 		return nil, err
@@ -65,7 +66,7 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 		zap.Uint64("Total", res.Total),
 		zap.Float64("MaxScore", res.MaxScore),
 	)
-	log.Debug("Index Search Info",
+	log.Debug("Local Index Search Info",
 		zap.Int("Total", res.Status.Total),
 		zap.Int("Successful", res.Status.Successful),
 		zap.Int("Failed", res.Status.Failed),
