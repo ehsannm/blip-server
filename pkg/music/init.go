@@ -124,7 +124,9 @@ func watchForSongs() {
 				err = deleteFromLocalIndex(songID)
 				if err != nil {
 					log.Warn("Error On Deleting Song From Index", zap.Error(err))
+					continue
 				}
+				log.Debug("Song Removed From Index", zap.String("ID", songID.Hex()))
 			}
 		}
 		_ = stream.Close(nil)
