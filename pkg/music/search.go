@@ -4,11 +4,13 @@ import (
 	"context"
 	"git.ronaksoftware.com/blip/server/internal/flusher"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/pools"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/search/query"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
+	"sort"
 	"strings"
 	"time"
 )
@@ -21,6 +23,11 @@ import (
    Auditor: Ehsan N. Moosa (E2)
    Copyright Ronak Software Group 2018
 */
+
+type indexedSong struct {
+	song  *Song
+	score float64
+}
 
 var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.Entry) {
 	b := songIndex.NewBatch()
@@ -43,7 +50,7 @@ func deleteFromLocalIndex(songID primitive.ObjectID) error {
 }
 
 // SearchLocalIndex
-func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
+func SearchLocalIndex(keyword string) ([]indexedSong, error) {
 	qs := make([]query.Query, 0, 4)
 
 	terms := strings.Split(strings.ToLower(keyword), "+")
@@ -72,18 +79,28 @@ func SearchLocalIndex(keyword string) ([]primitive.ObjectID, error) {
 		zap.Int("Failed", res.Status.Failed),
 	)
 
-	songIDs := make(map[primitive.ObjectID]struct{})
+	foundSongs := make([]indexedSong, 0, len(res.Hits))
+	waitGroup := pools.AcquireWaitGroup()
 	for _, hit := range res.Hits {
 		if songID, err := primitive.ObjectIDFromHex(hit.ID); err == nil {
-			songIDs[songID] = struct{}{}
+			waitGroup.Add(1)
+			go func(songID primitive.ObjectID, score float64) {
+				songX, _ := GetSongByID(songID)
+				if songX != nil {
+					foundSongs = append(foundSongs, indexedSong{
+						song:  nil,
+						score: score,
+					})
+				}
+				waitGroup.Done()
+			}(songID, hit.Score)
 		}
 	}
-	songIDsArr := make([]primitive.ObjectID, 0, len(songIDs))
-	for songID := range songIDs {
-		songIDsArr = append(songIDsArr, songID)
-	}
-
-	return songIDsArr, nil
+	waitGroup.Wait()
+	sort.Slice(foundSongs, func(i, j int) bool {
+		return foundSongs[i].score > foundSongs[j].score
+	})
+	return foundSongs, nil
 }
 
 type searchCtx struct {

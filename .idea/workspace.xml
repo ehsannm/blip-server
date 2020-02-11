@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,7 +52,7 @@
     <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="DatabaseDriversLRU" value="mysql&#10;mongo" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -89,7 +91,16 @@
       <list>
         <serviceView>
           <treeState>
-            <expand />
+            <expand>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:Blip Store 101" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+            </expand>
             <select />
           </treeState>
         </serviceView>
@@ -117,18 +128,18 @@
     <proxy>direct</proxy>
   </component>
   <component name="WindowStateProjectService">
-    <state x="443" y="345" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1580758813139">
+    <state x="436" y="138" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581402204107">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="443" y="345" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580758813139" />
+    <state x="436" y="138" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581402204107" />
     <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1580731812716">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1580731812716" />
-    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1580632469584">
+    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1581402239571">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
-    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1580632469584" />
+    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581402239571" />
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580244430983">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -138,6 +149,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
+    <state width="1124" height="295" key="GridCell.Tab.0.bottom" timestamp="1581402388517">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
+    <state width="1124" height="295" key="GridCell.Tab.0.center" timestamp="1581402388515">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
+    <state width="1124" height="295" key="GridCell.Tab.0.left" timestamp="1581402388514">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
+    <state width="1124" height="295" key="GridCell.Tab.0.right" timestamp="1581402388516">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
+    <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
+      <screen x="0" y="0" width="1680" height="1050" />
+    </state>
+    <state width="239" height="457" key="HiddenNamespacesPopup/0.0.1680.1050@0.0.1680.1050" timestamp="1581402150844" />
     <state x="680" y="266" key="VcsDiffUtil.ChangesDialog" timestamp="1581352512114">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
