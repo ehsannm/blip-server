@@ -88,7 +88,7 @@ func SearchLocalIndex(keyword string) ([]indexedSong, error) {
 				songX, _ := GetSongByID(songID)
 				if songX != nil {
 					foundSongs = append(foundSongs, indexedSong{
-						song:  nil,
+						song:  songX,
 						score: score,
 					})
 				}
