@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 	"io"
 	"net/http"
+	"net/url"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -120,7 +121,14 @@ func MigrateFiles() {
 		if songX.StoreID != 0 {
 			return true
 		}
-
+		if _, err := url.Parse(songX.OriginCoverUrl); err != nil {
+			_ = music.DeleteSong(songX.ID)
+			return false
+		}
+		if _, err := url.Parse(songX.OriginSongUrl); err != nil {
+			_ = music.DeleteSong(songX.ID)
+			return false
+		}
 		storeID := downloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
 		if storeID > 0 {
 			songX.StoreID = storeID
