@@ -33,9 +33,7 @@ var (
 	migrateDownloaded        int32
 	migrateDownloadFailed    int32
 	migrateAlreadyDownloaded int32
-
 )
-
 
 func MigrateLegacyDB() {
 	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
@@ -172,7 +170,10 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 
 	res, err := httpClient.Get(url)
 	if err != nil {
-		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", url))
+		log.Warn("Error On Read From Source",
+			zap.Error(err),
+			zap.String("Url", url),
+		)
 		return 0
 	}
 	switch res.StatusCode {
@@ -180,7 +181,10 @@ func downloadFromSource(bucketName string, songID primitive.ObjectID, url string
 		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
 		_, err = io.Copy(dbWriter, res.Body)
 		if err != nil {
-			log.Warn("Error On Copy", zap.Error(err))
+			log.Warn("Error On Copy",
+				zap.String("SongID", songID.Hex()),
+				zap.String("Url", url),
+			)
 			return 0
 		}
 	case http.StatusNotFound:
