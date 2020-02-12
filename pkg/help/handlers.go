@@ -11,6 +11,6 @@ import "github.com/kataras/iris"
    Copyright Ronak Software Group 2018
 */
 
-func GetInfo(ctx iris.Context) {
+func GetHandler(ctx iris.Context) {
 
 }

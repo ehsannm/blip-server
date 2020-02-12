@@ -32,7 +32,6 @@ func CreateEnvelope(constructor string, payload interface{}) *ResponseEnvelope {
 
 func WriteResponse(ctx iris.Context, constructor string, payload interface{}) {
 	ctx.ContentType("application/json")
-
 	ctx.StatusCode(http.StatusOK)
 	_, _ = ctx.JSON(ResponseEnvelope{
 		Constructor: constructor,
@@ -42,8 +41,8 @@ func WriteResponse(ctx iris.Context, constructor string, payload interface{}) {
 }
 
 func WriteError(ctx iris.Context, httpStatus int, errItem Item) {
+	ctx.StatusCode(httpStatus)
 	ctx.ContentType("application/json")
 	_, _ = ctx.JSON(CreateEnvelope("err", errItem))
-	ctx.StatusCode(httpStatus)
 	ctx.StopExecution()
 }

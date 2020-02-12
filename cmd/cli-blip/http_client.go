@@ -67,7 +67,7 @@ func sendHttp(method, urlSuffix string, contentType string, reader io.Reader, pr
 	}
 
 	if print {
-		fmt.Println(x.Constructor)
+		fmt.Println(res.Status, x.Constructor)
 		_, _ = pretty.Println(x.Payload)
 
 	}

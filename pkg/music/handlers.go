@@ -43,10 +43,10 @@ func SearchByProxyHandler(ctx iris.Context) {
 // Http Method: POST  /music/search/sound
 // Inputs: POST VALUES:
 //	1. "sound" ->  Based64 Standard Encoded
-// Returns: SearchResult
+// Returns: SoundSearchResult (SOUND_SEARCH_RESULT)
 // Possible Errors:
 //	1. 400: BAD_SOUND_FILE
-//	2. 406: error text
+//	2. 406: SEARCH_ENGINE
 func SearchBySoundHandler(ctx iris.Context) {
 	soundFile, _, err := ctx.FormFile("sound")
 	if err != nil {
@@ -69,7 +69,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 			zap.Error(err),
 			zap.String("SessionID", ctx.GetHeader(session.HdrSessionID)),
 		)
-		msg.WriteError(ctx, http.StatusNotAcceptable, msg.Item(err.Error()))
+		msg.WriteError(ctx, http.StatusNotAcceptable, msg.ErrSearchEngine)
 		return
 	}
 
@@ -130,10 +130,11 @@ func SearchBySoundHandler(ctx iris.Context) {
 // SearchByTextHandler is API Handler
 // Http Method: POST /music/search/text
 // Inputs: JSON - SearchReq
-// Returns: SearchResult
+// Returns: SearchResult (SEARCH_RESULT)
 // Possible Errors:
-//	1. 400: if could not parse request
-//	2. 500: identifies something wrong happened on the server side
+//	1. 400: CANNOT_MARSHAL_JSON
+//	2. 500: LOCAL_INDEX_FAILED
+//	3. 500: READ_FROM_DB
 func SearchByTextHandler(ctx iris.Context) {
 	req := &SearchReq{}
 	err := ctx.ReadJSON(req)
@@ -184,9 +185,9 @@ func SearchByTextHandler(ctx iris.Context) {
 // API: /music/search
 // Http Method: GET
 // Inputs: N/A
-// Returns: SearchResult
+// Returns: SearchResult (SEARCH_RESULT)
 // Possible Errors:
-//	1. 208: if there is no cursor
+//	1. 208: ALREADY_SERVED
 func SearchByCursorHandler(ctx iris.Context) {
 	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
 	if songChan == nil {

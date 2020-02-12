@@ -21,9 +21,8 @@ import (
 */
 
 var (
-	httpClient        http.Client
+	httpClient http.Client
 )
-
 
 func init() {
 	httpClient.Transport = &http.Transport{

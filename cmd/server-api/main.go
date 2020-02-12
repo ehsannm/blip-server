@@ -8,6 +8,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
+	"git.ronaksoftware.com/blip/server/pkg/help"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -91,6 +92,10 @@ func initServer() *iris.Application {
 	authParty.Post("/login", auth.LoginHandler)
 	authParty.Post("/register", auth.RegisterHandler)
 	authParty.Post("/logout", session.MustHaveSession, auth.LogoutHandler)
+
+	helpParty := app.Party("/help")
+	authParty.Use(auth.MustHaveAccessKey)
+	helpParty.Get("/config", help.GetHandler)
 
 	storeParty := app.Party("/store")
 	storeParty.Use(auth.MustHaveAccessKey)

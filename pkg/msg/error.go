@@ -44,4 +44,5 @@ var (
 	ErrInvalidDownloadID       Item = "INVALID_DOWNLOAD_ID"
 	ErrInvalidUrl              Item = "INVALID_URL"
 	ErrSongNotFound            Item = "SONG_NOT_FOUND"
+	ErrSearchEngine            Item = "SEARCH_ENGINE"
 )
