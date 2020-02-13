@@ -22,7 +22,7 @@ var (
 	vasLogCol *mongo.Collection
 )
 
-var writeToDB = flusher.NewLifo(1000, 5, time.Millisecond*500, func(items []flusher.Entry) {
+var writeLogToDB = flusher.NewLifo(1000, 5, time.Millisecond*500, func(items []flusher.Entry) {
 	docs := make([]interface{}, 0, len(items))
 	for idx := range items {
 		docs = append(docs, items[idx].Value)

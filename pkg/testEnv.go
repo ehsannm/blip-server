@@ -9,6 +9,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
+	"git.ronaksoftware.com/blip/server/pkg/help"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
@@ -62,6 +63,7 @@ func Init() {
 	}
 	auth.InitMongo(mongoClient)
 	crawler.InitMongo(mongoClient)
+	help.InitMongo(mongoClient)
 	music.InitMongo(mongoClient)
 	session.InitMongo(mongoClient)
 	store.InitMongo(mongoClient)

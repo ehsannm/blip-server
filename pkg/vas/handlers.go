@@ -46,20 +46,18 @@ func MCINotification(ctx iris.Context) {
 		zap.String("Status", params.Status),
 		zap.String("Channel", params.Channel),
 	)
-	writeToDB.Enter(nil, params)
+	writeLogToDB.Enter(nil, params)
 	switch params.Status {
 	case MciNotificationStatusSubscription:
 		subscribe(params)
 	case MciNotificationStatusUnsubscription:
 		unsubscribe(params)
 	case MciNotificationStatusActive:
-		// Some who charged
-	case MciNotificationStatusDeleted:
-		//
+		active(params)
 	case MciNotificationStatusFailed:
-		// Failed could not charge
+		failed(params)
 	case MciNotificationStatusPostPaid:
-
+	case MciNotificationStatusDeleted:
 	}
 }
 func subscribe(params *mciNotificationParams) {
@@ -138,6 +136,8 @@ func unsubscribe(params *mciNotificationParams) {
 		)
 	}
 }
+func failed(params *mciNotificationParams) {}
+func active(params *mciNotificationParams) {}
 
 func MCIMo(ctx iris.Context) {
 	customerNumber := ctx.URLParam("msisdn")

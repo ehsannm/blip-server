@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/help/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/help/help.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/help.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/help/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/help/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/testEnv.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/testEnv.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

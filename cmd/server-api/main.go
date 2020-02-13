@@ -44,6 +44,7 @@ func initModules() {
 		}
 		auth.InitMongo(mongoClient)
 		crawler.InitMongo(mongoClient)
+		help.InitMongo(mongoClient)
 		music.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
 		store.InitMongo(mongoClient)
@@ -63,6 +64,7 @@ func initModules() {
 	acr.Init()
 	auth.Init()
 	crawler.Init()
+	help.Init()
 	music.Init()
 	saba.Init()
 	session.Init()
@@ -95,6 +97,7 @@ func initServer() *iris.Application {
 
 	helpParty := app.Party("/help")
 	authParty.Use(auth.MustHaveAccessKey)
+	helpParty.Post("/config", help.SetHandler)
 	helpParty.Get("/config", help.GetHandler)
 
 	storeParty := app.Party("/store")

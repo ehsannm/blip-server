@@ -23,3 +23,8 @@ var (
 func InitMongo(c *mongo.Client) {
 	helpCol = c.Database(config.Db).Collection(config.ColHelp)
 }
+
+func Init() {
+	// load default configs from database
+	loadDefaultConfig()
+}

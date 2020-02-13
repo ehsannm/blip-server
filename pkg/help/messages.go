@@ -9,6 +9,15 @@ package help
    Copyright Ronak Software Group 2018
 */
 
+// easyjson
+// SetDefaultConfig
+type SetDefaultConfig struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+const CConfig = "CONFIG"
+
 // easyjson:json
 // Config
 type Config struct {
