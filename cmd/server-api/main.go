@@ -97,8 +97,8 @@ func initServer() *iris.Application {
 
 	helpParty := app.Party("/help")
 	authParty.Use(auth.MustHaveAccessKey)
-	helpParty.Post("/config", help.SetHandler)
-	helpParty.Get("/config", help.GetHandler)
+	helpParty.Post("/config", auth.MustAdmin, help.SetHandler)
+	helpParty.Get("/config", session.MustHaveSession, help.GetHandler)
 
 	storeParty := app.Party("/store")
 	storeParty.Use(auth.MustHaveAccessKey)

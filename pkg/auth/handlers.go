@@ -302,6 +302,19 @@ func sendCodeMagicNumber(ctx iris.Context) {
 	})
 }
 
+// LoginHandler is API handler
+// API: /auth/login
+// Http Method: POST
+// Inputs: JSON
+//	phone_code: string
+//	phone_code_hash: string
+//	phone: string
+// Returns: Authorization (AUTHORIZATION)
+// Possible Errors:
+//	1. 500: with error text
+//	2. 400: PHONE_NOT_VALID
+//	3. 400: PHONE_CODE_NOT_VALID
+//	4. 400: PHONE_CODE_HASH_NOT_VALID
 func LoginHandler(ctx iris.Context) {
 	req := &LoginReq{}
 	err := ctx.ReadJSON(req)
@@ -375,6 +388,20 @@ func LoginHandler(ctx iris.Context) {
 
 }
 
+// RegisterHandler is API handler
+// API: /auth/register
+// Http Method: POST
+// Inputs: JSON
+//	phone_code: string
+//	phone_code_hash: string
+//	phone: string
+//	username: string
+// Returns: Authorization (AUTHORIZATION)
+// Possible Errors:
+//	1. 500: with error text
+//	2. 400: PHONE_NOT_VALID
+//	3. 400: PHONE_CODE_NOT_VALID
+//	4. 400: PHONE_CODE_HASH_NOT_VALID
 func RegisterHandler(ctx iris.Context) {
 	req := &RegisterReq{}
 	err := ctx.ReadJSON(req)
