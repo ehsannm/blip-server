@@ -3,6 +3,7 @@ package music
 import (
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -47,6 +48,8 @@ func SearchByProxyHandler(ctx iris.Context) {
 // Possible Errors:
 //	1. 400: BAD_SOUND_FILE
 //	2. 406: SEARCH_ENGINE
+//	3. 500: LOCAL_INDEX_FAILED
+//  4. 403: SONG_NOT_FOUND
 func SearchBySoundHandler(ctx iris.Context) {
 	soundFile, _, err := ctx.FormFile("sound")
 	if err != nil {
@@ -64,6 +67,85 @@ func SearchBySoundHandler(ctx iris.Context) {
 	)
 
 	foundMusic, err := acr.IdentifyByByteString(soundBytes)
+	if err != nil {
+		log.Warn("Error On SearchBySound",
+			zap.Error(err),
+			zap.String("SessionID", ctx.GetHeader(session.HdrSessionID)),
+		)
+		msg.WriteError(ctx, http.StatusNotAcceptable, msg.ErrSearchEngine)
+		return
+	}
+
+	if len(foundMusic.Metadata.Music) == 0 {
+		msg.WriteError(ctx, http.StatusNotFound, msg.ErrSongNotFound)
+		return
+	}
+	var keyword string
+	if len(foundMusic.Metadata.Music[0].Artists) > 0 {
+		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
+	}
+	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
+	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
+	indexedSongs, err := SearchLocalIndex(keyword)
+	if err != nil {
+		log.Warn("Error On LocalIndex", zap.Error(err))
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		return
+	}
+	songs := make([]*Song, 0, len(indexedSongs))
+	for idx := range indexedSongs {
+		songs = append(songs, indexedSongs[idx].song)
+	}
+
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
+	if len(songs) == 0 {
+		songX, ok := <-songChan
+		if ok {
+			songs = append(songs, songX)
+		MainLoop:
+			for {
+				select {
+				case songX, ok := <-songChan:
+					if !ok {
+						break MainLoop
+					}
+					songs = append(songs, songX)
+				default:
+
+				}
+			}
+		}
+	}
+	res := &SoundSearchResult{
+		Songs: songs,
+	}
+	res.Info.Title = foundMusic.Metadata.Music[0].Title
+	res.Info.ReleaseDate = foundMusic.Metadata.Music[0].ReleaseDate
+	for _, artist := range foundMusic.Metadata.Music[0].Artists {
+		res.Info.Artists = append(res.Info.Artists, artist.Name)
+	}
+	msg.WriteResponse(ctx, CSoundSearchResult, res)
+}
+
+// SearchByFingerprintHandler is API Handler
+// Http Method: POST  /music/search/fingerprint
+// Inputs: POST VALUES:
+//	1. "fingerprint" ->  byte slice
+// Returns: SoundSearchResult (SOUND_SEARCH_RESULT)
+// Possible Errors:
+//	1. 500: LOCAL_INDEX_FAILED
+//	2. 406: SEARCH_ENGINE
+//  3. 403: SONG_NOT_FOUND
+func SearchByFingerprintHandler(ctx iris.Context) {
+	fingerprint := ctx.PostValue("fingerprint")
+	log.Debug("Received Sound",
+		zap.Int("Len", len(fingerprint)),
+	)
+
+	foundMusic, err := acr.IdentifyByFingerprint(tools.StrToByte(fingerprint))
 	if err != nil {
 		log.Warn("Error On SearchBySound",
 			zap.Error(err),
