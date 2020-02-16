@@ -170,6 +170,16 @@ func CreateAccessKeyHandler(ctx iris.Context) {
 	})
 }
 
+// LoginHandler is API handler
+// API: /auth/send_code
+// Http Method: POST
+// Inputs: JSON
+//	phone: string
+// Returns: PhoneCodeSent (PHONE_CODE_SENT)
+// Possible Errors:
+//	1. 500: READ_FROM_CACHE
+//	2. 400: CANNOT_UNMARSHAL_JSON
+//	2. 400: PHONE_NOT_VALID
 func SendCodeHandler(ctx iris.Context) {
 	req := &SendCodeReq{}
 	err := ctx.ReadJSON(req)
@@ -359,10 +369,12 @@ func LoginHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
-	err = session.Remove(u.ID, appName)
-	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-		return
+	if config.GetString(config.MagicPhone) != req.Phone {
+		err = session.Remove(u.ID, appName)
+		if err != nil {
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+			return
+		}
 	}
 	sessionID := tools.RandomID(64)
 	timeNow := time.Now().Unix()
