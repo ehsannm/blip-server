@@ -141,7 +141,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 //  3. 403: SONG_NOT_FOUND
 func SearchByFingerprintHandler(ctx iris.Context) {
 	fingerprint := ctx.PostValue("fingerprint")
-	log.Debug("Received Sound",
+	log.Debug("Received Fingerprint",
 		zap.Int("Len", len(fingerprint)),
 	)
 
