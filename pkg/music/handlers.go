@@ -27,6 +27,9 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+// SearchBySoundHandler is API Handler
+// This is a reverse proxy end point
+// @Deprecated
 func SearchByProxyHandler(ctx iris.Context) {
 	if ce := log.Check(log.DebugLevel, "SearchByProxy"); ce != nil {
 		s, ok := ctx.Values().Get(session.CtxSession).(session.Session)
@@ -140,7 +143,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 //	2. 406: SEARCH_ENGINE
 //  3. 403: SONG_NOT_FOUND
 func SearchByFingerprintHandler(ctx iris.Context) {
-	fingerprint := ctx.PostValue("fingerprint")
+	fingerprint := ctx.FormValue("fingerprint")
 	log.Debug("Received Fingerprint",
 		zap.Int("Len", len(fingerprint)),
 	)
