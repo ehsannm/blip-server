@@ -20,6 +20,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+//go:generate rm -f *_easyjson.go
+//go:generate easyjson messages.go
 var (
 	httpClient http.Client
 )

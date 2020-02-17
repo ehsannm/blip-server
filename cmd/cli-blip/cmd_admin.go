@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/admin"
 	"github.com/fatih/color"
@@ -21,7 +22,9 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats)
+	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats, SetVasCmd)
+	SetVasCmd.Flags().String(FlagUserID, "", "")
+	SetVasCmd.Flags().Bool(FlagEnabled, false, "")
 }
 
 var AdminCmd = &cobra.Command{
@@ -83,5 +86,21 @@ var MigrateLegacyDBStats = &cobra.Command{
 			color.HiGreen("Already Downloaded: %s", color.BlueString("%d", int(v["already_downloaded"].(float64))))
 		}
 
+	},
+}
+
+var SetVasCmd = &cobra.Command{
+	Use: "SetVas",
+	Run: func(cmd *cobra.Command, args []string) {
+		req := admin.SetVasReq{
+			UserID:  cmd.Flag(FlagUserID).Value.String(),
+			Enabled: cmd.Flag(FlagEnabled).Changed,
+		}
+		reqBytes, _ := req.MarshalJSON()
+		_, err := sendHttp(http.MethodPost, "admin/vas", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 	},
 }

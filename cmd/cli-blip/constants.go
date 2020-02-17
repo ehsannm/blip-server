@@ -40,4 +40,6 @@ const (
 	FlagSource        = "source"
 	FlagSongID        = "songID"
 	FlagCrawlerID     = "crawlerID"
+	FlagUserID        = "userID"
+	FlagEnabled       = "enabled"
 )

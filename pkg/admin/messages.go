@@ -26,3 +26,10 @@ type MigrateStats struct {
 	DownloadFailed    int32 `json:"download_failed"`
 	AlreadyDownloaded int32 `json:"already_downloaded"`
 }
+
+// easyjson:json
+// @Function
+type SetVasReq struct {
+	UserID  string `json:"user_id"`
+	Enabled bool   `json:"enabled"`
+}

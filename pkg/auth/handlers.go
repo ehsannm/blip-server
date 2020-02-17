@@ -187,7 +187,7 @@ func SendCodeHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
-	if strings.HasPrefix(req.Phone, config.GetString(config.MagicPhone)) {
+	if config.GetBool(config.TestMode) && strings.HasPrefix(req.Phone, config.GetString(config.MagicPhone)) {
 		sendCodeMagicNumber(ctx, req.Phone)
 		return
 	}
