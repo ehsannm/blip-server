@@ -187,8 +187,8 @@ func SendCodeHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
 		return
 	}
-	if req.Phone == config.GetString(config.MagicPhone) {
-		sendCodeMagicNumber(ctx)
+	if strings.HasPrefix(req.Phone, config.GetString(config.MagicPhone)) {
+		sendCodeMagicNumber(ctx, req.Phone)
 		return
 	}
 
@@ -292,8 +292,7 @@ func sendMusicChi(ctx iris.Context, phone string) {
 		Registered:    u != nil,
 	})
 }
-func sendCodeMagicNumber(ctx iris.Context) {
-	magicPhone := config.GetString(config.MagicPhone)
+func sendCodeMagicNumber(ctx iris.Context, magicPhone string) {
 	phoneCode := config.GetString(config.MagicPhoneCode)
 	phoneCodeHash := tools.RandomID(12)
 	err := redisCache.Do(radix.FlatCmd(nil, "SETEX",
@@ -369,12 +368,10 @@ func LoginHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
 		return
 	}
-	if config.GetString(config.MagicPhone) != req.Phone {
-		err = session.Remove(u.ID, appName)
-		if err != nil {
-			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-			return
-		}
+	err = session.Remove(u.ID, appName)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
 	}
 	sessionID := tools.RandomID(64)
 	timeNow := time.Now().Unix()
