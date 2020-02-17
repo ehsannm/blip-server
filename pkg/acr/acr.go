@@ -87,7 +87,7 @@ func IdentifyByByteString(fileBytes []byte) (*Music, error) {
 
 func IdentifyByFingerprint(fingerprint []byte) (*Music, error) {
 	t := time.Now().Unix() * 1000
-	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\naudio\n1\n%d", accessKey, t)
+	stringToSign := fmt.Sprintf("POST\n/v1/identify\n%s\nfingerprint\n1\n%d", accessKey, t)
 
 	hm := hmac.New(func() hash.Hash { return sha1.New() }, tools.StrToByte(accessSecret))
 	hm.Write(tools.StrToByte(stringToSign))
