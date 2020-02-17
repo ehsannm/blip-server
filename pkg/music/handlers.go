@@ -155,6 +155,15 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 		return
 	}
 
+	if ce := log.Check(log.DebugLevel, "ACR Result"); ce != nil {
+		ce.Write(
+			zap.String("Status.Msg", foundMusic.Status.Message),
+			zap.String("Status.Ver", foundMusic.Status.Version),
+			zap.Int("Status.Code", foundMusic.Status.Code),
+			zap.Int("ResultType", foundMusic.ResultType),
+		)
+	}
+
 	if len(foundMusic.Metadata.Music) == 0 {
 		msg.WriteError(ctx, http.StatusNotFound, msg.ErrSongNotFound)
 		return
