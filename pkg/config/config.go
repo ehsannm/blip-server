@@ -60,7 +60,7 @@ func Init() {
 	pflag.String(MongoUrl, "mongodb://localhost:27017", "")
 	pflag.String(RedisUrl, "localhost:6379", "")
 	pflag.String(RedisPass, "ehsan2374", "")
-	pflag.String(MagicPhone, "2374002374", "")
+	pflag.String(MagicPhone, "237400", "")
 	pflag.String(MagicPhoneCode, "2374", "")
 	pflag.String(SongsIndexDir, ".", "")
 
