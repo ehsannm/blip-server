@@ -1,9 +1,9 @@
 package music
 
 import (
+	"encoding/base64"
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -146,9 +146,15 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 	fingerprint := ctx.FormValue("fingerprint")
 	log.Debug("Received Fingerprint",
 		zap.Int("Len", len(fingerprint)),
+		zap.String("FingerPrint", fingerprint),
 	)
+	decodeFP, err := base64.StdEncoding.DecodeString(fingerprint)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCorruptData)
+		return
+	}
 
-	foundMusic, err := acr.IdentifyByFingerprint(tools.StrToByte(fingerprint))
+	foundMusic, err := acr.IdentifyByFingerprint(decodeFP)
 	if err != nil {
 		log.Warn("Error On SearchBySound",
 			zap.Error(err),

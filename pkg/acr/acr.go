@@ -100,7 +100,7 @@ func IdentifyByFingerprint(fingerprint []byte) (*Music, error) {
 	values.Set("access_key", accessKey)
 	values.Set("data_type", "fingerprint")
 	values.Set("sample_bytes", fmt.Sprintf("%d", len(fingerprint)))
-	values.Set("sample", tools.ByteToStr(fingerprint))
+	values.Set("sample", base64.StdEncoding.EncodeToString(fingerprint))
 	values.Set("signature_version", "1")
 	values.Set("signature", signature)
 	values.Set("timestamp", fmt.Sprintf("%d", t))
