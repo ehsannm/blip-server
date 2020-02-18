@@ -182,7 +182,7 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
 	}
 	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
-	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
+	_ = StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
 	indexedSongs, err := SearchLocalIndex(keyword)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
@@ -194,28 +194,6 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 		songs = append(songs, indexedSongs[idx].song)
 	}
 
-	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-		return
-	}
-	if len(songs) == 0 {
-		songX, ok := <-songChan
-		if ok {
-			songs = append(songs, songX)
-		MainLoop:
-			for {
-				select {
-				case songX, ok := <-songChan:
-					if !ok {
-						break MainLoop
-					}
-					songs = append(songs, songX)
-				default:
-
-				}
-			}
-		}
-	}
 	res := &SoundSearchResult{
 		Songs: songs,
 	}
