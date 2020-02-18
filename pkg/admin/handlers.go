@@ -70,7 +70,7 @@ func MigrateStatsHandler(ctx iris.Context) {
 // Returns: Bool (BOOL)
 // Possible Errors:
 //	1. 403: USER_NOT_FOUND
-//	2. 500: WRITE_TO_D
+//	2. 500: WRITE_TO_DB
 func SetVas(ctx iris.Context) {
 	req := &SetVasReq{}
 	err := ctx.ReadJSON(req)
