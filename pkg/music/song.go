@@ -180,11 +180,11 @@ func ForEachSong(f func(songX *Song) bool) error {
 func DownloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
 	// download from source url
 	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
-	defer dbWriter.Close()
 	if err != nil {
 		log.Warn("Error On GetUploadStream", zap.Error(err))
 		return 0
 	}
+	defer dbWriter.Close()
 
 	res, err := httpClient.Get(url)
 	if err != nil {
