@@ -22,7 +22,7 @@ const (
 	// Apps
 	AppNameAdmin    = "Admin"
 	AppNameMusicChi = "MusicChi"
-	AppNameMahyar   = "Mahyar"
+	AppNameBlip     = "Blip"
 
 	UsernameRegex = "^[a-zA-Z0-9]+[a-zA-Z0-9_]{3,12}$"
 )
