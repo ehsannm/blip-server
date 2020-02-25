@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/store/gridfs/bucket.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/gridfs/download_stream.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/store/gridfs/upload_stream.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/extra/experiments/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/extra/experiments/http.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/admin/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/functions.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,25 +73,25 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pkg/store" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/cmd/cli" />
-      <recent name="$PROJECT_DIR$/internal" />
-      <recent name="$PROJECT_DIR$/testdata" />
-      <recent name="$PROJECT_DIR$/pkg/sms" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/pkg/vas" />
       <recent name="$PROJECT_DIR$/pkg/acr" />
       <recent name="$PROJECT_DIR$/extra/testdata" />
       <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pkg/store" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmd/cli" />
+      <recent name="$PROJECT_DIR$/internal" />
+      <recent name="$PROJECT_DIR$/testdata" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -165,26 +167,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582656516966">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582670605016">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582656516966" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582656516965">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582670605016" />
+    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582670605015">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582656516965" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582656516964">
+    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582670605015" />
+    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582670605014">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582656516964" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582656516965">
+    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582670605014" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582670605015">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582656516965" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582670605015" />
     <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

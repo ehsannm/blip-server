@@ -55,7 +55,6 @@ func HealthCheck() {
 			}
 		}
 
-
 		if songX.CoverStoreID != 0 {
 			err := store.Exists(store.BucketCovers, songX.CoverStoreID, songX.ID)
 			if err != nil {

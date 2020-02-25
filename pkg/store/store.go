@@ -3,11 +3,11 @@ package store
 import (
 	"errors"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"git.ronaksoftware.com/blip/server/pkg/store/gridfs"
 	"github.com/gobwas/pool/pbytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"io"
 )
@@ -62,7 +62,15 @@ func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
 	if mongoClient == nil {
 		return errors.New("no store exists")
 	}
-	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
+	bucket, err := gridfs.NewBucket(
+		mongoClient.Database(config.DbStore),
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		options.GridFSBucket().SetName(bucketName))
 	if err != nil {
 		return err
 	}
@@ -86,7 +94,16 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 	if mongoClient == nil {
 		return storeID, nil, errors.New("no store exists")
 	}
-	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
+	bucket, err := gridfs.NewBucket(
+		mongoClient.Database(config.DbStore),
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		options.GridFSBucket().SetName(bucketName),
+	)
 	if err != nil {
 		return storeID, nil, err
 	}
@@ -102,7 +119,16 @@ func GetDownloadStream(bucketName string, songID primitive.ObjectID, storeID int
 	if mongoClient == nil {
 		return nil, errors.New("no connection exists")
 	}
-	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
+	bucket, err := gridfs.NewBucket(
+		mongoClient.Database(config.DbStore),
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		options.GridFSBucket().SetName(bucketName),
+	)
 	if err != nil {
 		return nil, err
 	}

@@ -8,6 +8,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
+	"git.ronaksoftware.com/blip/server/pkg/store/gridfs"
 	"github.com/kataras/iris"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
@@ -360,12 +361,19 @@ func DownloadHandler(ctx iris.Context) {
 		}
 	}
 
-	dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.SongStoreID)
+	var dbReader *gridfs.DownloadStream
+	switch bucketName {
+	case store.BucketCovers:
+		dbReader, err = store.GetDownloadStream(bucketName, songX.ID, songX.CoverStoreID)
+	case store.BucketSongs:
+		dbReader, err = store.GetDownloadStream(bucketName, songX.ID, songX.SongStoreID)
+	}
 	if err != nil {
 		log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
 		return
 	}
+	defer dbReader.Close()
 	_, err = store.Copy(ctx.ResponseWriter(), dbReader, ctx.ResponseWriter().Flush)
 	if err != nil {
 		log.Warn("Error On Download Song (Copy)", zap.Error(err))
