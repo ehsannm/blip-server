@@ -17,14 +17,13 @@ type Unsubscribed struct {
 	StatusCode string `json:"status_code"`
 }
 
-const CMigrateStats = "MIGRATE_STATS"
+const CHealthCheckStats = "HEALTH_CHECK_STATS"
 
 // easyjson:json
-type MigrateStats struct {
-	Scanned           int32 `json:"scanned"`
-	Downloaded        int32 `json:"downloaded"`
-	DownloadFailed    int32 `json:"download_failed"`
-	AlreadyDownloaded int32 `json:"already_downloaded"`
+type HealthCheckStats struct {
+	Scanned    int32 `json:"scanned"`
+	CoverFixed int32 `json:"cover_fixed"`
+	SongFixed  int32 `json:"song_fixed"`
 }
 
 // easyjson:json

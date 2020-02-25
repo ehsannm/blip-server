@@ -38,26 +38,18 @@ func Unsubscribe(ctx iris.Context) {
 
 }
 
-func MigrateLegacyDBHandler(ctx iris.Context) {
-	if !migrateRunning {
-		migrateRunning = true
-		go MigrateLegacyDB()
+func HealthCheckHandler(ctx iris.Context) {
+	if !healthCheckRunning {
+		healthCheckRunning = true
+		go HealthCheck()
 	}
 }
 
-func MigrateFilesHandler(ctx iris.Context) {
-	if !migrateRunning {
-		migrateRunning = true
-		go MigrateFiles()
-	}
-}
-
-func MigrateStatsHandler(ctx iris.Context) {
-	msg.WriteResponse(ctx, CMigrateStats, MigrateStats{
-		Scanned:           atomic.LoadInt32(&migrateScanned),
-		Downloaded:        atomic.LoadInt32(&migrateDownloaded),
-		AlreadyDownloaded: atomic.LoadInt32(&migrateAlreadyDownloaded),
-		DownloadFailed:    atomic.LoadInt32(&migrateDownloadFailed),
+func HealthCheckStatsHandler(ctx iris.Context) {
+	msg.WriteResponse(ctx, CHealthCheckStats, HealthCheckStats{
+		Scanned:    atomic.LoadInt32(&scanned),
+		CoverFixed: atomic.LoadInt32(&coverFixed),
+		SongFixed:  atomic.LoadInt32(&songFixed),
 	})
 }
 

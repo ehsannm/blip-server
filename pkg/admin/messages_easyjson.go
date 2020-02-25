@@ -163,7 +163,7 @@ func (v *SetVasReq) UnmarshalJSON(data []byte) error {
 func (v *SetVasReq) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin1(l, v)
 }
-func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(in *jlexer.Lexer, out *MigrateStats) {
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(in *jlexer.Lexer, out *HealthCheckStats) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -184,12 +184,10 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(in *jlexer.Lex
 		switch key {
 		case "scanned":
 			out.Scanned = int32(in.Int32())
-		case "downloaded":
-			out.Downloaded = int32(in.Int32())
-		case "download_failed":
-			out.DownloadFailed = int32(in.Int32())
-		case "already_downloaded":
-			out.AlreadyDownloaded = int32(in.Int32())
+		case "cover_fixed":
+			out.CoverFixed = int32(in.Int32())
+		case "song_fixed":
+			out.SongFixed = int32(in.Int32())
 		default:
 			in.SkipRecursive()
 		}
@@ -200,7 +198,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(in *jlexer.Lex
 		in.Consumed()
 	}
 }
-func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgAdmin2(out *jwriter.Writer, in MigrateStats) {
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgAdmin2(out *jwriter.Writer, in HealthCheckStats) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -210,43 +208,38 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgAdmin2(out *jwriter.W
 		out.Int32(int32(in.Scanned))
 	}
 	{
-		const prefix string = ",\"downloaded\":"
+		const prefix string = ",\"cover_fixed\":"
 		out.RawString(prefix)
-		out.Int32(int32(in.Downloaded))
+		out.Int32(int32(in.CoverFixed))
 	}
 	{
-		const prefix string = ",\"download_failed\":"
+		const prefix string = ",\"song_fixed\":"
 		out.RawString(prefix)
-		out.Int32(int32(in.DownloadFailed))
-	}
-	{
-		const prefix string = ",\"already_downloaded\":"
-		out.RawString(prefix)
-		out.Int32(int32(in.AlreadyDownloaded))
+		out.Int32(int32(in.SongFixed))
 	}
 	out.RawByte('}')
 }
 
 // MarshalJSON supports json.Marshaler interface
-func (v MigrateStats) MarshalJSON() ([]byte, error) {
+func (v HealthCheckStats) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
 	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgAdmin2(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
-func (v MigrateStats) MarshalEasyJSON(w *jwriter.Writer) {
+func (v HealthCheckStats) MarshalEasyJSON(w *jwriter.Writer) {
 	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgAdmin2(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
-func (v *MigrateStats) UnmarshalJSON(data []byte) error {
+func (v *HealthCheckStats) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
-func (v *MigrateStats) UnmarshalEasyJSON(l *jlexer.Lexer) {
+func (v *HealthCheckStats) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgAdmin2(l, v)
 }

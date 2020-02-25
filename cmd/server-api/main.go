@@ -78,9 +78,8 @@ func initServer() *iris.Application {
 
 	adminParty := app.Party("/admin")
 	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
-	adminParty.Post("/migrate_legacy_db", admin.MigrateLegacyDBHandler)
-	adminParty.Post("/migrate_files", admin.MigrateFilesHandler)
-	adminParty.Get("/migrate_stats", admin.MigrateStatsHandler)
+	adminParty.Post("/health_check", admin.HealthCheckHandler)
+	adminParty.Get("/health_check_stats", admin.HealthCheckStatsHandler)
 	adminParty.Post("/vas", admin.SetVas)
 
 	tokenParty := app.Party("/token")

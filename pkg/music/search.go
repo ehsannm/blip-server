@@ -142,7 +142,7 @@ MainLoop:
 					Genre:          foundSong.Genre,
 					Lyrics:         foundSong.Lyrics,
 					Artists:        foundSong.Artists,
-					StoreID:        0,
+					SongStoreID:    0,
 					OriginCoverUrl: foundSong.CoverUrl,
 					OriginSongUrl:  foundSong.SongUrl,
 					Source:         r.Source,
@@ -156,7 +156,7 @@ MainLoop:
 					)
 					continue
 				}
-			} else if songX.StoreID == 0 {
+			} else if songX.SongStoreID == 0 {
 				// If the song has not been downloaded from source yet, update the origin url
 				songX.Artists = foundSong.Artists
 				songX.Title = foundSong.Title

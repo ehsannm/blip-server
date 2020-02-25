@@ -23,7 +23,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats, SetVasCmd, SetConfig)
+	AdminCmd.AddCommand(UnsubscribeCmd, HealthCheck, HealthCheckStats, SetVasCmd, SetConfig)
 	SetVasCmd.Flags().String(FlagUserID, "", "")
 	SetVasCmd.Flags().Bool(FlagEnabled, false, "")
 	SetConfig.Flags().String(FlagKey, "", "")
@@ -50,10 +50,10 @@ var UnsubscribeCmd = &cobra.Command{
 	},
 }
 
-var MigrateLegacyDB = &cobra.Command{
-	Use: "MigrateLegacyDB",
+var HealthCheck = &cobra.Command{
+	Use: "HealthCheck",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodPost, "admin/migrate_legacy_db", ContentTypeJSON, nil, true)
+		_, err := sendHttp(http.MethodPost, "admin/health_check", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return
@@ -61,32 +61,20 @@ var MigrateLegacyDB = &cobra.Command{
 	},
 }
 
-var MigrateFiles = &cobra.Command{
-	Use: "MigrateFiles",
+var HealthCheckStats = &cobra.Command{
+	Use: "HealthCheckStats",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodPost, "admin/migrate_files", ContentTypeJSON, nil, true)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	},
-}
-
-var MigrateLegacyDBStats = &cobra.Command{
-	Use: "MigrateLegacyDBStats",
-	Run: func(cmd *cobra.Command, args []string) {
-		res, err := sendHttp(http.MethodGet, "admin/migrate_stats", ContentTypeJSON, nil, false)
+		res, err := sendHttp(http.MethodGet, "admin/health_check_stats", ContentTypeJSON, nil, false)
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 		switch res.Constructor {
-		case admin.CMigrateStats:
+		case admin.CHealthCheckStats:
 			v := res.Payload.(map[string]interface{})
 			color.HiGreen("Scanned: %s", color.BlueString("%d", int(v["scanned"].(float64))))
-			color.HiGreen("Downloaded: %s", color.BlueString("%d", int(v["downloaded"].(float64))))
-			color.HiRed("Failed Downloads: %s", color.BlueString("%d", int(v["download_failed"].(float64))))
-			color.HiGreen("Already Downloaded: %s", color.BlueString("%d", int(v["already_downloaded"].(float64))))
+			color.HiRed("CoverFixed: %s", color.BlueString("%d", int(v["cover_fixed"].(float64))))
+			color.HiRed("SongFixed: %s", color.BlueString("%d", int(v["song_fixed"].(float64))))
 		}
 
 	},

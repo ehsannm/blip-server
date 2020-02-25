@@ -5,11 +5,14 @@ import (
 	"encoding/hex"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/tools"
+	"git.ronaksoftware.com/blip/server/pkg/store"
 	"github.com/gobwas/pool/pbytes"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.uber.org/zap"
+	"io"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -32,7 +35,8 @@ type Song struct {
 	Genre          string             `bson:"genre" json:"genre"`
 	Lyrics         string             `bson:"lyrics" json:"lyrics"`
 	Artists        string             `bson:"artists" json:"artists"`
-	StoreID        int64              `bson:"store_id" json:"-"`
+	SongStoreID    int64              `bson:"store_id" json:"-"`
+	CoverStoreID   int64              `bson:"cover_store_id" json:"-"`
 	OriginCoverUrl string             `bson:"org_cover_url" json:"-"`
 	OriginSongUrl  string             `bson:"org_song_url" json:"-"`
 	Source         string             `bson:"source" json:"-"`
@@ -169,4 +173,49 @@ func ForEachSong(f func(songX *Song) bool) error {
 	}
 
 	return nil
+}
+
+// DownloadFromSource transfer music/cover from the external source into our storage areas, and
+// return the storeID
+func DownloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
+	// download from source url
+	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
+	defer dbWriter.Close()
+	if err != nil {
+		log.Warn("Error On GetUploadStream", zap.Error(err))
+		return 0
+	}
+
+	res, err := httpClient.Get(url)
+	if err != nil {
+		log.Warn("Error On Read From Source",
+			zap.Error(err),
+			zap.String("Url", url),
+		)
+		return 0
+	}
+	switch res.StatusCode {
+	case http.StatusOK, http.StatusAccepted:
+		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
+		_, err = io.Copy(dbWriter, res.Body)
+		if err != nil {
+			log.Warn("Error On Copy",
+				zap.String("SongID", songID.Hex()),
+				zap.String("Url", url),
+			)
+			return 0
+		}
+	case http.StatusNotFound:
+		return -1
+	default:
+		log.Warn("Invalid HTTP Status",
+			zap.String("Status", res.Status),
+			zap.String("Url", url),
+		)
+		return 0
+	}
+
+	log.Info("Download Successfully", zap.String("Url", url))
+
+	return storeID
 }

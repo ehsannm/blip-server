@@ -1,21 +1,13 @@
 package admin
 
 import (
-	"database/sql"
-	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/store"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	"io"
-	"net/http"
 	"net/url"
-	"sync"
 	"sync/atomic"
-	"time"
 )
 
 /*
@@ -28,176 +20,79 @@ import (
 */
 
 var (
-	migrateRunning           bool
-	migrateScanned           int32
-	migrateDownloaded        int32
-	migrateDownloadFailed    int32
-	migrateAlreadyDownloaded int32
+	healthCheckRunning bool
+	scanned            int32
+	coverFixed         int32
+	songFixed          int32
 )
 
-func MigrateLegacyDB() {
-	db, err := sqlx.Connect("mysql", "ehsan:ZOAPcQf7rs8hRV02@(139.59.191.4:3306)/blip")
-	if err != nil {
-		log.Warn("Error On Connect MySql", zap.Error(err))
-		return
-	}
+func HealthCheck() {
+	scanned = 0
+	coverFixed = 0
+	songFixed = 0
 
-	rows, err := db.Query("SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' ORDER by uid ASC")
-	if err != nil {
-		log.Warn("Error On Query", zap.Error(err))
-		migrateRunning = false
-		return
-	}
-	var uid, artist, title, uriLocal, cover sql.NullString
-
-	waitGroup := sync.WaitGroup{}
-	rateLimit := make(chan struct{}, 50)
-
-MainLoop:
-	for rows.Next() {
-		err = rows.Scan(&uid, &artist, &title, &uriLocal, &cover)
-		if err != nil {
-			log.Warn("Error On Scan Legacy DB", zap.Error(err))
-			continue
-		}
-		if !artist.Valid || !title.Valid || !uriLocal.Valid || !cover.Valid {
-			continue
-		}
-		waitGroup.Add(1)
-		rateLimit <- struct{}{}
-		go func(artist, title, songUrl, coverUrl string) {
-			defer waitGroup.Done()
-			defer func() {
-				<-rateLimit
-			}()
-
-			atomic.AddInt32(&migrateScanned, 1)
-			uniqueKey := music.GenerateUniqueKey(title, artist)
-			_, err := music.GetSongByUniqueKey(uniqueKey)
-			if err != nil {
-				_, err := music.SaveSong(&music.Song{
-					ID:             primitive.NewObjectID(),
-					UniqueKey:      uniqueKey,
-					Title:          title,
-					Genre:          "",
-					Lyrics:         "",
-					Artists:        artist,
-					StoreID:        0,
-					OriginCoverUrl: coverUrl,
-					OriginSongUrl:  songUrl,
-					Source:         "Archive",
-				})
-				if err != nil {
-					log.Warn("Error On SaveSong", zap.Error(err))
-				}
-				return
-			}
-		}(artist.String, title.String, uriLocal.String, cover.String)
-	}
-	waitGroup.Wait()
-
-	if rows.Err() != nil {
-		rows, err = db.Query(fmt.Sprintf(
-			"SELECT uid, artist, title, uri_local, cover FROM archives WHERE uri_local != '' AND uid > '%s' ORDER by uid ASC", uid.String,
-		))
-		if err != nil {
-			log.Warn("Error On Query", zap.Error(err))
-		} else {
-			goto MainLoop
-		}
-	}
-	migrateRunning = false
-	log.Info("Migration Finished",
-		zap.Int32("Scanned", migrateScanned),
-		zap.Error(rows.Err()),
-	)
-}
-func MigrateFiles() {
-	migrateScanned = 0
-	migrateDownloaded = 0
-	migrateDownloadFailed = 0
-	migrateAlreadyDownloaded = 0
 	err := music.ForEachSong(func(songX *music.Song) bool {
-		if songX.StoreID != 0 {
-			return true
+		atomic.AddInt32(&scanned, 1)
+		downloadSong := false
+		downloadCover := false
+		if songX.SongStoreID != 0 {
+			err := store.Exists(store.BucketSongs, songX.SongStoreID, songX.ID)
+			if err != nil {
+				downloadSong = true
+			}
 		}
-		if _, err := url.Parse(songX.OriginCoverUrl); err != nil {
-			_ = music.DeleteSong(songX.ID)
-			return false
+		if downloadSong {
+			if _, err := url.Parse(songX.OriginSongUrl); err != nil {
+				_ = music.DeleteSong(songX.ID)
+				return false
+			}
+			songStoreID := music.DownloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
+			if songStoreID != 0 {
+				atomic.AddInt32(&songFixed, 1)
+				songX.SongStoreID = songStoreID
+			}
 		}
-		if _, err := url.Parse(songX.OriginSongUrl); err != nil {
-			_ = music.DeleteSong(songX.ID)
-			return false
+
+		if songX.CoverStoreID != 0 {
+			err := store.Exists(store.BucketCovers, songX.CoverStoreID, songX.ID)
+			if err != nil {
+				downloadCover = true
+			}
 		}
-		storeID := downloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
-		if storeID > 0 {
-			songX.StoreID = storeID
+		if downloadCover {
+			if _, err := url.Parse(songX.OriginCoverUrl); err != nil {
+				_ = music.DeleteSong(songX.ID)
+				return false
+			}
+			coverStoreID := music.DownloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
+			if coverStoreID != 0 {
+				atomic.AddInt32(&coverFixed, 1)
+				songX.CoverStoreID = coverStoreID
+			}
+		}
+
+		if downloadCover || downloadSong {
 			_, err := music.SaveSong(songX)
 			if err != nil {
-				log.Warn("Error On Save Search Result",
+				log.Warn("Error On Save Song",
 					zap.Error(err),
 					zap.String("Title", songX.ID.Hex()),
 				)
 				return false
 			}
-			downloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
-			atomic.AddInt32(&migrateDownloaded, 1)
-		} else {
-			_ = music.DeleteSong(songX.ID)
-			atomic.AddInt32(&migrateDownloadFailed, 1)
 		}
+
 		return true
 	})
 	if err != nil {
 		log.Warn("Error On ForEachSong", zap.Error(err))
 	}
 
-	migrateRunning = false
-	log.Info("Migration Files Finished",
-		zap.Int32("Scanned", migrateScanned),
-		zap.Int32("Downloaded", migrateDownloaded),
+	healthCheckRunning = false
+	log.Info("HealthCheck Finished",
+		zap.Int32("Scanned", scanned),
+		zap.Int32("CoverFixed", coverFixed),
+		zap.Int32("SongFixed", songFixed),
 	)
 
-}
-func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
-	// download from source url
-	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
-	defer dbWriter.Close()
-	if err != nil {
-		log.Warn("Error On GetUploadStream", zap.Error(err))
-		return 0
-	}
-
-	res, err := httpClient.Get(url)
-	if err != nil {
-		log.Warn("Error On Read From Source",
-			zap.Error(err),
-			zap.String("Url", url),
-		)
-		return 0
-	}
-	switch res.StatusCode {
-	case http.StatusOK, http.StatusAccepted:
-		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
-		_, err = io.Copy(dbWriter, res.Body)
-		if err != nil {
-			log.Warn("Error On Copy",
-				zap.String("SongID", songID.Hex()),
-				zap.String("Url", url),
-			)
-			return 0
-		}
-	case http.StatusNotFound:
-		return -1
-	default:
-		log.Warn("Invalid HTTP Status",
-			zap.String("Status", res.Status),
-			zap.String("Url", url),
-		)
-		return 0
-	}
-
-	log.Info("Download Successfully", zap.String("Url", url))
-
-	return storeID
 }

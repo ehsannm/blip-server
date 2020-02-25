@@ -11,7 +11,6 @@ import (
 	"github.com/kataras/iris"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -147,7 +146,6 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 	if ce := log.Check(log.DebugLevel, "Received Fingerprint"); ce != nil {
 		ce.Write(
 			zap.Int("Len", len(fingerprint)),
-			zap.String("FingerPrint", fingerprint),
 		)
 	}
 	decodeFP, err := base64.StdEncoding.DecodeString(fingerprint)
@@ -324,28 +322,45 @@ func DownloadHandler(ctx iris.Context) {
 	}
 
 	startTime := time.Now()
-	if songX.StoreID == 0 {
-		storeID := downloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
-		if storeID > 0 {
-			songX.StoreID = storeID
-			_, err := SaveSong(songX)
-			if err != nil {
-				log.Warn("Error On Save Search Result",
-					zap.Error(err),
-					zap.String("Title", songX.ID.Hex()),
-				)
+	switch bucketName {
+	case store.BucketSongs:
+		if songX.SongStoreID == 0 {
+			songStoreID := DownloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
+			if songStoreID > 0 {
+				songX.SongStoreID = songStoreID
+				_, err := SaveSong(songX)
+				if err != nil {
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Title", songX.ID.Hex()),
+					)
+					msg.WriteError(ctx, http.StatusNotFound, msg.ErrReadFromSource)
+					return
+				}
+			} else {
+				_ = DeleteSong(songX.ID)
 				msg.WriteError(ctx, http.StatusNotFound, msg.ErrReadFromSource)
 				return
 			}
-			downloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
-		} else {
-			_ = DeleteSong(songX.ID)
-			msg.WriteError(ctx, http.StatusNotFound, msg.ErrReadFromSource)
-			return
+		}
+		fallthrough
+	case store.BucketCovers:
+		if songX.CoverStoreID == 0 {
+			coverStoreID := DownloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
+			if coverStoreID > 0 {
+				songX.CoverStoreID = coverStoreID
+				_, err := SaveSong(songX)
+				if err != nil {
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Title", songX.ID.Hex()),
+					)
+				}
+			}
 		}
 	}
 
-	dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.StoreID)
+	dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.SongStoreID)
 	if err != nil {
 		log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
@@ -358,7 +373,7 @@ func DownloadHandler(ctx iris.Context) {
 		return
 	}
 
-	if ce := log.Check(log.DebugLevel, "Song Downloaded"); ce != nil {
+	if ce := log.Check(log.DebugLevel, "Song CoverFixed"); ce != nil {
 		ce.Write(
 			zap.String("Bucket", bucketName),
 			zap.String("SongID", songX.ID.Hex()),
@@ -367,46 +382,4 @@ func DownloadHandler(ctx iris.Context) {
 
 	}
 	return
-}
-func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
-	// download from source url
-	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
-	defer dbWriter.Close()
-	if err != nil {
-		log.Warn("Error On GetUploadStream", zap.Error(err))
-		return 0
-	}
-
-	res, err := httpClient.Get(url)
-	if err != nil {
-		log.Warn("Error On Read From Source",
-			zap.Error(err),
-			zap.String("Url", url),
-		)
-		return 0
-	}
-	switch res.StatusCode {
-	case http.StatusOK, http.StatusAccepted:
-		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
-		_, err = io.Copy(dbWriter, res.Body)
-		if err != nil {
-			log.Warn("Error On Copy",
-				zap.String("SongID", songID.Hex()),
-				zap.String("Url", url),
-			)
-			return 0
-		}
-	case http.StatusNotFound:
-		return -1
-	default:
-		log.Warn("Invalid HTTP Status",
-			zap.String("Status", res.Status),
-			zap.String("Url", url),
-		)
-		return 0
-	}
-
-	log.Info("Download Successfully", zap.String("Url", url))
-
-	return storeID
 }

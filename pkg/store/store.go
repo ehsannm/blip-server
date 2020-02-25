@@ -55,6 +55,22 @@ func Delete(storeID int64) error {
 	return err
 }
 
+func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
+	storesMtx.RLock()
+	mongoClient := storeConns[storeID]
+	storesMtx.RUnlock()
+	if mongoClient == nil {
+		return errors.New("no store exists")
+	}
+	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
+	if err != nil {
+		return err
+	}
+
+	_, err = bucket.Find(bson.M{"_id": songID})
+	return err
+}
+
 func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *gridfs.UploadStream, error) {
 	var mongoClient *mongo.Client
 	var storeID int64
@@ -68,7 +84,7 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 	}
 	storesMtx.RUnlock()
 	if mongoClient == nil {
-		return storeID, nil, errors.New("no connection exists")
+		return storeID, nil, errors.New("no store exists")
 	}
 	bucket, err := gridfs.NewBucket(mongoClient.Database(config.DbStore), options.GridFSBucket().SetName(bucketName))
 	if err != nil {
