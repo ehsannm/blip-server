@@ -21,7 +21,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	helpCol = c.Database(config.Db).Collection(config.ColHelp)
+	helpCol = c.Database(config.DbMain).Collection(config.ColHelp)
 }
 
 func Init() {

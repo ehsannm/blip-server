@@ -22,7 +22,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	sessionCol = c.Database(config.Db).Collection(config.ColSession)
+	sessionCol = c.Database(config.DbMain).Collection(config.ColSession)
 }
 
 func Init() {

@@ -15,7 +15,7 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	tokenCol = c.Database(config.Db).Collection(config.ColToken)
+	tokenCol = c.Database(config.DbMain).Collection(config.ColToken)
 }
 
 func Init() {

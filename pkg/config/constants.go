@@ -13,7 +13,7 @@ import "time"
 
 // MongoDB Collections
 const (
-	Db         = "blip"
+	DbMain     = "blip"
 	DbStore    = "blip-store"
 	ColAuth    = "auth"
 	ColToken   = "token"

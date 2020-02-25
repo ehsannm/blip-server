@@ -324,63 +324,90 @@ func DownloadHandler(ctx iris.Context) {
 	}
 
 	startTime := time.Now()
-	if songX.StoreID != 0 {
-		dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.StoreID)
-		if err != nil {
-			log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
-			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+	if songX.StoreID == 0 {
+		storeID := downloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
+		if storeID > 0 {
+			songX.StoreID = storeID
+			_, err := SaveSong(songX)
+			if err != nil {
+				log.Warn("Error On Save Search Result",
+					zap.Error(err),
+					zap.String("Title", songX.ID.Hex()),
+				)
+				msg.WriteError(ctx, http.StatusNotFound, msg.ErrReadFromSource)
+				return
+			}
+			downloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
+		} else {
+			_ = DeleteSong(songX.ID)
+			msg.WriteError(ctx, http.StatusNotFound, msg.ErrReadFromSource)
 			return
 		}
-		_, err = store.Copy(ctx.ResponseWriter(), dbReader, ctx.ResponseWriter().Flush)
-		if err != nil {
-			log.Warn("Error On Download Song (Copy)", zap.Error(err))
-			ctx.StatusCode(http.StatusServiceUnavailable)
-			return
-		}
-	} else {
-		downloadFromSource(ctx, bucketName, songX)
 	}
-	log.Debug("Song Downloaded",
-		zap.String("SongID", songX.ID.Hex()),
-		zap.Duration("Time", time.Now().Sub(startTime)),
-	)
+
+	dbReader, err := store.GetDownloadStream(bucketName, songX.ID, songX.StoreID)
+	if err != nil {
+		log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
+		return
+	}
+	_, err = store.Copy(ctx.ResponseWriter(), dbReader, ctx.ResponseWriter().Flush)
+	if err != nil {
+		log.Warn("Error On Download Song (Copy)", zap.Error(err))
+		ctx.StatusCode(http.StatusServiceUnavailable)
+		return
+	}
+
+	if ce := log.Check(log.DebugLevel, "Song Downloaded"); ce != nil {
+		ce.Write(
+			zap.String("Bucket", bucketName),
+			zap.String("SongID", songX.ID.Hex()),
+			zap.Duration("Time", time.Now().Sub(startTime)),
+		)
+
+	}
 	return
 }
-func downloadFromSource(ctx iris.Context, bucketName string, songX *Song) {
-	// download from source url
-	storeID, dbWriter, err := store.GetUploadStream(bucketName, songX.ID)
-	if err != nil {
-		log.Warn("Error On GetUploadStream (Download From Source)", zap.Error(err))
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
-		return
-	}
-	defer dbWriter.Close()
 
-	writer := io.MultiWriter(dbWriter, ctx.ResponseWriter())
-	res, err := httpClient.Get(songX.OriginSongUrl)
+func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
+	// download from source url
+	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)
+	defer dbWriter.Close()
 	if err != nil {
-		log.Warn("Error On Read From Source", zap.Error(err), zap.String("Url", songX.OriginSongUrl))
-		msg.WriteError(ctx, http.StatusFailedDependency, msg.ErrReadFromSource)
-		return
+		log.Warn("Error On GetUploadStream", zap.Error(err))
+		return 0
+	}
+
+	res, err := httpClient.Get(url)
+	if err != nil {
+		log.Warn("Error On Read From Source",
+			zap.Error(err),
+			zap.String("Url", url),
+		)
+		return 0
 	}
 	switch res.StatusCode {
 	case http.StatusOK, http.StatusAccepted:
-		_, err = store.Copy(writer, res.Body, ctx.ResponseWriter().Flush)
+		_ = dbWriter.SetWriteDeadline(time.Now().Add(time.Minute))
+		_, err = io.Copy(dbWriter, res.Body)
 		if err != nil {
-			log.Warn("Error On Copy (Download From Source)", zap.Error(err))
-			ctx.StatusCode(http.StatusServiceUnavailable)
-			return
+			log.Warn("Error On Copy",
+				zap.String("SongID", songID.Hex()),
+				zap.String("Url", url),
+			)
+			return 0
 		}
-
+	case http.StatusNotFound:
+		return -1
 	default:
-		log.Warn("Error On Http Status (Download From Source)",
-			zap.Error(err),
-			zap.String("Url", songX.OriginSongUrl),
+		log.Warn("Invalid HTTP Status",
 			zap.String("Status", res.Status),
+			zap.String("Url", url),
 		)
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
-		return
+		return 0
 	}
-	songX.StoreID = storeID
-	_, _ = SaveSong(songX)
+
+	log.Info("Download Successfully", zap.String("Url", url))
+
+	return storeID
 }

@@ -32,7 +32,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	crawlerCol = c.Database(config.Db).Collection(config.ColCrawler)
+	crawlerCol = c.Database(config.DbMain).Collection(config.ColCrawler)
 }
 
 func Init() {

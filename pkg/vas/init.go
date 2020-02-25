@@ -15,5 +15,5 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	vasLogCol = c.Database(config.Db).Collection(config.ColLogVas)
+	vasLogCol = c.Database(config.DbMain).Collection(config.ColLogVas)
 }

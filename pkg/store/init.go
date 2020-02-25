@@ -37,7 +37,7 @@ const (
 )
 
 func InitMongo(c *mongo.Client) {
-	storeCol = c.Database(config.Db).Collection(config.ColStore)
+	storeCol = c.Database(config.DbMain).Collection(config.ColStore)
 }
 
 func Init() {

@@ -31,7 +31,7 @@ var (
 )
 
 func InitMongo(c *mongo.Client) {
-	authCol = c.Database(config.Db).Collection(config.ColAuth)
+	authCol = c.Database(config.DbMain).Collection(config.ColAuth)
 }
 
 func InitRedisCache(c *redis.Cache) {

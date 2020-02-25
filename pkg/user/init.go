@@ -16,7 +16,7 @@ import (
 */
 
 func InitMongo(c *mongo.Client) {
-	userCol = c.Database(config.Db).Collection(config.ColUser)
+	userCol = c.Database(config.DbMain).Collection(config.ColUser)
 }
 
 func InitRedisCache(c *redis.Cache) {

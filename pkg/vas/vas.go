@@ -27,6 +27,7 @@ var writeLogToDB = flusher.NewLifo(1000, 5, time.Millisecond*500, func(items []f
 	for idx := range items {
 		docs = append(docs, items[idx].Value)
 	}
+
 	res, err := vasLogCol.InsertMany(nil, docs, options.InsertMany().SetOrdered(false))
 	if err != nil {
 		log.Warn("Error On Writing MCI Notification to DB", zap.Error(err))
