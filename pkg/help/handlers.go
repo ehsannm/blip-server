@@ -2,6 +2,7 @@ package help
 
 import (
 	"fmt"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -10,6 +11,7 @@ import (
 	"github.com/rogpeppe/go-internal/semver"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"net/http"
 	"strings"
 )
@@ -81,6 +83,15 @@ func GetHandler(ctx iris.Context) {
 	}
 	if minAppVersion != "" {
 		updateForce = semver.Compare(minAppVersion, clientAppVer) >= 0
+	}
+
+	if ce := log.Check(log.DebugLevel, "Get Config"); ce != nil {
+		ce.Write(
+			zap.String("ClientVer", clientAppVer),
+			zap.String("ClientPlatform", clientPlatform),
+			zap.String("CurVer", currAppVersion),
+			zap.String("MinVer", minAppVersion),
+		)
 	}
 
 	res := &Config{
