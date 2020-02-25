@@ -133,9 +133,6 @@ github.com/iris-contrib/formBinder
 github.com/iris-contrib/go.uuid
 # github.com/iris-contrib/httpexpect v0.0.0-20180314041918-ebe99fcebbce
 github.com/iris-contrib/httpexpect
-# github.com/jmoiron/sqlx v1.2.0
-github.com/jmoiron/sqlx
-github.com/jmoiron/sqlx/reflectx
 # github.com/json-iterator/go v1.1.7
 github.com/json-iterator/go
 # github.com/jtolds/gls v4.20.0+incompatible
