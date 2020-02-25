@@ -60,7 +60,7 @@ func SearchLocalIndex(keyword string) ([]indexedSong, error) {
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.Explain = true
-	searchRequest.Size = 100
+	searchRequest.Size = 10
 	searchRequest.SortBy([]string{"-_score"})
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {
