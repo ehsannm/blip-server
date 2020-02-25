@@ -97,7 +97,7 @@ func initServer() *iris.Application {
 	authParty.Post("/logout", session.MustHaveSession, auth.LogoutHandler)
 
 	helpParty := app.Party("/help")
-	authParty.Use(auth.MustHaveAccessKey)
+	helpParty.Use(auth.MustHaveAccessKey)
 	helpParty.Post("/config", auth.MustAdmin, help.SetHandler)
 	helpParty.Get("/config", session.MustHaveSession, help.GetHandler)
 
