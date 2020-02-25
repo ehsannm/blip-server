@@ -16,7 +16,6 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-
 var configMtx sync.RWMutex
 var defaultConfig = map[string]string{}
 

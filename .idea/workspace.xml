@@ -3,8 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/messages.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/cmd_admin.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/cmd_admin.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +108,11 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@7b5d3af9" type="9fbbdea:ServiceModel$ServiceNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
                 <item name="com.intellij.database.console.session.MessageBusSession@4ddad442" type="9fbbdea:ServiceModel$ServiceNode" />
               </path>
             </expand>
@@ -160,26 +164,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582640076311">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582640104076">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582640076311" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582640076310">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582640104076" />
+    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582640104075">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582640076310" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582640076309">
+    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582640104075" />
+    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582640104075">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582640076309" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582640076310">
+    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582640104075" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582640104075">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582640076310" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582640104075" />
     <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

@@ -138,6 +138,7 @@ func easyjson66c1e240Decode(in *jlexer.Lexer, out *struct {
 	Artists     []string `json:"artists"`
 	Title       string   `json:"title"`
 	ReleaseDate string   `json:"release_date"`
+	ImageUrl    string   `json:"image_url"`
 }) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
@@ -184,6 +185,8 @@ func easyjson66c1e240Decode(in *jlexer.Lexer, out *struct {
 			out.Title = string(in.String())
 		case "release_date":
 			out.ReleaseDate = string(in.String())
+		case "image_url":
+			out.ImageUrl = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -198,6 +201,7 @@ func easyjson66c1e240Encode(out *jwriter.Writer, in struct {
 	Artists     []string `json:"artists"`
 	Title       string   `json:"title"`
 	ReleaseDate string   `json:"release_date"`
+	ImageUrl    string   `json:"image_url"`
 }) {
 	out.RawByte('{')
 	first := true
@@ -227,6 +231,11 @@ func easyjson66c1e240Encode(out *jwriter.Writer, in struct {
 		const prefix string = ",\"release_date\":"
 		out.RawString(prefix)
 		out.String(string(in.ReleaseDate))
+	}
+	{
+		const prefix string = ",\"image_url\":"
+		out.RawString(prefix)
+		out.String(string(in.ImageUrl))
 	}
 	out.RawByte('}')
 }

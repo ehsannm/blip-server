@@ -482,8 +482,6 @@ func RegisterHandler(ctx iris.Context) {
 		return
 	}
 
-
-
 	sessionID := tools.RandomID(64)
 	err = session.Save(&session.Session{
 		ID:         sessionID,

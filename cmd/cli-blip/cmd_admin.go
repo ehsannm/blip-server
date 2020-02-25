@@ -113,7 +113,7 @@ var SetConfig = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		req := help.SetDefaultConfig{
 			Key:   cmd.Flag(FlagKey).Value.String(),
-			Value: cmd.Flag(FlagKey).Value.String(),
+			Value: cmd.Flag(FlagValue).Value.String(),
 		}
 		reqBytes, _ := req.MarshalJSON()
 		_, err := sendHttp(http.MethodPost, "help/config", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
