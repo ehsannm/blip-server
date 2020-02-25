@@ -40,6 +40,8 @@ func HealthCheck() {
 			if err != nil {
 				downloadSong = true
 			}
+		} else {
+			downloadSong = true
 		}
 		if downloadSong {
 			if _, err := url.Parse(songX.OriginSongUrl); err != nil {
@@ -58,6 +60,8 @@ func HealthCheck() {
 			if err != nil {
 				downloadCover = true
 			}
+		} else {
+			downloadCover = true
 		}
 		if downloadCover {
 			if _, err := url.Parse(songX.OriginCoverUrl); err != nil {
