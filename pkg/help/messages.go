@@ -9,7 +9,7 @@ package help
    Copyright Ronak Software Group 2018
 */
 
-// easyjson
+// easyjson:json
 // SetDefaultConfig
 type SetDefaultConfig struct {
 	Key   string `json:"key"`

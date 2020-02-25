@@ -42,4 +42,6 @@ const (
 	FlagCrawlerID     = "crawlerID"
 	FlagUserID        = "userID"
 	FlagEnabled       = "enabled"
+	FlagKey           = "key"
+	FlagValue         = "value"
 )

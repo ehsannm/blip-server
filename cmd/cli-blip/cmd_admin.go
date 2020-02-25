@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"git.ronaksoftware.com/blip/server/pkg/admin"
+	"git.ronaksoftware.com/blip/server/pkg/help"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
 	"net/http"
@@ -22,9 +23,11 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats, SetVasCmd)
+	AdminCmd.AddCommand(UnsubscribeCmd, MigrateLegacyDB, MigrateFiles, MigrateLegacyDBStats, SetVasCmd, SetConfig)
 	SetVasCmd.Flags().String(FlagUserID, "", "")
 	SetVasCmd.Flags().Bool(FlagEnabled, false, "")
+	SetConfig.Flags().String(FlagKey, "", "")
+	SetConfig.Flags().String(FlagValue, "", "")
 }
 
 var AdminCmd = &cobra.Command{
@@ -98,6 +101,22 @@ var SetVasCmd = &cobra.Command{
 		}
 		reqBytes, _ := req.MarshalJSON()
 		_, err := sendHttp(http.MethodPost, "admin/vas", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+
+var SetConfig = &cobra.Command{
+	Use: "SetConfig",
+	Run: func(cmd *cobra.Command, args []string) {
+		req := help.SetDefaultConfig{
+			Key:   cmd.Flag(FlagKey).Value.String(),
+			Value: cmd.Flag(FlagKey).Value.String(),
+		}
+		reqBytes, _ := req.MarshalJSON()
+		_, err := sendHttp(http.MethodPost, "help/config", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
 		if err != nil {
 			fmt.Println(err)
 			return
