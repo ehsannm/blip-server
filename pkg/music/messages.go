@@ -32,6 +32,7 @@ type SoundSearchResult struct {
 		Artists     []string `json:"artists"`
 		Title       string   `json:"title"`
 		ReleaseDate string   `json:"release_date"`
+		ImageUrl    string   `json:"image_url"`
 	} `json:"info"`
 	Songs []*Song `json:"songs"`
 }
