@@ -65,16 +65,16 @@ func SetHandler(ctx iris.Context) {
 func GetHandler(ctx iris.Context) {
 	clientAppVer := ctx.GetHeader(HdrAppVersion)
 	clientPlatform := strings.ToLower(ctx.GetHeader(HdrPlatform))
-	currAppVersion := defaultConfig[fmt.Sprintf("%s.%s.%s.cur",
+	currAppVersion := getConfig(fmt.Sprintf("%s.%s.%s.cur",
 		ctx.Values().GetString(auth.CtxClientName),
 		clientPlatform,
 		clientAppVer,
-	)]
-	minAppVersion := defaultConfig[fmt.Sprintf("%s.%s.%s.min",
+	))
+	minAppVersion := getConfig(fmt.Sprintf("%s.%s.%s.min",
 		ctx.Values().GetString(auth.CtxClientName),
 		clientPlatform,
 		clientAppVer,
-	)]
+	))
 
 	updateAvailable := false
 	updateForce := false
@@ -89,7 +89,7 @@ func GetHandler(ctx iris.Context) {
 		UpdateAvailable: updateAvailable,
 		UpdateForce:     updateForce,
 		StoreLink:       "",
-		ShowBlipLink:    defaultConfig[BlipShowLink] != "",
+		ShowBlipLink:    getConfig(BlipShowLink) != "",
 	}
 	s, ok := ctx.Values().Get(session.CtxSession).(*session.Session)
 	if ok {

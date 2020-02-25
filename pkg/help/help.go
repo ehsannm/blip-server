@@ -4,6 +4,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.uber.org/zap"
+	"sync"
 )
 
 /*
@@ -15,18 +16,22 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-// var defaultConfig = struct {
-// 	ShowBlipLink         string `bson:"show_blip_link" json:"show_blip_link"`
-// 	AndroidLatestVersion string `bson:"andorid_latest_version" json:"android_latest_version"`
-// 	IosLatestVersion     string `bson:"ios_latest_version" json:"ios_latest_version"`
-// }{}
 
+var configMtx sync.RWMutex
 var defaultConfig = map[string]string{}
 
 func loadDefaultConfig() {
+	configMtx.Lock()
 	res := helpCol.FindOne(nil, bson.M{"_id": "defaults"})
 	err := res.Decode(&defaultConfig)
 	if err != nil {
 		log.Warn("Error On Reading Default Configs", zap.Error(err))
 	}
+	configMtx.Unlock()
+}
+
+func getConfig(key string) string {
+	configMtx.RLock()
+	defer configMtx.RUnlock()
+	return defaultConfig[key]
 }

@@ -52,7 +52,7 @@ func Init() {
 	// Initialize MongoDB
 	mongoClient, err := mongo.Connect(
 		nil,
-		options.Client().ApplyURI(config.GetString(config.MongoUrl)),
+		options.Client().ApplyURI(config.GetString(config.MongoUrl)).SetDirect(true),
 	)
 	if err != nil {
 		log.Fatal("Error On MongoConnect", zap.Error(err))
