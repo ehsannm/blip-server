@@ -15,11 +15,13 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var defaultConfig = struct {
-	ShowBlipLink         string `bson:"show_blip_link" json:"show_blip_link"`
-	AndroidLatestVersion string `bson:"andorid_latest_version" json:"android_latest_version"`
-	IosLatestVersion     string `bson:"ios_latest_version" json:"ios_latest_version"`
-}{}
+// var defaultConfig = struct {
+// 	ShowBlipLink         string `bson:"show_blip_link" json:"show_blip_link"`
+// 	AndroidLatestVersion string `bson:"andorid_latest_version" json:"android_latest_version"`
+// 	IosLatestVersion     string `bson:"ios_latest_version" json:"ios_latest_version"`
+// }{}
+
+var defaultConfig = map[string]string{}
 
 func loadDefaultConfig() {
 	res := helpCol.FindOne(nil, bson.M{"_id": "defaults"})
