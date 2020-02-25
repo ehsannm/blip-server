@@ -368,7 +368,6 @@ func DownloadHandler(ctx iris.Context) {
 	}
 	return
 }
-
 func downloadFromSource(bucketName string, songID primitive.ObjectID, url string) int64 {
 	// download from source url
 	storeID, dbWriter, err := store.GetUploadStream(bucketName, songID)

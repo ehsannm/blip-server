@@ -127,6 +127,11 @@ MainLoop:
 					zap.String("Source", r.Source),
 				)
 			}
+			foundSong.Artists = strings.TrimSpace(foundSong.Artists)
+			foundSong.Title = strings.TrimSpace(foundSong.Title)
+			if len(foundSong.Title) == 0 {
+				continue
+			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
 			if err != nil {

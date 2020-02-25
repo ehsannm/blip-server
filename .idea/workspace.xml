@@ -3,17 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/crawler/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/init.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/session/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/session/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/store/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/token/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/token/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,26 +160,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582631121472">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582632580903">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582631121472" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582631121471">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582632580903" />
+    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582632580902">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582631121471" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582631121470">
+    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582632580902" />
+    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582632580901">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582631121470" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582631121471">
+    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582632580901" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582632580902">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582631121471" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582632580902" />
     <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
