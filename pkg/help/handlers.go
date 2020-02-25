@@ -65,15 +65,13 @@ func SetHandler(ctx iris.Context) {
 func GetHandler(ctx iris.Context) {
 	clientAppVer := ctx.GetHeader(HdrAppVersion)
 	clientPlatform := strings.ToLower(ctx.GetHeader(HdrPlatform))
-	currAppVersion := getConfig(fmt.Sprintf("%s.%s.%s.cur",
+	currAppVersion := getConfig(fmt.Sprintf("%s.%s.cur",
 		ctx.Values().GetString(auth.CtxClientName),
 		clientPlatform,
-		clientAppVer,
 	))
-	minAppVersion := getConfig(fmt.Sprintf("%s.%s.%s.min",
+	minAppVersion := getConfig(fmt.Sprintf("%s.%s.min",
 		ctx.Values().GetString(auth.CtxClientName),
 		clientPlatform,
-		clientAppVer,
 	))
 
 	updateAvailable := false
