@@ -381,7 +381,7 @@ func DownloadHandler(ctx iris.Context) {
 		return
 	}
 
-	if ce := log.Check(log.DebugLevel, "Song CoverFixed"); ce != nil {
+	if ce := log.Check(log.DebugLevel, "Song Download"); ce != nil {
 		ce.Write(
 			zap.String("Bucket", bucketName),
 			zap.String("SongID", songX.ID.Hex()),
