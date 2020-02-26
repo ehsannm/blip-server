@@ -153,7 +153,7 @@ func debugMiddleware(ctx iris.Context) {
 		ce.Write(
 			zap.String("Url", ctx.Request().RequestURI),
 			zap.String("Method", ctx.Request().Method),
-			zap.String("SessionID", ctx.Request().Header.Get(session.HdrSessionID)),
+			zap.Bool("HashSession", ctx.Request().Header.Get(session.HdrSessionID) != ""),
 		)
 	}
 }
