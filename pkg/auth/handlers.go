@@ -251,7 +251,13 @@ func sendMusicChi(ctx iris.Context, phone string) {
 	if u != nil && u.VasPaid {
 		phoneCode = tools.RandomDigit(4)
 		// User our internal sms provider
-		_, err := smsProvider.SendInBackground(phone, fmt.Sprintf("Blip Code: %s", phoneCode))
+		if ce := log.Check(log.DebugLevel, "Send Code (MusicChi)"); ce != nil {
+			ce.Write(
+				zap.String("Phone", phone),
+				zap.String("PhoneCode", phoneCode),
+			)
+		}
+		_, err := smsProvider.SendInBackground(phone, fmt.Sprintf("MusicChi Code: %s", phoneCode))
 		if err != nil {
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromSmsServer)
 			return

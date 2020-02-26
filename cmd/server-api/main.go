@@ -75,6 +75,9 @@ func initModules() {
 
 func initServer() *iris.Application {
 	app := iris.New()
+	if log.Enabled(log.DebugLevel) {
+		app.Use(debugMiddleware)
+	}
 
 	adminParty := app.Party("/admin")
 	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
@@ -131,8 +134,10 @@ func initServer() *iris.Application {
 		app.Any("/debug/pprof", p)
 		app.Any("/debug/pprof/{action:path}", p)
 	}
+
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")
+
 	return app
 }
 
@@ -141,4 +146,14 @@ func main() {
 	initModules()
 	Root.AddCommand(InitDB)
 	_ = Root.Execute()
+}
+
+func debugMiddleware(ctx iris.Context) {
+	if ce := log.Check(log.DebugLevel, "Request Received"); ce != nil {
+		ce.Write(
+			zap.String("Url", ctx.Request().RequestURI),
+			zap.String("Method", ctx.Request().Method),
+			zap.String("SessionID", ctx.Request().Header.Get(session.HdrSessionID)),
+		)
+	}
 }

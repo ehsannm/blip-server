@@ -224,3 +224,7 @@ func Check(level Level, msg string) *CheckedEntry {
 func SetLevel(level Level) {
 	DefaultLevel.SetLevel(level)
 }
+
+func Enabled(level Level) bool {
+	return DebugLevel.Enabled(level)
+}
