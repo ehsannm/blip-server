@@ -45,7 +45,7 @@ func Init() {
 		config.GetString(config.SmsPayamakPass),
 		config.GetString(config.SmsPayamakUrl),
 		config.GetString(config.SmsPayamakPhone),
-		10,
+		100,
 	)
 
 	cnt, err := authCol.CountDocuments(nil, bson.D{})
