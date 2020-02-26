@@ -323,11 +323,13 @@ func DownloadHandler(ctx iris.Context) {
 	}
 
 	startTime := time.Now()
+	downloadFromSource := false
 	switch bucketName {
 	case store.BucketSongs:
 		if songX.SongStoreID == 0 {
 			songStoreID := DownloadFromSource(store.BucketSongs, songX.ID, songX.OriginSongUrl)
 			if songStoreID > 0 {
+				downloadFromSource = true
 				songX.SongStoreID = songStoreID
 				_, err := SaveSong(songX)
 				if err != nil {
@@ -349,6 +351,7 @@ func DownloadHandler(ctx iris.Context) {
 		if songX.CoverStoreID == 0 {
 			coverStoreID := DownloadFromSource(store.BucketCovers, songX.ID, songX.OriginCoverUrl)
 			if coverStoreID > 0 {
+				downloadFromSource = true
 				songX.CoverStoreID = coverStoreID
 				_, err := SaveSong(songX)
 				if err != nil {
@@ -386,6 +389,7 @@ func DownloadHandler(ctx iris.Context) {
 			zap.String("Bucket", bucketName),
 			zap.String("SongID", songX.ID.Hex()),
 			zap.Duration("Time", time.Now().Sub(startTime)),
+			zap.Bool("FromSource", downloadFromSource),
 		)
 
 	}
