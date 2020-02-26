@@ -206,8 +206,6 @@ func SendCodeHandler(ctx iris.Context) {
 	if v != "" {
 		u, _ := user.GetByPhone(req.Phone)
 		verifyParams := strings.Split(v, "|")
-		// TODO:: fix this
-		_, _ = smsProvider.SendInBackground(req.Phone, fmt.Sprintf("MusicChi Code: %s", verifyParams[2]))
 		msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 			PhoneCodeHash: verifyParams[0],
 			Registered:    u != nil,
