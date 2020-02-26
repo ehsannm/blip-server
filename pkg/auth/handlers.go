@@ -486,8 +486,11 @@ func RegisterHandler(ctx iris.Context) {
 		Disabled:  false,
 	})
 	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
-		return
+		u, _ := user.GetByPhone(req.Phone)
+		if u == nil {
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
+			return
+		}
 	}
 
 	sessionID := tools.RandomID(64)

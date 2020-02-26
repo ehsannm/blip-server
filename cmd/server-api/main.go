@@ -75,9 +75,6 @@ func initModules() {
 
 func initServer() *iris.Application {
 	app := iris.New()
-	// if log.Enabled(log.DebugLevel) {
-	// 	app.Use(debugMiddleware)
-	// }
 
 	adminParty := app.Party("/admin")
 	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
