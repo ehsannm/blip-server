@@ -11,7 +11,12 @@ import "github.com/gobwas/pool/pbytes"
    Copyright Ronak Software Group 2018
 */
 
+var (
+	mediumPool *pbytes.Pool
+	largePool  *pbytes.Pool
+)
 
 func init() {
-	pbytes.DefaultPool = pbytes.New(128, 256 << 10)
+	mediumPool = pbytes.New(64<<10, 512<<10)
+	largePool = pbytes.New(16<<20, 16<<20)
 }

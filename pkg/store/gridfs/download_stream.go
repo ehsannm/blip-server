@@ -9,7 +9,6 @@ package gridfs
 import (
 	"context"
 	"errors"
-	"github.com/gobwas/pool/pbytes"
 	"time"
 
 	"io"
@@ -44,7 +43,7 @@ type DownloadStream struct {
 
 func newDownloadStream(cursor *mongo.Cursor, decryptFunc DecryptFunc, chunkSize int32, fileLen int64) *DownloadStream {
 	numChunks := int32(math.Ceil(float64(fileLen) / float64(chunkSize)))
-	buffer := pbytes.GetLen(int(chunkSize))
+	buffer := mediumPool.GetLen(int(chunkSize))
 	return &DownloadStream{
 		numChunks:   numChunks,
 		chunkSize:   chunkSize,
@@ -63,7 +62,7 @@ func (ds *DownloadStream) Close() error {
 	}
 
 	ds.closed = true
-	pbytes.Put(ds.buffer)
+	mediumPool.Put(ds.buffer)
 	return nil
 }
 

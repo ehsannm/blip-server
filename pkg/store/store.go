@@ -108,6 +108,7 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 	if err != nil {
 		return storeID, nil, err
 	}
+
 	_ = bucket.Delete(songID)
 	stream, err := bucket.OpenUploadStreamWithID(songID, songID.Hex())
 	bucket.Release()

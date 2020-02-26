@@ -7,10 +7,8 @@
 package gridfs
 
 import (
-	"errors"
-	"github.com/gobwas/pool/pbytes"
-
 	"context"
+	"errors"
 	"time"
 
 	"math"
@@ -51,7 +49,7 @@ func newUploadStream(upload *Upload, encryptFunc EncryptFunc, fileID interface{}
 			return bytes
 		}
 	}
-	buf := pbytes.GetLen(UploadBufferSize)
+	buf := largePool.GetLen(UploadBufferSize)
 	return &UploadStream{
 		Upload: upload,
 		FileID: fileID,
@@ -86,7 +84,7 @@ func (us *UploadStream) Close() error {
 	}
 
 	us.closed = true
-	pbytes.Put(us.buffer)
+	largePool.Put(us.buffer)
 	return nil
 }
 
