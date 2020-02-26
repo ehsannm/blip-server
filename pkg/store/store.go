@@ -76,6 +76,7 @@ func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
 	}
 
 	_, err = bucket.Find(bson.M{"_id": songID})
+	bucket.Release()
 	return err
 }
 
@@ -109,6 +110,7 @@ func GetUploadStream(bucketName string, songID primitive.ObjectID) (int64, *grid
 	}
 	_ = bucket.Delete(songID)
 	stream, err := bucket.OpenUploadStreamWithID(songID, songID.Hex())
+	bucket.Release()
 	return storeID, stream, err
 }
 
@@ -132,7 +134,9 @@ func GetDownloadStream(bucketName string, songID primitive.ObjectID, storeID int
 	if err != nil {
 		return nil, err
 	}
-	return bucket.OpenDownloadStream(songID)
+	stream, err := bucket.OpenDownloadStream(songID)
+	bucket.Release()
+	return stream, err
 }
 
 func Copy(dst io.Writer, src io.Reader, flushFunc func()) (written int64, err error) {

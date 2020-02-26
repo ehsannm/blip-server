@@ -9,6 +9,7 @@ package gridfs
 import (
 	"bytes"
 	"context"
+	"github.com/gobwas/pool/pbytes"
 
 	"io"
 
@@ -102,12 +103,15 @@ func NewBucket(db *mongo.Database, encryptFunc EncryptFunc, decryptFunc DecryptF
 
 	b.chunksColl = db.Collection(b.name+".chunks", collOpts)
 	b.filesColl = db.Collection(b.name+".files", collOpts)
-	b.readBuf = make([]byte, b.chunkSize)
-	b.writeBuf = make([]byte, b.chunkSize)
-
+	b.readBuf = pbytes.GetLen(int(b.chunkSize))
+	b.writeBuf = pbytes.GetLen(int(b.chunkSize))
 	return b, nil
 }
 
+func (b *Bucket) Release() {
+	pbytes.Put(b.readBuf)
+	pbytes.Put(b.writeBuf)
+}
 // SetWriteDeadline sets the write deadline for this bucket.
 func (b *Bucket) SetWriteDeadline(t time.Time) error {
 	b.writeDeadline = t
