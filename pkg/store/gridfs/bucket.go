@@ -112,6 +112,7 @@ func (b *Bucket) Release() {
 	pbytes.Put(b.readBuf)
 	pbytes.Put(b.writeBuf)
 }
+
 // SetWriteDeadline sets the write deadline for this bucket.
 func (b *Bucket) SetWriteDeadline(t time.Time) error {
 	b.writeDeadline = t

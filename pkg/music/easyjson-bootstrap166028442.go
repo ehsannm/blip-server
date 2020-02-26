@@ -6,20 +6,20 @@
 package main
 
 import (
-  "fmt"
-  "os"
+	"fmt"
+	"os"
 
-  "github.com/mailru/easyjson/gen"
+	"github.com/mailru/easyjson/gen"
 
-  pkg "git.ronaksoftware.com/blip/server/pkg/music"
+	pkg "git.ronaksoftware.com/blip/server/pkg/music"
 )
 
 func main() {
-  g := gen.NewGenerator("song_easyjson.go")
-  g.SetPkg("music", "git.ronaksoftware.com/blip/server/pkg/music")
-  g.Add(pkg.EasyJSON_exporter_Song(nil))
-  if err := g.Run(os.Stdout); err != nil {
-    fmt.Fprintln(os.Stderr, err)
-    os.Exit(1)
-  }
+	g := gen.NewGenerator("song_easyjson.go")
+	g.SetPkg("music", "git.ronaksoftware.com/blip/server/pkg/music")
+	g.Add(pkg.EasyJSON_exporter_Song(nil))
+	if err := g.Run(os.Stdout); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }

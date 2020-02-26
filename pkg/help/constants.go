@@ -17,5 +17,6 @@ const (
 
 const (
 	// Config Keys
-	BlipShowLink = "blip_show_link"
+	ShowBlipLink  = "show_blip_link"
+	ShowShareLink = "show_share_link"
 )

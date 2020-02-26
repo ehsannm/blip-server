@@ -58,6 +58,32 @@ func SetHandler(ctx iris.Context) {
 	msg.WriteResponse(ctx, msg.CBool, msg.Bool{Success: true})
 }
 
+func UnsetHandler(ctx iris.Context) {
+	req := &UnsetDefaultConfig{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+	_, err = helpCol.UpdateOne(nil,
+		bson.M{"_id": "defaults"},
+		bson.M{"$unset": bson.M{
+			req.Key: "",
+		}},
+		options.Update(),
+	)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+
+	// reload default configs from the server
+	// FIXME:: this is not multi server
+	loadDefaultConfig()
+
+	msg.WriteResponse(ctx, msg.CBool, msg.Bool{Success: true})
+}
+
 // SetHandler is API Handler
 // Http Method: GET  /help/config
 // Returns: Config (CONFIG)
@@ -98,7 +124,8 @@ func GetHandler(ctx iris.Context) {
 		UpdateAvailable: updateAvailable,
 		UpdateForce:     updateForce,
 		StoreLink:       "",
-		ShowBlipLink:    getConfig(BlipShowLink) != "",
+		ShowBlipLink:    getConfig(ShowBlipLink) != "",
+		ShowShareLink:   getConfig(ShowShareLink) != "",
 	}
 	s, ok := ctx.Values().Get(session.CtxSession).(*session.Session)
 	if ok {

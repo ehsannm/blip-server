@@ -16,6 +16,12 @@ type SetDefaultConfig struct {
 	Value string `json:"value"`
 }
 
+// easyjson:json
+// UnsetDefaultConfig
+type UnsetDefaultConfig struct {
+	Key string `json:"key"`
+}
+
 const CConfig = "CONFIG"
 
 // easyjson:json
@@ -25,6 +31,7 @@ type Config struct {
 	UpdateForce     bool   `json:"update_force"`
 	StoreLink       string `json:"store_link"`
 	ShowBlipLink    bool   `json:"show_blip_link"`
+	ShowShareLink   bool   `json:"show_share_link"`
 	Authorized      bool   `json:"authorized"`
 	VasEnabled      bool   `json:"vas_enabled"`
 }
