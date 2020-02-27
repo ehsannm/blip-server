@@ -71,18 +71,6 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 		return nil, err
 	}
 
-	log.Debug("Local Index Search Finished",
-		zap.Strings("Terms", terms),
-		zap.Duration("Time", res.Took),
-		zap.Uint64("Total", res.Total),
-		zap.Float64("MaxScore", res.MaxScore),
-	)
-	log.Debug("Local Index Search Info",
-		zap.Int("Total", res.Status.Total),
-		zap.Int("Successful", res.Status.Successful),
-		zap.Int("Failed", res.Status.Failed),
-	)
-
 	foundSongs := make([]indexedSong, 0, len(res.Hits))
 	waitGroup := pools.AcquireWaitGroup()
 	for _, hit := range res.Hits {
@@ -101,6 +89,17 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 		}
 	}
 	waitGroup.Wait()
+	log.Debug("Local Index Search Finished",
+		zap.Strings("Terms", terms),
+		zap.Duration("Time", res.Took),
+		zap.Uint64("Total", res.Total),
+		zap.Float64("MaxScore", res.MaxScore),
+	)
+	log.Debug("Local Index Search Info",
+		zap.Int("Total", res.Status.Total),
+		zap.Int("Songs", len(foundSongs)),
+	)
+
 	sort.Slice(foundSongs, func(i, j int) bool {
 		return foundSongs[i].score > foundSongs[j].score
 	})
@@ -121,7 +120,7 @@ type searchCtx struct {
 
 func (ctx *searchCtx) job() {
 	log.Debug("SearchCtx started", zap.String("CursorID", ctx.cursorID))
-	waitGroup := sync.WaitGroup{}
+	waitGroup := &sync.WaitGroup{}
 MainLoop:
 	for r := range ctx.resChan {
 		for _, foundSong := range r.Result {
@@ -139,7 +138,7 @@ MainLoop:
 			foundSong.Artists = strings.TrimSpace(foundSong.Artists)
 			foundSong.Title = strings.TrimSpace(foundSong.Title)
 			if len(foundSong.Title) == 0 {
-				return
+				continue
 			}
 			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
 			songX, err := GetSongByUniqueKey(uniqueKey)
@@ -163,7 +162,7 @@ MainLoop:
 						zap.String("Source", r.Source),
 						zap.String("Title", foundSong.Title),
 					)
-					return
+					continue
 				}
 			} else if songX.SongStoreID == 0 {
 				// If the song has not been downloaded from source yet, update the origin url
@@ -181,7 +180,7 @@ MainLoop:
 						zap.String("Source", r.Source),
 						zap.String("Title", foundSong.Title),
 					)
-					return
+					continue
 				}
 			}
 			waitGroup.Add(1)

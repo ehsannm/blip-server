@@ -3,10 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/messages_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/extra/experiments/http.go" beforeDir="false" afterPath="$PROJECT_DIR$/extra/experiments/http.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/crawler/messages_easyjson.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/search_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,11 +203,11 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="680" y="266" key="VcsDiffUtil.ChangesDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352512114" />
-    <state x="531" y="301" width="893" height="587" key="find.popup" timestamp="1582778751402">
+    <state x="531" y="301" width="893" height="587" key="find.popup" timestamp="1582826876667">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1581412011553" />
-    <state x="531" y="301" width="893" height="587" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1582778751402" />
+    <state x="531" y="301" width="893" height="587" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1582826876667" />
     <state x="505" y="233" width="670" height="676" key="search.everywhere.popup" timestamp="1580659478878">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

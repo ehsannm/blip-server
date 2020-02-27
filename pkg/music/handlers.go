@@ -185,6 +185,13 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 	for _, artist := range foundMusic.Metadata.Music[0].Artists {
 		res.Info.Artists = append(res.Info.Artists, artist.Name)
 	}
+
+	if ce := log.Check(log.DebugLevel, "SearchByFingerprint Result"); ce != nil {
+		ce.Write(
+			zap.Int("Songs", len(songs)),
+		)
+	}
+
 	msg.WriteResponse(ctx, CSoundSearchResult, res)
 }
 
