@@ -89,19 +89,25 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 				}
 				waitGroup.Done()
 			}(songID, hit.Score)
+		} else {
+			log.Debug("Invalid Indexed SongID", zap.Error(err), zap.String("ID", hit.ID))
 		}
 	}
 	waitGroup.Wait()
-	log.Debug("Local Index Search Finished",
-		zap.Strings("Terms", terms),
-		zap.Duration("Time", res.Took),
-		zap.Uint64("Total", res.Total),
-		zap.Float64("MaxScore", res.MaxScore),
-	)
-	log.Debug("Local Index Search Info",
-		zap.Int("Total", res.Status.Total),
-		zap.Int("Songs", len(foundSongs)),
-	)
+	if ce := log.Check(log.DebugLevel, "Local Index Search Finished"); ce != nil {
+		ce.Write(
+			zap.Strings("Terms", terms),
+			zap.Duration("Time", res.Took),
+			zap.Uint64("Total", res.Total),
+			zap.Float64("MaxScore", res.MaxScore),
+		)
+	}
+	if ce := log.Check(log.DebugLevel, "Local Index Search Info"); ce != nil {
+		ce.Write(
+			zap.Int("Total", res.Status.Total),
+			zap.Int("Songs", len(foundSongs)),
+		)
+	}
 
 	sort.Slice(foundSongs, func(i, j int) bool {
 		return foundSongs[i].score > foundSongs[j].score
