@@ -49,7 +49,7 @@ func TestSong(t *testing.T) {
 			}
 		})
 		Convey("Search", func(c C) {
-			songIDs, err := music.SearchLocalIndex("song")
+			songIDs, err := music.SearchLocalIndex("song", 10)
 			c.So(err, ShouldBeNil)
 			c.So(len(songIDs), ShouldBeGreaterThan, 0)
 		})

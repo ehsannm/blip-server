@@ -50,7 +50,7 @@ func deleteFromLocalIndex(songID primitive.ObjectID) error {
 }
 
 // SearchLocalIndex
-func SearchLocalIndex(keyword string) ([]indexedSong, error) {
+func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 	qs := make([]query.Query, 0, 4)
 
 	terms := strings.Split(strings.ToLower(keyword), "+")
@@ -60,7 +60,7 @@ func SearchLocalIndex(keyword string) ([]indexedSong, error) {
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.Explain = true
-	searchRequest.Size = 10
+	searchRequest.Size = result
 	searchRequest.SortBy([]string{"-_score"})
 	res, err := songIndex.Search(searchRequest)
 	if err != nil {

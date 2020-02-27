@@ -296,6 +296,20 @@ func (b *Bucket) Find(filter interface{}, opts ...*options.GridFSFindOptions) (*
 	return b.filesColl.Find(ctx, filter, find)
 }
 
+func (b *Bucket) Exists(fileID interface{}) error {
+	ctx, cancel := deadlineContext(b.writeDeadline)
+	if cancel != nil {
+		defer cancel()
+	}
+
+	id, err := convertFileID(fileID)
+	if err != nil {
+		return err
+	}
+	res := b.filesColl.FindOne(ctx, bsonx.Doc{{Key: "_id", Value: id}})
+	return res.Err()
+}
+
 // Rename renames the stored file with the specified file ID.
 func (b *Bucket) Rename(fileID interface{}, newFilename string) error {
 	ctx, cancel := deadlineContext(b.writeDeadline)

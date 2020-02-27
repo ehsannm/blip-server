@@ -89,7 +89,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 	}
 	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
-	indexedSongs, err := SearchLocalIndex(keyword)
+	indexedSongs, err := SearchLocalIndex(keyword, 10)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
@@ -184,7 +184,7 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 	}
 	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
 	_ = StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
-	indexedSongs, err := SearchLocalIndex(keyword)
+	indexedSongs, err := SearchLocalIndex(keyword, 10)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
@@ -223,7 +223,7 @@ func SearchByTextHandler(ctx iris.Context) {
 	}
 	req.Keyword = strings.Trim(req.Keyword, "\"")
 	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
-	indexedSongs, err := SearchLocalIndex(req.Keyword)
+	indexedSongs, err := SearchLocalIndex(req.Keyword, 25)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
@@ -374,9 +374,9 @@ func DownloadHandler(ctx iris.Context) {
 	var dbReader *gridfs.DownloadStream
 	switch bucketName {
 	case store.BucketCovers:
-		dbReader, err = store.GetDownloadStream(bucketName, songX.ID, songX.CoverStoreID)
+		dbReader, err = store.GetDownloadStream(store.BucketCovers, songX.ID, songX.CoverStoreID)
 	case store.BucketSongs:
-		dbReader, err = store.GetDownloadStream(bucketName, songX.ID, songX.SongStoreID)
+		dbReader, err = store.GetDownloadStream(store.BucketSongs, songX.ID, songX.SongStoreID)
 	}
 	if err != nil {
 		log.Warn("Error On Download Song (GetDownloadStream)", zap.Error(err))
@@ -386,7 +386,10 @@ func DownloadHandler(ctx iris.Context) {
 	defer dbReader.Close()
 	_, err = store.Copy(ctx.ResponseWriter(), dbReader, ctx.ResponseWriter().Flush)
 	if err != nil {
-		log.Warn("Error On Download Song (Copy)", zap.Error(err))
+		log.Warn("Error On Download Song (Copy)",
+			zap.Error(err),
+			zap.Duration("D", time.Now().Sub(startTime)),
+		)
 		ctx.StatusCode(http.StatusServiceUnavailable)
 		return
 	}

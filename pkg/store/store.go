@@ -75,7 +75,7 @@ func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
 		return err
 	}
 
-	_, err = bucket.Find(bson.M{"_id": songID})
+	err = bucket.Exists(songID)
 	bucket.Release()
 	return err
 }
