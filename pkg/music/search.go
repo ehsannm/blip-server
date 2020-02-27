@@ -228,6 +228,7 @@ func StartSearch(cursorID string, keyword string) *searchCtx {
 		keyword:  keyword,
 		done:     make(chan struct{}, 1),
 		songChan: make(chan *Song, 100),
+		sent:     make(map[primitive.ObjectID]struct{}),
 	}
 	ctx.ctx, ctx.cancelFunc = context.WithCancel(context.Background())
 	ctx.resChan = crawler.Search(ctx.ctx, keyword)
