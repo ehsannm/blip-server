@@ -38,10 +38,10 @@ func Unsubscribe(ctx iris.Context) {
 
 }
 
-func HealthCheckHandler(ctx iris.Context) {
+func HealthCheckDbHandler(ctx iris.Context) {
 	if !healthCheckRunning {
 		healthCheckRunning = true
-		go HealthCheck()
+		go HealthCheckDB()
 	}
 }
 
@@ -51,6 +51,13 @@ func HealthCheckStatsHandler(ctx iris.Context) {
 		CoverFixed: atomic.LoadInt32(&coverFixed),
 		SongFixed:  atomic.LoadInt32(&songFixed),
 	})
+}
+
+func HealthCheckStoreHandler(ctx iris.Context) {
+	if !healthCheckRunning {
+		healthCheckRunning = true
+		go HealthCheckStore()
+	}
 }
 
 // SetVas is API handler

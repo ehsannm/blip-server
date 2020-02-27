@@ -296,6 +296,7 @@ func (b *Bucket) Find(filter interface{}, opts ...*options.GridFSFindOptions) (*
 	return b.filesColl.Find(ctx, filter, find)
 }
 
+// Exists returns nil if the file exists otherwise it returns error
 func (b *Bucket) Exists(fileID interface{}) error {
 	ctx, cancel := deadlineContext(b.writeDeadline)
 	if cancel != nil {

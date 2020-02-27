@@ -2,6 +2,7 @@ package store
 
 import (
 	"errors"
+	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/store/gridfs"
 	"github.com/gobwas/pool/pbytes"
@@ -9,7 +10,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.uber.org/zap"
 	"io"
+	"sync"
 )
 
 /*
@@ -55,7 +58,7 @@ func Delete(storeID int64) error {
 	return err
 }
 
-func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
+func FileExists(bucketName string, storeID int64, songID primitive.ObjectID) error {
 	storesMtx.RLock()
 	mongoClient := storeConns[storeID]
 	storesMtx.RUnlock()
@@ -76,6 +79,31 @@ func Exists(bucketName string, storeID int64, songID primitive.ObjectID) error {
 	}
 
 	err = bucket.Exists(songID)
+	bucket.Release()
+	return err
+}
+
+func FileDelete(bucketName string, storeID int64, songID primitive.ObjectID) error {
+	storesMtx.RLock()
+	mongoClient := storeConns[storeID]
+	storesMtx.RUnlock()
+	if mongoClient == nil {
+		return errors.New("no store exists")
+	}
+	bucket, err := gridfs.NewBucket(
+		mongoClient.Database(config.DbStore),
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		options.GridFSBucket().SetName(bucketName))
+	if err != nil {
+		return err
+	}
+
+	err = bucket.Delete(songID)
 	bucket.Release()
 	return err
 }
@@ -178,4 +206,64 @@ func Copy(dst io.Writer, src io.Reader, flushFunc func()) (written int64, err er
 		}
 	}
 	return written, err
+}
+
+// ForEachSong iterates through all the songs, this is for INTERNAL use only.
+func ForEachSong(bucketName string, storeID int64, f func(songID primitive.ObjectID) bool) error {
+	var lastID primitive.ObjectID
+	storesMtx.RLock()
+	mongoClient := storeConns[storeID]
+	storesMtx.RUnlock()
+	if mongoClient == nil {
+		return errors.New("no store exists")
+	}
+
+	bucket, err := gridfs.NewBucket(
+		mongoClient.Database(config.DbStore),
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		func(bytes []byte) []byte {
+			return bytes
+		},
+		options.GridFSBucket().SetName(bucketName))
+	if err != nil {
+		return err
+	}
+	defer bucket.Release()
+
+	cur, err := bucket.Find(bson.D{}, options.GridFSFind().SetNoCursorTimeout(true))
+	if err != nil {
+		return err
+	}
+	waitGroup := sync.WaitGroup{}
+	defer waitGroup.Wait()
+	rateLimit := make(chan struct{}, 20)
+	for {
+		for cur.Next(nil) {
+			lastID = cur.Current.Lookup("_id").ObjectID()
+			waitGroup.Add(1)
+			rateLimit <- struct{}{}
+			go func(songID primitive.ObjectID) {
+				f(songID)
+				waitGroup.Done()
+				<-rateLimit
+			}(lastID)
+		}
+		if cur.Err() == nil {
+			_ = cur.Close(nil)
+			break
+		}
+		log.Warn("Error On Cursor", zap.Error(err))
+		_ = cur.Close(nil)
+		cur, err = bucket.Find(
+			bson.M{"_id": bson.M{"$gt": lastID}},
+			options.GridFSFind().SetNoCursorTimeout(true),
+		)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

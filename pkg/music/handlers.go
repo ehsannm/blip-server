@@ -328,7 +328,7 @@ func DownloadHandler(ctx iris.Context) {
 	case store.BucketSongs:
 		downloadSong := true
 		if songX.SongStoreID != 0 {
-			err := store.Exists(store.BucketSongs, songX.SongStoreID, songX.ID)
+			err := store.FileExists(store.BucketSongs, songX.SongStoreID, songX.ID)
 			if err == nil {
 				downloadSong = false
 			}

@@ -23,7 +23,7 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, HealthCheck, HealthCheckStats, SetVasCmd, SetConfig)
+	AdminCmd.AddCommand(UnsubscribeCmd, HealthCheckDb, HealthCheckStore, HealthCheckStats, SetVasCmd, SetConfig)
 	SetVasCmd.Flags().String(FlagUserID, "", "")
 	SetVasCmd.Flags().Bool(FlagEnabled, false, "")
 	SetConfig.Flags().String(FlagKey, "", "")
@@ -50,10 +50,20 @@ var UnsubscribeCmd = &cobra.Command{
 	},
 }
 
-var HealthCheck = &cobra.Command{
-	Use: "HealthCheck",
+var HealthCheckDb = &cobra.Command{
+	Use: "HealthCheckDb",
 	Run: func(cmd *cobra.Command, args []string) {
-		_, err := sendHttp(http.MethodPost, "admin/health_check", ContentTypeJSON, nil, true)
+		_, err := sendHttp(http.MethodPost, "admin/health_check_db", ContentTypeJSON, nil, true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+var HealthCheckStore = &cobra.Command{
+	Use: "HealthCheckStore",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, err := sendHttp(http.MethodPost, "admin/health_check_store", ContentTypeJSON, nil, true)
 		if err != nil {
 			fmt.Println(err)
 			return

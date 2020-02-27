@@ -78,7 +78,8 @@ func initServer() *iris.Application {
 
 	adminParty := app.Party("/admin")
 	adminParty.Use(auth.MustHaveAccessKey, auth.MustAdmin)
-	adminParty.Post("/health_check", admin.HealthCheckHandler)
+	adminParty.Post("/health_check_db", admin.HealthCheckDbHandler)
+	adminParty.Post("/health_check_store", admin.HealthCheckStoreHandler)
 	adminParty.Get("/health_check_stats", admin.HealthCheckStatsHandler)
 	adminParty.Post("/vas", admin.SetVas)
 
