@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/genius/genius.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/search.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/search.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/music/song_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/music/song_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/store/gridfs/bucket.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/gridfs/bucket.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/store/store.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/store/store.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/admin/functions.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/admin/functions.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

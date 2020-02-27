@@ -52,6 +52,8 @@ func HealthCheck() {
 			if songStoreID != 0 {
 				atomic.AddInt32(&songFixed, 1)
 				songX.SongStoreID = songStoreID
+			} else {
+				_ = music.DeleteSong(songX.ID)
 			}
 		}
 
