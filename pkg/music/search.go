@@ -60,7 +60,7 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 	terms := strings.Split(strings.ToLower(keyword), "+")
 	for _, t := range terms {
 		t := strings.Trim(t, "()")
-		qs = append(qs, bleve.NewTermQuery(t), bleve.NewFuzzyQuery(t))
+		qs = append(qs, bleve.NewTermQuery(t), bleve.NewFuzzyQuery(t), bleve.NewMatchQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.Explain = true
