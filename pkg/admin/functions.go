@@ -54,6 +54,7 @@ func HealthCheck() {
 				songX.SongStoreID = songStoreID
 			} else {
 				_ = music.DeleteSong(songX.ID)
+				return true
 			}
 		}
 
