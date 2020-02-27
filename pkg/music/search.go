@@ -115,7 +115,7 @@ type searchCtx struct {
 	cancelFunc context.CancelFunc
 	resChan    <-chan *crawler.SearchResponse
 	done       chan struct{}
-	songChan   chan *Song
+	found      chan struct{}
 	sent       map[primitive.ObjectID]struct{}
 }
 
@@ -128,81 +128,77 @@ MainLoop:
 			if ctx.ctx.Err() != nil {
 				break MainLoop
 			}
-			waitGroup.Add(1)
-			go func(foundSong crawler.FoundSong) {
-				defer waitGroup.Done()
-				if ce := log.Check(log.DebugLevel, "Crawler Found Song"); ce != nil {
-					ce.Write(
-						zap.String("Title", foundSong.Title),
-						zap.String("Artist", foundSong.Artists),
-						zap.String("Source", r.Source),
-					)
+
+			if ce := log.Check(log.DebugLevel, "Crawler Found Song"); ce != nil {
+				ce.Write(
+					zap.String("Title", foundSong.Title),
+					zap.String("Artist", foundSong.Artists),
+					zap.String("Source", r.Source),
+				)
+			}
+			foundSong.Artists = strings.TrimSpace(foundSong.Artists)
+			foundSong.Title = strings.TrimSpace(foundSong.Title)
+			if len(foundSong.Title) == 0 {
+				return
+			}
+			uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
+			songX, err := GetSongByUniqueKey(uniqueKey)
+			if err != nil {
+				songX = &Song{
+					ID:             primitive.NilObjectID,
+					UniqueKey:      uniqueKey,
+					Title:          foundSong.Title,
+					Genre:          foundSong.Genre,
+					Lyrics:         foundSong.Lyrics,
+					Artists:        foundSong.Artists,
+					SongStoreID:    0,
+					OriginCoverUrl: foundSong.CoverUrl,
+					OriginSongUrl:  foundSong.SongUrl,
+					Source:         r.Source,
 				}
-				foundSong.Artists = strings.TrimSpace(foundSong.Artists)
-				foundSong.Title = strings.TrimSpace(foundSong.Title)
-				if len(foundSong.Title) == 0 {
+				_, err = SaveSong(songX)
+				if err != nil {
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Source", r.Source),
+						zap.String("Title", foundSong.Title),
+					)
 					return
 				}
-				uniqueKey := GenerateUniqueKey(foundSong.Title, foundSong.Artists)
-				songX, err := GetSongByUniqueKey(uniqueKey)
+			} else if songX.SongStoreID == 0 {
+				// If the song has not been downloaded from source yet, update the origin url
+				songX.Artists = foundSong.Artists
+				songX.Title = foundSong.Title
+				songX.Genre = foundSong.Genre
+				songX.Lyrics = foundSong.Lyrics
+				songX.OriginSongUrl = foundSong.SongUrl
+				songX.OriginCoverUrl = foundSong.CoverUrl
+				songX.Source = r.Source
+				_, err = SaveSong(songX)
 				if err != nil {
-					songX = &Song{
-						ID:             primitive.NilObjectID,
-						UniqueKey:      uniqueKey,
-						Title:          foundSong.Title,
-						Genre:          foundSong.Genre,
-						Lyrics:         foundSong.Lyrics,
-						Artists:        foundSong.Artists,
-						SongStoreID:    0,
-						OriginCoverUrl: foundSong.CoverUrl,
-						OriginSongUrl:  foundSong.SongUrl,
-						Source:         r.Source,
-					}
-					_, err = SaveSong(songX)
-					if err != nil {
-						log.Warn("Error On Save Search Result",
-							zap.Error(err),
-							zap.String("Source", r.Source),
-							zap.String("Title", foundSong.Title),
-						)
-						return
-					}
-				} else if songX.SongStoreID == 0 {
-					// If the song has not been downloaded from source yet, update the origin url
-					songX.Artists = foundSong.Artists
-					songX.Title = foundSong.Title
-					songX.Genre = foundSong.Genre
-					songX.Lyrics = foundSong.Lyrics
-					songX.OriginSongUrl = foundSong.SongUrl
-					songX.OriginCoverUrl = foundSong.CoverUrl
-					songX.Source = r.Source
-					_, err = SaveSong(songX)
-					if err != nil {
-						log.Warn("Error On Save Search Result",
-							zap.Error(err),
-							zap.String("Source", r.Source),
-							zap.String("Title", foundSong.Title),
-						)
-						return
-					}
+					log.Warn("Error On Save Search Result",
+						zap.Error(err),
+						zap.String("Source", r.Source),
+						zap.String("Title", foundSong.Title),
+					)
+					return
 				}
+			}
+			waitGroup.Add(1)
+			go func(songX *Song) {
 				updateLocalIndex(songX)
-				select {
-				case ctx.songChan <- songX:
-				default:
-					log.Warn("SearchCtx Could not write to song channel")
-				}
-			}(foundSong)
+				waitGroup.Done()
+			}(songX)
 		}
 	}
-	waitGroup.Wait()
-	close(ctx.songChan)
 	ctx.done <- struct{}{}
+	waitGroup.Wait()
+	close(ctx.found)
 	log.Debug("SearchCtx done", zap.String("CursorID", ctx.cursorID))
 }
 
-func (ctx *searchCtx) SongChan() <-chan *Song {
-	return ctx.songChan
+func (ctx *searchCtx) SongChan() <-chan struct{} {
+	return ctx.found
 }
 
 func (ctx *searchCtx) ShouldSend(songID primitive.ObjectID) bool {
@@ -233,7 +229,7 @@ func StartSearch(cursorID string, keyword string) *searchCtx {
 		cursorID: cursorID,
 		keyword:  keyword,
 		done:     make(chan struct{}, 1),
-		songChan: make(chan *Song, 100),
+		found:    make(chan struct{}),
 		sent:     make(map[primitive.ObjectID]struct{}),
 	}
 	ctx.ctx, ctx.cancelFunc = context.WithCancel(context.Background())

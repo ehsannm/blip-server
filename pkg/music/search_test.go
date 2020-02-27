@@ -31,8 +31,8 @@ func TestSearch(t *testing.T) {
 			}
 		})
 		Convey("Resume Search (After Consume All)", func(c C) {
-			songChan := music.ResumeSearch(cursorID)
-			c.So(songChan, ShouldBeNil)
+			searchCtx := music.ResumeSearch(cursorID)
+			c.So(searchCtx, ShouldBeNil)
 		})
 		Convey("Start Search (Partial Consume)", func(c C) {
 			searchCtx := music.StartSearch(cursorID, keyword)

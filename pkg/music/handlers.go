@@ -240,14 +240,10 @@ func SearchByCursorHandler(ctx iris.Context) {
 MainLoop:
 	for {
 		select {
-		case _, ok := <-searchCtx.songChan:
+		case _, ok := <-searchCtx.found:
 			if !ok {
 				break MainLoop
 			}
-			if !t.Stop() {
-				<-t.C
-			}
-			t.Reset(time.Second) // WaitAfter
 		case <-t.C:
 			break MainLoop
 		}
