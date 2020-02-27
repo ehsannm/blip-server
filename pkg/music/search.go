@@ -120,6 +120,7 @@ type searchCtx struct {
 
 func (ctx *searchCtx) job() {
 	log.Debug("SearchCtx started", zap.String("CursorID", ctx.cursorID))
+	startTime := time.Now()
 	waitGroup := &sync.WaitGroup{}
 MainLoop:
 	for r := range ctx.resChan {
@@ -193,7 +194,10 @@ MainLoop:
 	ctx.done <- struct{}{}
 	waitGroup.Wait()
 	close(ctx.found)
-	log.Debug("SearchCtx done", zap.String("CursorID", ctx.cursorID))
+	log.Debug("SearchCtx done",
+		zap.String("CursorID", ctx.cursorID),
+		zap.Duration("D", time.Now().Sub(startTime)),
+	)
 }
 
 func (ctx *searchCtx) SongChan() <-chan struct{} {
