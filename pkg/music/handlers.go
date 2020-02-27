@@ -88,7 +88,7 @@ func SearchBySoundHandler(ctx iris.Context) {
 		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
 	}
 	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
-	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
+	searchCtx := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
 	indexedSongs, err := SearchLocalIndex(keyword, 10)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
@@ -97,31 +97,11 @@ func SearchBySoundHandler(ctx iris.Context) {
 	}
 	songs := make([]*Song, 0, len(indexedSongs))
 	for idx := range indexedSongs {
-		songs = append(songs, indexedSongs[idx].song)
-	}
-
-	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-		return
-	}
-	if len(songs) == 0 {
-		songX, ok := <-songChan
-		if ok {
-			songs = append(songs, songX)
-		MainLoop:
-			for {
-				select {
-				case songX, ok := <-songChan:
-					if !ok {
-						break MainLoop
-					}
-					songs = append(songs, songX)
-				default:
-
-				}
-			}
+		if searchCtx.ShouldSend(indexedSongs[idx].song.ID) {
+			songs = append(songs, indexedSongs[idx].song)
 		}
 	}
+
 	res := &SoundSearchResult{
 		Songs: songs,
 	}
@@ -183,7 +163,7 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 		keyword = foundMusic.Metadata.Music[0].Artists[0].Name
 	}
 	keyword = fmt.Sprintf("%s+%s", keyword, foundMusic.Metadata.Music[0].Title)
-	_ = StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
+	searchCtx := StartSearch(ctx.GetHeader(session.HdrSessionID), keyword)
 	indexedSongs, err := SearchLocalIndex(keyword, 10)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
@@ -192,7 +172,9 @@ func SearchByFingerprintHandler(ctx iris.Context) {
 	}
 	songs := make([]*Song, 0, len(indexedSongs))
 	for idx := range indexedSongs {
-		songs = append(songs, indexedSongs[idx].song)
+		if searchCtx.ShouldSend(indexedSongs[idx].song.ID) {
+			songs = append(songs, indexedSongs[idx].song)
+		}
 	}
 
 	res := &SoundSearchResult{
@@ -222,7 +204,7 @@ func SearchByTextHandler(ctx iris.Context) {
 		return
 	}
 	req.Keyword = strings.Trim(req.Keyword, "\"")
-	songChan := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
+	searchCtx := StartSearch(ctx.GetHeader(session.HdrSessionID), req.Keyword)
 	indexedSongs, err := SearchLocalIndex(req.Keyword, 25)
 	if err != nil {
 		log.Warn("Error On LocalIndex", zap.Error(err))
@@ -231,30 +213,11 @@ func SearchByTextHandler(ctx iris.Context) {
 	}
 	songs := make([]*Song, 0, len(indexedSongs))
 	for idx := range indexedSongs {
-		songs = append(songs, indexedSongs[idx].song)
-	}
-	if err != nil {
-		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
-		return
-	}
-	if len(songs) == 0 {
-		songX, ok := <-songChan
-		if ok {
-			songs = append(songs, songX)
-		MainLoop:
-			for {
-				select {
-				case songX, ok := <-songChan:
-					if !ok {
-						break MainLoop
-					}
-					songs = append(songs, songX)
-				default:
-
-				}
-			}
+		if searchCtx.ShouldSend(indexedSongs[idx].song.ID) {
+			songs = append(songs, indexedSongs[idx].song)
 		}
 	}
+
 	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
 		Songs: songs,
 	})
@@ -268,21 +231,19 @@ func SearchByTextHandler(ctx iris.Context) {
 // Possible Errors:
 //	1. 208: ALREADY_SERVED
 func SearchByCursorHandler(ctx iris.Context) {
-	songChan := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
-	if songChan == nil {
+	searchCtx := ResumeSearch(ctx.GetHeader(session.HdrSessionID))
+	if searchCtx == nil {
 		msg.WriteError(ctx, http.StatusAlreadyReported, msg.ErrAlreadyServed)
 		return
 	}
 	t := time.NewTimer(time.Second * 5) // Wait
-	songs := make([]*Song, 0, 100)
 MainLoop:
 	for {
 		select {
-		case songX, ok := <-songChan:
+		case _, ok := <-searchCtx.songChan:
 			if !ok {
 				break MainLoop
 			}
-			songs = append(songs, songX)
 			if !t.Stop() {
 				<-t.C
 			}
@@ -291,6 +252,20 @@ MainLoop:
 			break MainLoop
 		}
 	}
+
+	indexedSongs, err := SearchLocalIndex(searchCtx.keyword, 100)
+	if err != nil {
+		log.Warn("Error On LocalIndex", zap.Error(err))
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		return
+	}
+	songs := make([]*Song, 0, len(indexedSongs))
+	for idx := range indexedSongs {
+		if searchCtx.ShouldSend(indexedSongs[idx].song.ID) {
+			songs = append(songs, indexedSongs[idx].song)
+		}
+	}
+
 	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
 		Songs: songs,
 	})

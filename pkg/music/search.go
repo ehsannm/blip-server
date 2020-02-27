@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -39,10 +40,13 @@ var songIndexer = flusher.New(1000, 1, time.Millisecond, func(items []flusher.En
 	if err != nil {
 		log.Warn("Error On Indexing Song", zap.Error(err))
 	}
+	for _, item := range items {
+		item.Callback(nil)
+	}
 })
 
 func updateLocalIndex(s *Song) {
-	songIndexer.Enter(s, nil)
+	_ = songIndexer.EnterWithResult(s, nil)
 }
 
 func deleteFromLocalIndex(songID primitive.ObjectID) error {
@@ -104,12 +108,15 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 }
 
 type searchCtx struct {
+	sync.RWMutex
+	keyword    string
 	cursorID   string
 	ctx        context.Context
 	cancelFunc context.CancelFunc
 	resChan    <-chan *crawler.SearchResponse
 	done       chan struct{}
 	songChan   chan *Song
+	sent       map[primitive.ObjectID]struct{}
 }
 
 func (ctx *searchCtx) job() {
@@ -188,9 +195,26 @@ MainLoop:
 	log.Debug("SearchCtx done", zap.String("CursorID", ctx.cursorID))
 }
 
+func (ctx *searchCtx) SongChan() <-chan *Song {
+	return ctx.songChan
+}
+
+func (ctx *searchCtx) ShouldSend(songID primitive.ObjectID) bool {
+	ctx.RLock()
+	_, ok := ctx.sent[songID]
+	ctx.RUnlock()
+	if ok {
+		return false
+	}
+	ctx.Lock()
+	ctx.sent[songID] = struct{}{}
+	ctx.Unlock()
+	return true
+}
+
 // StartSearch creates a new context and send the request to all the crawlers and waits for them to finish. If a context
 // with the same id exists, we first cancel the old one and create a new context with new 'keyword'
-func StartSearch(cursorID string, keyword string) <-chan *Song {
+func StartSearch(cursorID string, keyword string) *searchCtx {
 	ctx := getSearchCtx(cursorID)
 	if ctx != nil {
 		ctx.cancelFunc()
@@ -201,6 +225,7 @@ func StartSearch(cursorID string, keyword string) <-chan *Song {
 
 	ctx = &searchCtx{
 		cursorID: cursorID,
+		keyword:  keyword,
 		done:     make(chan struct{}, 1),
 		songChan: make(chan *Song, 100),
 	}
@@ -208,18 +233,18 @@ func StartSearch(cursorID string, keyword string) <-chan *Song {
 	ctx.resChan = crawler.Search(ctx.ctx, keyword)
 	saveSearchCtx(ctx)
 	go ctx.job()
-	return ctx.songChan
+	return ctx
 }
 
 // ResumeSearch checks if a context with 'cursorID' has been already exists and return the song channel, otherwise it returns
 // nil.
-func ResumeSearch(cursorID string) <-chan *Song {
+func ResumeSearch(cursorID string) *searchCtx {
 	ctx := getSearchCtx(cursorID)
 	if ctx == nil {
 		return nil
 	}
 
-	return ctx.songChan
+	return ctx
 }
 
 func saveSearchCtx(ctx *searchCtx) {

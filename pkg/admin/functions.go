@@ -138,7 +138,7 @@ func HealthCheckStore() {
 			log.Warn("Error On FileDelete", zap.Error(err))
 			return false
 		}
-		atomic.AddInt32(&songFixed, 1)
+		atomic.AddInt32(&coverFixed, 1)
 		return true
 	})
 	if err != nil {

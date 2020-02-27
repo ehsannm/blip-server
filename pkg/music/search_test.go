@@ -25,8 +25,8 @@ func TestSearch(t *testing.T) {
 	keyword := "Song 1"
 	Convey("Search By Text", t, func(c C) {
 		Convey("Start Search (Consume All)", func(c C) {
-			songChan := music.StartSearch(cursorID, keyword)
-			for s := range songChan {
+			searchCtx := music.StartSearch(cursorID, keyword)
+			for s := range searchCtx.SongChan() {
 				c.So(s, ShouldNotBeNil)
 			}
 		})
@@ -35,15 +35,15 @@ func TestSearch(t *testing.T) {
 			c.So(songChan, ShouldBeNil)
 		})
 		Convey("Start Search (Partial Consume)", func(c C) {
-			songChan := music.StartSearch(cursorID, keyword)
-			c.So(songChan, ShouldNotBeNil)
-			songX := <-songChan
+			searchCtx := music.StartSearch(cursorID, keyword)
+			c.So(searchCtx, ShouldNotBeNil)
+			songX := <-searchCtx.SongChan()
 			c.So(songX, ShouldNotBeNil)
 		})
 		Convey("Resume Search (After Partial Consume)", func(c C) {
-			songChan := music.ResumeSearch(cursorID)
-			c.So(songChan, ShouldNotBeNil)
-			for s := range songChan {
+			searchCtx := music.ResumeSearch(cursorID)
+			c.So(searchCtx, ShouldNotBeNil)
+			for s := range searchCtx.SongChan() {
 				c.So(s, ShouldNotBeNil)
 			}
 		})
