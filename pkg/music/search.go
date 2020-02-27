@@ -60,7 +60,7 @@ func SearchLocalIndex(keyword string, result int) ([]indexedSong, error) {
 	terms := strings.Split(strings.ToLower(keyword), "+")
 	for _, t := range terms {
 		t := strings.Trim(t, "()")
-		qs = append(qs, bleve.NewTermQuery(t))
+		qs = append(qs, bleve.NewTermQuery(t), bleve.NewFuzzyQuery(t))
 	}
 	searchRequest := bleve.NewSearchRequest(bleve.NewDisjunctionQuery(qs...))
 	searchRequest.Explain = true
@@ -165,7 +165,7 @@ MainLoop:
 					)
 					continue
 				}
-			} else if songX.SongStoreID == 0 {
+			} else if songX.SongStoreID == 0 && songX.CoverStoreID == 0 {
 				// If the song has not been downloaded from source yet, update the origin url
 				songX.Artists = foundSong.Artists
 				songX.Title = foundSong.Title
