@@ -307,7 +307,10 @@ func (b *Bucket) Exists(fileID interface{}) error {
 		return err
 	}
 	res := b.filesColl.FindOne(ctx, bsonx.Doc{{Key: "_id", Value: id}})
-	return res.Err()
+	if res.Err() == mongo.ErrNoDocuments {
+		return mongo.ErrNoDocuments
+	}
+	return nil
 }
 
 // Rename renames the stored file with the specified file ID.
