@@ -163,7 +163,6 @@ func FeedbackHandler(ctx iris.Context) {
 			zap.String("UserID", s.UserID))
 	}
 
-
 	_, err = feedbackCol.InsertOne(nil,
 		bson.M{
 			"txt":     req.Text,

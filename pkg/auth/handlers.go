@@ -365,7 +365,10 @@ func LoginHandler(ctx iris.Context) {
 			return
 		}
 		switch vasCode {
-		case saba.SuccessfulCode, saba.SubscriptionAlreadyExists:
+		case saba.SuccessfulCode:
+		case saba.SubscriptionAlreadyExists:
+			u.VasPaid = true
+			_ = user.Save(u)
 		default:
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(saba.Codes[vasCode]))
 			return
@@ -429,6 +432,7 @@ func RegisterHandler(ctx iris.Context) {
 	}
 
 	var otpID, phoneCode, phoneCodeHash string
+	var vasPaid bool
 	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
 		log.Warn("Error On ReadFromCache", zap.Error(err))
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromCache)
@@ -448,6 +452,7 @@ func RegisterHandler(ctx iris.Context) {
 		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneCodeHashNotValid)
 		return
 	}
+
 	if otpID != "" {
 		vasCode, err := saba.Confirm(req.Phone, req.PhoneCode, otpID)
 		if err != nil {
@@ -455,7 +460,10 @@ func RegisterHandler(ctx iris.Context) {
 			return
 		}
 		switch vasCode {
-		case saba.SuccessfulCode, saba.SubscriptionAlreadyExists:
+		case saba.SuccessfulCode:
+			vasPaid = true
+		case saba.SubscriptionAlreadyExists:
+			vasPaid = true
 		default:
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(saba.Codes[vasCode]))
 			return
@@ -487,6 +495,7 @@ func RegisterHandler(ctx iris.Context) {
 		Email:     "",
 		CreatedOn: timeNow,
 		Disabled:  false,
+		VasPaid:   vasPaid,
 	})
 	if err != nil {
 		u, _ := user.GetByPhone(req.Phone)
