@@ -3,7 +3,6 @@ package saba
 import (
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 
 	"github.com/pkg/errors"
@@ -62,7 +61,6 @@ func Subscribe(phone string) (*SubscribeResponse, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -92,7 +90,6 @@ func Unsubscribe(phone string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 
@@ -123,7 +120,6 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 		ce.Write(
 			zap.String("Code", sResp.StatusCode),
 			zap.String("Status", sResp.Status),
-			zap.String("Res", tools.ByteToStr(httpBytes)),
 		)
 	}
 
