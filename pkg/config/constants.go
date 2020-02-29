@@ -13,17 +13,18 @@ import "time"
 
 // MongoDB Collections
 const (
-	DbMain     = "blip"
-	DbStore    = "blip-store"
-	ColAuth    = "auth"
-	ColToken   = "token"
-	ColUser    = "user"
-	ColSession = "session"
-	ColLogVas  = "log.vas"
-	ColSong    = "song"
-	ColCrawler = "crawler"
-	ColStore   = "store"
-	ColHelp    = "help"
+	DbMain      = "blip"
+	DbStore     = "blip-store"
+	ColAuth     = "auth"
+	ColToken    = "token"
+	ColUser     = "user"
+	ColSession  = "session"
+	ColLogVas   = "log.vas"
+	ColSong     = "song"
+	ColCrawler  = "crawler"
+	ColStore    = "store"
+	ColHelp     = "help"
+	ColFeedback = "feedback"
 )
 
 // Redis Keys

@@ -17,11 +17,13 @@ import (
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson messages.go
 var (
-	helpCol *mongo.Collection
+	helpCol     *mongo.Collection
+	feedbackCol *mongo.Collection
 )
 
 func InitMongo(c *mongo.Client) {
 	helpCol = c.Database(config.DbMain).Collection(config.ColHelp)
+	feedbackCol = c.Database(config.DbMain).Collection(config.ColFeedback)
 }
 
 func Init() {

@@ -58,6 +58,11 @@ func SetHandler(ctx iris.Context) {
 	msg.WriteResponse(ctx, msg.CBool, msg.Bool{Success: true})
 }
 
+// UnsetHandler is API Handler
+// Http Method: DELETE /help/config
+// Inputs:
+// Possible Errors:
+//	1.
 func UnsetHandler(ctx iris.Context) {
 	req := &UnsetDefaultConfig{}
 	err := ctx.ReadJSON(req)
@@ -137,4 +142,33 @@ func GetHandler(ctx iris.Context) {
 	}
 
 	msg.WriteResponse(ctx, CConfig, res)
+}
+
+// FeedbackHandler is API Handler
+// Http Method: POST /help/feedback
+// Returns: Bool (BOOL)
+// Possible Errors:
+//	1. 500: WRITE_TO_DB
+//	2. 400: CANNOT_UNMARSHAL_JSON
+func FeedbackHandler(ctx iris.Context) {
+	req := &Feedback{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+	s, _ := ctx.Values().Get(session.CtxSession).(session.Session)
+
+	_, err = feedbackCol.InsertOne(nil,
+		bson.M{
+			"txt":     req.Text,
+			"rate":    req.Rate,
+			"user_id": s.UserID,
+		},
+	)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToDb)
+		return
+	}
+
 }

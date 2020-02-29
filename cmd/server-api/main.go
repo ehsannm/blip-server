@@ -101,6 +101,7 @@ func initServer() *iris.Application {
 	helpParty.Post("/config", auth.MustAdmin, help.SetHandler)
 	helpParty.Delete("/config", auth.MustAdmin, help.UnsetHandler)
 	helpParty.Get("/config", session.MustHaveSession, help.GetHandler)
+	helpParty.Post("/feedback", session.MustHaveSession, help.FeedbackHandler)
 
 	storeParty := app.Party("/store")
 	storeParty.Use(auth.MustHaveAccessKey)

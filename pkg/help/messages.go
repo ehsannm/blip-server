@@ -35,3 +35,10 @@ type Config struct {
 	Authorized      bool   `json:"authorized"`
 	VasEnabled      bool   `json:"vas_enabled"`
 }
+
+// easyjson:json
+// Feedback
+type Feedback struct {
+	Text string `json:"text"`
+	Rate int    `json:"rate"`
+}

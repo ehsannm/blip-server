@@ -156,7 +156,80 @@ func (v *SetDefaultConfig) UnmarshalJSON(data []byte) error {
 func (v *SetDefaultConfig) UnmarshalEasyJSON(l *jlexer.Lexer) {
 	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp1(l, v)
 }
-func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(in *jlexer.Lexer, out *Config) {
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(in *jlexer.Lexer, out *Feedback) {
+	isTopLevel := in.IsStart()
+	if in.IsNull() {
+		if isTopLevel {
+			in.Consumed()
+		}
+		in.Skip()
+		return
+	}
+	in.Delim('{')
+	for !in.IsDelim('}') {
+		key := in.UnsafeString()
+		in.WantColon()
+		if in.IsNull() {
+			in.Skip()
+			in.WantComma()
+			continue
+		}
+		switch key {
+		case "text":
+			out.Text = string(in.String())
+		case "rate":
+			out.Rate = int(in.Int())
+		default:
+			in.SkipRecursive()
+		}
+		in.WantComma()
+	}
+	in.Delim('}')
+	if isTopLevel {
+		in.Consumed()
+	}
+}
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(out *jwriter.Writer, in Feedback) {
+	out.RawByte('{')
+	first := true
+	_ = first
+	{
+		const prefix string = ",\"text\":"
+		out.RawString(prefix[1:])
+		out.String(string(in.Text))
+	}
+	{
+		const prefix string = ",\"rate\":"
+		out.RawString(prefix)
+		out.Int(int(in.Rate))
+	}
+	out.RawByte('}')
+}
+
+// MarshalJSON supports json.Marshaler interface
+func (v Feedback) MarshalJSON() ([]byte, error) {
+	w := jwriter.Writer{}
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(&w, v)
+	return w.Buffer.BuildBytes(), w.Error
+}
+
+// MarshalEasyJSON supports easyjson.Marshaler interface
+func (v Feedback) MarshalEasyJSON(w *jwriter.Writer) {
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(w, v)
+}
+
+// UnmarshalJSON supports json.Unmarshaler interface
+func (v *Feedback) UnmarshalJSON(data []byte) error {
+	r := jlexer.Lexer{Data: data}
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(&r, v)
+	return r.Error()
+}
+
+// UnmarshalEasyJSON supports easyjson.Unmarshaler interface
+func (v *Feedback) UnmarshalEasyJSON(l *jlexer.Lexer) {
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(l, v)
+}
+func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp3(in *jlexer.Lexer, out *Config) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -199,7 +272,7 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(in *jlexer.Lexe
 		in.Consumed()
 	}
 }
-func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(out *jwriter.Writer, in Config) {
+func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp3(out *jwriter.Writer, in Config) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -244,23 +317,23 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(out *jwriter.Wr
 // MarshalJSON supports json.Marshaler interface
 func (v Config) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(&w, v)
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp3(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Config) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp2(w, v)
+	easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp3(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Config) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(&r, v)
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp3(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Config) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp2(l, v)
+	easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp3(l, v)
 }
