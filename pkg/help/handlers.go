@@ -96,7 +96,7 @@ func UnsetHandler(ctx iris.Context) {
 //	1. 400: CANNOT_UNMARSHAL_JSON
 //	2. 500: WRITE_TO_DB
 func GetHandler(ctx iris.Context) {
-	clientAppVer := ctx.GetHeader(HdrAppVersion)
+	clientAppVer := fmt.Sprintf("v%s", strings.TrimLeft(ctx.GetHeader(HdrAppVersion), "v"))
 	clientPlatform := strings.ToLower(ctx.GetHeader(HdrPlatform))
 	currAppVersion := getConfig(fmt.Sprintf("%s_%s_cur",
 		ctx.Values().GetString(auth.CtxClientName),
