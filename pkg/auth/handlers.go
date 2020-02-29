@@ -338,6 +338,11 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
+	u, err := user.GetByPhone(req.Phone)
+	if err != nil || u == nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
+		return
+	}
 	var otpID, phoneCode, phoneCodeHash string
 	if v, err := redisCache.GetString(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone)); err != nil {
 		log.Warn("Error On ReadFromCache", zap.Error(err))
@@ -371,11 +376,7 @@ func LoginHandler(ctx iris.Context) {
 	}
 
 	appName := ctx.Values().GetString(CtxClientName)
-	u, err := user.GetByPhone(req.Phone)
-	if err != nil {
-		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrPhoneNotValid)
-		return
-	}
+
 	err = session.Remove(u.ID, appName)
 	if err != nil {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrReadFromDb)
