@@ -158,6 +158,11 @@ func FeedbackHandler(ctx iris.Context) {
 		return
 	}
 	s, _ := ctx.Values().Get(session.CtxSession).(session.Session)
+	if ce := log.Check(log.DebugLevel, "Feedback Received"); ce != nil {
+		ce.Write(
+			zap.String("UserID", s.UserID))
+	}
+
 
 	_, err = feedbackCol.InsertOne(nil,
 		bson.M{
