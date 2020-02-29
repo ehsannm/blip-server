@@ -23,11 +23,12 @@ import (
 
 func init() {
 	RootCmd.AddCommand(AdminCmd)
-	AdminCmd.AddCommand(UnsubscribeCmd, HealthCheckDb, HealthCheckStore, HealthCheckStats, SetVasCmd, SetConfig)
+	AdminCmd.AddCommand(UnsubscribeCmd, HealthCheckDb, HealthCheckStore, HealthCheckStats, SetVasCmd, SetConfig, DeleteConfig)
 	SetVasCmd.Flags().String(FlagUserID, "", "")
 	SetVasCmd.Flags().Bool(FlagEnabled, false, "")
 	SetConfig.Flags().String(FlagKey, "", "")
 	SetConfig.Flags().String(FlagValue, "", "")
+	DeleteConfig.Flags().String(FlagKey, "", "")
 }
 
 var AdminCmd = &cobra.Command{
@@ -115,6 +116,21 @@ var SetConfig = &cobra.Command{
 		}
 		reqBytes, _ := req.MarshalJSON()
 		_, err := sendHttp(http.MethodPost, "help/config", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+	},
+}
+
+var DeleteConfig = &cobra.Command{
+	Use: "DeleteConfig",
+	Run: func(cmd *cobra.Command, args []string) {
+		req := help.UnsetDefaultConfig{
+			Key:   cmd.Flag(FlagKey).Value.String(),
+		}
+		reqBytes, _ := req.MarshalJSON()
+		_, err := sendHttp(http.MethodDelete, "help/config", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
 		if err != nil {
 			fmt.Println(err)
 			return

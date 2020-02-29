@@ -451,7 +451,9 @@ func RegisterHandler(ctx iris.Context) {
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(err.Error()))
 			return
 		}
-		if vasCode != saba.SuccessfulCode {
+		switch vasCode {
+		case saba.SuccessfulCode, saba.SubscriptionAlreadyExists:
+		default:
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Item(saba.Codes[vasCode]))
 			return
 		}

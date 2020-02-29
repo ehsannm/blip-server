@@ -114,7 +114,7 @@ func Confirm(phone, phoneCode string, otpID string) (string, error) {
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
 	_ = httpResp.Body.Close()
 
-	sResp := new(ConfirmResponse)
+	sResp := &ConfirmResponse{}
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
 		return "", errors.Wrap(err, "Error In Unmarshal Response")

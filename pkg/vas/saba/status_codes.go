@@ -11,6 +11,7 @@ package saba
 
 const (
 	SuccessfulCode = "SC000"
+	SubscriptionAlreadyExists = "SC012"
 )
 
 var Codes = map[string]string{
