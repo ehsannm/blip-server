@@ -128,7 +128,7 @@ func GetHandler(ctx iris.Context) {
 	res := &Config{
 		UpdateAvailable: updateAvailable,
 		UpdateForce:     updateForce,
-		StoreLink:       "",
+		StoreLink:       getConfig(StoreLink),
 		ShowBlipLink:    getConfig(ShowBlipLink) != "",
 		ShowShareLink:   getConfig(ShowShareLink) != "",
 	}
@@ -171,4 +171,5 @@ func FeedbackHandler(ctx iris.Context) {
 		return
 	}
 
+	msg.WriteResponse(ctx, msg.CBool, msg.Bool{Success: true})
 }
