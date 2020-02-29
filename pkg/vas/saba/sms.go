@@ -52,7 +52,7 @@ func Subscribe(phone string) (*SubscribeResponse, error) {
 	httpBytes, _ := ioutil.ReadAll(httpResp.Body)
 	_ = httpResp.Body.Close()
 
-	sResp := new(SubscribeResponse)
+	sResp := &SubscribeResponse{}
 	err = sResp.UnmarshalJSON(httpBytes)
 	if err != nil {
 		return nil, err

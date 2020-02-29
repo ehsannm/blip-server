@@ -39,14 +39,14 @@ func completer(d prompt.Document) []prompt.Suggest {
 	currWord := d.GetWordBeforeCursor()
 	if strings.HasPrefix(currWord, "--") {
 		// Search in Flags
-		RootCmd.PersistentFlags().VisitAll(func(flag *pflag.Flag) {
-			if strings.HasPrefix(flag.Name, currWord[2:]) {
-				suggests = append(suggests, prompt.Suggest{
-					Text:        fmt.Sprintf("--%s", flag.Name),
-					Description: flag.Usage,
-				})
-			}
-		})
+		// RootCmd.PersistentFlags().VisitAll(func(flag *pflag.Flag) {
+		// 	if strings.HasPrefix(flag.Name, currWord[2:]) {
+		// 		suggests = append(suggests, prompt.Suggest{
+		// 			Text:        fmt.Sprintf("--%s", flag.Name),
+		// 			Description: flag.Usage,
+		// 		})
+		// 	}
+		// })
 		currCmd.Flags().VisitAll(func(flag *pflag.Flag) {
 			if strings.HasPrefix(flag.Name, currWord[2:]) {
 				suggests = append(suggests, prompt.Suggest{

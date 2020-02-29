@@ -13,7 +13,6 @@ import (
 func init() {
 	RootCmd.AddCommand(AuthCmd)
 	AuthCmd.AddCommand(SendCodeCmd, LoginCmd, RegisterCmd, CreateAccessKeyCmd)
-
 	AuthCmd.PersistentFlags().String(FlagPhone, "", "")
 	AuthCmd.PersistentFlags().String(FlagPhoneCode, "", "")
 	AuthCmd.PersistentFlags().String(FlagPhoneCodeHash, "", "")

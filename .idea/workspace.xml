@@ -3,12 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/help/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/cmd_auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/cmd_auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/cli-blip/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/cli-blip/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/saba/sms.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/saba/sms.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,16 +114,7 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@4b8d2ed3" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Blip Store 101" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Blip Store 101" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@3fd89529" type="9fbbdea:ServiceModel$ServiceNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@3e7f5027" type="9fbbdea:ServiceModel$ServiceNode" />
               </path>
             </expand>
             <select />
@@ -177,26 +165,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582871046353">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582976212647">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582871046353" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582871046352">
+    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582976212647" />
+    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582976212646">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582871046352" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582871046351">
+    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582976212646" />
+    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582976212645">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582871046351" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582871046352">
+    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582976212645" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582976212647">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582871046352" />
+    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582976212646" />
     <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -205,11 +193,11 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="680" y="266" key="VcsDiffUtil.ChangesDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352512114" />
-    <state x="531" y="301" width="893" height="587" key="find.popup" timestamp="1582826876667">
+    <state x="531" y="301" width="893" height="587" key="find.popup" timestamp="1582979147195">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state x="498" y="282" width="837" height="550" key="find.popup/0.0.1680.1050@0.0.1680.1050" timestamp="1581412011553" />
-    <state x="531" y="301" width="893" height="587" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1582826876667" />
+    <state x="531" y="301" width="893" height="587" key="find.popup/0.0.1792.1120@0.0.1792.1120" timestamp="1582979147195" />
     <state x="539" y="249" width="715" height="722" key="search.everywhere.popup" timestamp="1582974788718">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
