@@ -60,6 +60,10 @@ func HealthCheckStoreHandler(ctx iris.Context) {
 	}
 }
 
+func CreateUser(ctx iris.Context) {
+
+}
+
 // SetVas is API handler
 // API: /admin/vas
 // Http Method: POST

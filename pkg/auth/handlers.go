@@ -311,9 +311,10 @@ func sendCodeMagicNumber(ctx iris.Context, magicPhone string) {
 		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrWriteToCache)
 		return
 	}
+	u, _ := user.GetByPhone(magicPhone)
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 		PhoneCodeHash: phoneCodeHash,
-		Registered:    true,
+		Registered:    u != nil,
 	})
 }
 

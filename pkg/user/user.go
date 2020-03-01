@@ -100,3 +100,4 @@ func GetByPhone(phone string) (*User, error) {
 	}
 	return user, nil
 }
+
