@@ -350,6 +350,10 @@ func LoginHandler(ctx iris.Context) {
 		return
 	} else {
 		verifyParams := strings.Split(v, "|")
+		if len(verifyParams) != 3 {
+			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrCorruptData)
+			return
+		}
 		phoneCodeHash = verifyParams[0]
 		otpID = verifyParams[1]
 		phoneCode = verifyParams[2]
