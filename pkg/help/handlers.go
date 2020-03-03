@@ -146,6 +146,9 @@ func GetHandler(ctx iris.Context) {
 
 // FeedbackHandler is API Handler
 // Http Method: POST /help/feedback
+// Inputs: JSON
+//	text: string
+//	rate: int
 // Returns: Bool (BOOL)
 // Possible Errors:
 //	1. 500: WRITE_TO_DB

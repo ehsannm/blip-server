@@ -533,6 +533,13 @@ func RegisterHandler(ctx iris.Context) {
 
 }
 
+// LogoutHandler is API handler
+// API: /auth/logout
+// Http Method: POST
+// Inputs: JSON
+//	unsubscribe: bool
+// Returns: Bool (BOOL)
+// Possible Errors:
 func LogoutHandler(ctx iris.Context) {
 	req := &LogoutReq{}
 	err := ctx.ReadJSON(req)
