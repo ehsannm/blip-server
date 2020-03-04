@@ -48,8 +48,10 @@ func easyjson9e1087fdDecodeGitRonaksoftwareComBlipServerPkgUser(in *jlexer.Lexer
 			out.CreatedOn = int64(in.Int64())
 		case "disabled":
 			out.Disabled = bool(in.Bool())
-		case "premium":
+		case "vas_paid":
 			out.VasPaid = bool(in.Bool())
+		case "app_key":
+			out.AppKey = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -95,9 +97,14 @@ func easyjson9e1087fdEncodeGitRonaksoftwareComBlipServerPkgUser(out *jwriter.Wri
 		out.Bool(bool(in.Disabled))
 	}
 	{
-		const prefix string = ",\"premium\":"
+		const prefix string = ",\"vas_paid\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.VasPaid))
+	}
+	{
+		const prefix string = ",\"app_key\":"
+		out.RawString(prefix)
+		out.String(string(in.AppKey))
 	}
 	out.RawByte('}')
 }

@@ -11,6 +11,8 @@ import "git.ronaksoftware.com/blip/server/pkg/config"
    Copyright Ronak Software Group 2018
 */
 
+//go:generate easyjson messages.go
+
 var (
 	baseUrl      string
 	accessKey    string

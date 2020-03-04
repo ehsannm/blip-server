@@ -9,6 +9,7 @@ package acr
    Copyright Ronak Software Group 2018
 */
 
+// easyjson:json
 type Music struct {
 	Status struct {
 		Message string `json:"msg"`

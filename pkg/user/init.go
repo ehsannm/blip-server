@@ -15,6 +15,8 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+//go:generate easyjson user.go
+
 func InitMongo(c *mongo.Client) {
 	userCol = c.Database(config.DbMain).Collection(config.ColUser)
 }
