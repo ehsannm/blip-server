@@ -10,7 +10,7 @@ package saba
 */
 
 const (
-	SuccessfulCode = "SC000"
+	SuccessfulCode            = "SC000"
 	SubscriptionAlreadyExists = "SC012"
 )
 

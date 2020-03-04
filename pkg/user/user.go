@@ -32,6 +32,7 @@ type User struct {
 	CreatedOn int64  `json:"created_on" bson:"created_on"`
 	Disabled  bool   `json:"disabled" bson:"disabled"`
 	VasPaid   bool   `json:"vas_paid" bson:"vas_paid"`
+	AppKey    string `json:"app_key" bson:"app_key"`
 }
 
 // Save stores the object 'u' in the database, replace the old one if already exists
@@ -43,6 +44,7 @@ func Save(u *User) error {
 		"created_on": u.CreatedOn,
 		"disabled":   u.Disabled,
 		"vas_paid":   u.VasPaid,
+		"app_key":    u.AppKey,
 	}}, options.Update().SetUpsert(true))
 	deleteFromCache(u.ID)
 	return err
@@ -100,4 +102,3 @@ func GetByPhone(phone string) (*User, error) {
 	}
 	return user, nil
 }
-

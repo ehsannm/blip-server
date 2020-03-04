@@ -404,6 +404,11 @@ func LoginHandler(ctx iris.Context) {
 		return
 	}
 
+	if u.AppKey != ctx.GetHeader(HdrAccessKey) {
+		u.AppKey = ctx.GetHeader(HdrAccessKey)
+		_ = user.Save(u)
+	}
+
 	_ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    u.ID,
@@ -501,6 +506,7 @@ func RegisterHandler(ctx iris.Context) {
 		CreatedOn: timeNow,
 		Disabled:  false,
 		VasPaid:   vasPaid,
+		AppKey:    ctx.GetHeader(HdrAccessKey),
 	})
 	if err != nil {
 		u, _ := user.GetByPhone(req.Phone)

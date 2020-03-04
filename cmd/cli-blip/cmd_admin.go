@@ -127,7 +127,7 @@ var DeleteConfig = &cobra.Command{
 	Use: "DeleteConfig",
 	Run: func(cmd *cobra.Command, args []string) {
 		req := help.UnsetDefaultConfig{
-			Key:   cmd.Flag(FlagKey).Value.String(),
+			Key: cmd.Flag(FlagKey).Value.String(),
 		}
 		reqBytes, _ := req.MarshalJSON()
 		_, err := sendHttp(http.MethodDelete, "help/config", ContentTypeJSON, bytes.NewBuffer(reqBytes), true)
