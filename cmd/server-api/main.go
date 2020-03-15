@@ -8,6 +8,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/auth"
 	"git.ronaksoftware.com/blip/server/pkg/config"
 	"git.ronaksoftware.com/blip/server/pkg/crawler"
+	"git.ronaksoftware.com/blip/server/pkg/device"
 	"git.ronaksoftware.com/blip/server/pkg/help"
 	"git.ronaksoftware.com/blip/server/pkg/music"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -44,6 +45,7 @@ func initModules() {
 		}
 		auth.InitMongo(mongoClient)
 		crawler.InitMongo(mongoClient)
+		device.InitMongo(mongoClient)
 		help.InitMongo(mongoClient)
 		music.InitMongo(mongoClient)
 		session.InitMongo(mongoClient)
@@ -82,6 +84,10 @@ func initServer() *iris.Application {
 	adminParty.Post("/health_check_store", admin.HealthCheckStoreHandler)
 	adminParty.Get("/health_check_stats", admin.HealthCheckStatsHandler)
 	adminParty.Post("/vas", admin.SetVas)
+
+	deviceParty := app.Party("/device")
+	deviceParty.Use(auth.MustHaveAccessKey, session.MustHaveSession)
+	deviceParty.Post("/register", device.RegisterDevice)
 
 	tokenParty := app.Party("/token")
 	tokenParty.Use(auth.MustHaveAccessKey)

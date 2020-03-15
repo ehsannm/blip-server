@@ -19,11 +19,7 @@ import (
    Copyright Ronak Software Group 2018
 */
 
-var (
-	vasLogCol *mongo.Collection
-)
-
-var writeLogToDB = flusher.NewLifo(1000, 5, time.Millisecond*500, func(items []flusher.Entry) {
+var writeLogToDB = flusher.New(1000, 1, time.Millisecond*500, func(items []flusher.Entry) {
 	bulkWrites := make([]mongo.WriteModel, 0, len(items))
 	for idx := range items {
 		bulkWrites = append(bulkWrites, mongo.NewInsertOneModel().SetDocument(items[idx].Value))

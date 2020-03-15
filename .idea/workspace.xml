@@ -2,10 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/pkg/device/handlers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/device/init.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pkg/device/messages.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/acr/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/acr/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/messages.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/auth/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/init.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +50,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Go File" />
         <option value="Go Application" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
@@ -68,7 +75,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="DatabaseDriversLRU" value="mysql&#10;mongo" />
-    <property name="DefaultGoTemplateProperty" value="Go Application" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -80,25 +87,25 @@
     <property name="go.sdk.automatically.set" value="true" />
     <property name="go.tried.to.enable.integration.vgo.integrator" value="true" />
     <property name="go.vendoring.notification.had.been.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/pkg/store" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pkg/device" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/pkg/device" />
+      <recent name="$PROJECT_DIR$/pkg/store" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/cmd/cli" />
+      <recent name="$PROJECT_DIR$/internal" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/internal" />
       <recent name="$PROJECT_DIR$/pkg/vas" />
       <recent name="$PROJECT_DIR$/pkg/acr" />
       <recent name="$PROJECT_DIR$/extra/testdata" />
       <recent name="$PROJECT_DIR$" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/pkg/store" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/cmd/cli" />
-      <recent name="$PROJECT_DIR$/internal" />
-      <recent name="$PROJECT_DIR$/testdata" />
     </key>
   </component>
   <component name="ServiceViewManager">
@@ -114,7 +121,7 @@
               <path>
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@6675d3e0" type="9fbbdea:ServiceModel$ServiceNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@2393b404" type="9fbbdea:ServiceModel$ServiceNode" />
               </path>
             </expand>
             <select />
@@ -152,10 +159,11 @@
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
     <state x="529" y="335" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1680.1050@0.0.1680.1050" timestamp="1580731812716" />
-    <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1581516644990">
-      <screen x="0" y="0" width="1680" height="1050" />
+    <state x="563" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1583351158148">
+      <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state x="528" y="260" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581516644990" />
+    <state x="563" y="277" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/0.0.1792.1120@0.0.1792.1120" timestamp="1583351158148" />
     <state x="372" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1580244430983">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>
@@ -169,26 +177,26 @@
     </state>
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.0.1680.1050@0.0.1680.1050" timestamp="1581352507326" />
     <state x="100" y="100" width="1480" height="850" key="DiffContextDialog/0.23.1680.951@0.23.1680.951" timestamp="1581352526190" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom" timestamp="1582984250274">
+    <state width="1203" height="457" key="GridCell.Tab.0.bottom" timestamp="1584265210889">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.bottom/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388517" />
-    <state width="1203" height="317" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1582984250274" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center" timestamp="1582984250273">
+    <state width="1203" height="457" key="GridCell.Tab.0.bottom/0.0.1792.1120@0.0.1792.1120" timestamp="1584265210889" />
+    <state width="1203" height="457" key="GridCell.Tab.0.center" timestamp="1584265210888">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.center/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388515" />
-    <state width="1203" height="317" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1582984250273" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left" timestamp="1582984250273">
+    <state width="1203" height="457" key="GridCell.Tab.0.center/0.0.1792.1120@0.0.1792.1120" timestamp="1584265210888" />
+    <state width="1203" height="457" key="GridCell.Tab.0.left" timestamp="1584265210887">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.left/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388514" />
-    <state width="1203" height="317" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1582984250273" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right" timestamp="1582984250274">
+    <state width="1203" height="457" key="GridCell.Tab.0.left/0.0.1792.1120@0.0.1792.1120" timestamp="1584265210887" />
+    <state width="1203" height="457" key="GridCell.Tab.0.right" timestamp="1584265210888">
       <screen x="0" y="0" width="1792" height="1120" />
     </state>
     <state width="1124" height="295" key="GridCell.Tab.0.right/0.0.1680.1050@0.0.1680.1050" timestamp="1581402388516" />
-    <state width="1203" height="317" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1582984250274" />
+    <state width="1203" height="457" key="GridCell.Tab.0.right/0.0.1792.1120@0.0.1792.1120" timestamp="1584265210888" />
     <state width="239" height="457" key="HiddenNamespacesPopup" timestamp="1581402150844">
       <screen x="0" y="0" width="1680" height="1050" />
     </state>

@@ -1,4 +1,4 @@
-package vas
+package device
 
 import (
 	"git.ronaksoftware.com/blip/server/pkg/config"
@@ -6,7 +6,7 @@ import (
 )
 
 /*
-   Creation Time: 2020 - Jan - 31
+   Creation Time: 2020 - Mar - 15
    Created by:  (ehsan)
    Maintainers:
       1.  Ehsan N. Moosa (E2)
@@ -14,10 +14,12 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+//go:generate rm -f *_easyjson.go
+//go:generate easyjson messages.go
 var (
-	vasLogCol *mongo.Collection
+	deviceCol *mongo.Collection
 )
 
 func InitMongo(c *mongo.Client) {
-	vasLogCol = c.Database(config.DbMain).Collection(config.ColLogVas)
+	deviceCol = c.Database(config.DbMain).Collection(config.ColDevice)
 }

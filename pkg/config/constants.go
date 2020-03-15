@@ -20,11 +20,13 @@ const (
 	ColUser     = "user"
 	ColSession  = "session"
 	ColLogVas   = "log.vas"
+	ColLogAuth  = "log.auth"
 	ColSong     = "song"
 	ColCrawler  = "crawler"
 	ColStore    = "store"
 	ColHelp     = "help"
 	ColFeedback = "feedback"
+	ColDevice   = "device"
 )
 
 // Redis Keys

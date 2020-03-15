@@ -24,6 +24,7 @@ import (
 //go:generate easyjson messages.go
 var (
 	authCol      *mongo.Collection
+	authLogCol   *mongo.Collection
 	authCache    map[string]*Auth
 	authCacheMtx sync.RWMutex
 	redisCache   *redis.Cache
@@ -32,6 +33,7 @@ var (
 
 func InitMongo(c *mongo.Client) {
 	authCol = c.Database(config.DbMain).Collection(config.ColAuth)
+	authLogCol = c.Database(config.DbMain).Collection(config.ColLogAuth)
 }
 
 func InitRedisCache(c *redis.Cache) {

@@ -29,6 +29,12 @@ import (
    Copyright Ronak Software Group 2018
 */
 
+type authLog struct {
+	Phone  string `bson:"phone"`
+	Action string `bson:"action"`
+	Date   int64  `bson:"date"`
+}
+
 func MustHaveAccessKey(ctx iris.Context) {
 	accessKey := ctx.GetHeader(HdrAccessKey)
 	authCacheMtx.RLock()
@@ -264,11 +270,21 @@ func sendMusicChi(ctx iris.Context, phone string) {
 		}
 	} else {
 		if _, ok := supportedCarriers[phone[:5]]; !ok {
+			writeLogToDB.Enter(nil, authLog{
+				Phone:  phone,
+				Action: "sendCodeUnsupported",
+				Date:   time.Now().Unix(),
+			})
 			msg.WriteError(ctx, http.StatusNotAcceptable, msg.ErrUnsupportedCarrier)
 			return
 		}
 		res, err := saba.Subscribe(phone)
 		if err != nil {
+			writeLogToDB.Enter(nil, authLog{
+				Phone:  phone,
+				Action: "sendCodeSabaFailed",
+				Date:   time.Now().Unix(),
+			})
 			log.Warn("Error On Saba Subscribe", zap.Error(err))
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.Err3rdParty)
 			return
@@ -277,8 +293,14 @@ func sendMusicChi(ctx iris.Context, phone string) {
 		switch res.StatusCode {
 		case "SC111", "SC000":
 		default:
+			writeLogToDB.Enter(nil, authLog{
+				Phone:  phone,
+				Action: "sendCodeSabaInvalidStatus",
+				Date:   time.Now().Unix(),
+			})
 			// If we are here, then it means VAS did not send the sms
 			msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrNoResponseFromVAS)
+			return
 		}
 	}
 
@@ -293,6 +315,11 @@ func sendMusicChi(ctx iris.Context, phone string) {
 		return
 	}
 
+	writeLogToDB.Enter(nil, authLog{
+		Phone:  phone,
+		Action: "sendCodeOk",
+		Date:   time.Now().Unix(),
+	})
 	msg.WriteResponse(ctx, CPhoneCodeSent, PhoneCodeSent{
 		PhoneCodeHash: phoneCodeHash,
 		Registered:    u != nil,
@@ -410,6 +437,11 @@ func LoginHandler(ctx iris.Context) {
 	}
 
 	_ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+	writeLogToDB.Enter(nil, authLog{
+		Phone:  u.Phone,
+		Action: "login",
+		Date:   time.Now().Unix(),
+	})
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    u.ID,
 		Phone:     u.Phone,
@@ -530,6 +562,12 @@ func RegisterHandler(ctx iris.Context) {
 	}
 
 	_ = redisCache.Del(fmt.Sprintf("%s.%s", config.RkPhoneCode, req.Phone))
+
+	writeLogToDB.Enter(nil, authLog{
+		Phone:  req.Phone,
+		Action: "register",
+		Date:   time.Now().Unix(),
+	})
 	msg.WriteResponse(ctx, CAuthorization, Authorization{
 		UserID:    userID,
 		Phone:     req.Phone,
