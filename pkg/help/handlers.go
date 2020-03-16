@@ -106,6 +106,7 @@ func GetHandler(ctx iris.Context) {
 		ctx.Values().GetString(auth.CtxClientName),
 		clientPlatform,
 	))
+	metrixToken := getConfig(fmt.Sprintf("metrix_%s", ctx.GetHeader(auth.HdrAccessKey)))
 
 	updateAvailable := false
 	updateForce := false
@@ -131,6 +132,7 @@ func GetHandler(ctx iris.Context) {
 		StoreLink:       getConfig(StoreLink),
 		ShowBlipLink:    getConfig(ShowBlipLink) != "",
 		ShowShareLink:   getConfig(ShowShareLink) != "",
+		MetrixToken:     metrixToken,
 	}
 	s, ok := ctx.Values().Get(session.CtxSession).(*session.Session)
 	if ok {

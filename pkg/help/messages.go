@@ -34,6 +34,7 @@ type Config struct {
 	ShowShareLink   bool   `json:"show_share_link"`
 	Authorized      bool   `json:"authorized"`
 	VasEnabled      bool   `json:"vas_enabled"`
+	MetrixToken     string `json:"metrix_token"`
 }
 
 // easyjson:json

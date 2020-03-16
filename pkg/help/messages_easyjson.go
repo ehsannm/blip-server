@@ -262,6 +262,8 @@ func easyjson66c1e240DecodeGitRonaksoftwareComBlipServerPkgHelp3(in *jlexer.Lexe
 			out.Authorized = bool(in.Bool())
 		case "vas_enabled":
 			out.VasEnabled = bool(in.Bool())
+		case "metrix_token":
+			out.MetrixToken = string(in.String())
 		default:
 			in.SkipRecursive()
 		}
@@ -310,6 +312,11 @@ func easyjson66c1e240EncodeGitRonaksoftwareComBlipServerPkgHelp3(out *jwriter.Wr
 		const prefix string = ",\"vas_enabled\":"
 		out.RawString(prefix)
 		out.Bool(bool(in.VasEnabled))
+	}
+	{
+		const prefix string = ",\"metrix_token\":"
+		out.RawString(prefix)
+		out.String(string(in.MetrixToken))
 	}
 	out.RawByte('}')
 }

@@ -2,17 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="11f6d62b-6e1b-4273-96e4-f8dea442088a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/pkg/device/handlers.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/device/init.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pkg/device/messages.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server-api/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server-api/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/auth.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/handlers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/auth/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/auth/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/config/constants.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/config/constants.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/init.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/init.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/vas/vas.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/vas/vas.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/acr/messages_easyjson.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/acr/messages_easyjson.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/help/handlers.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/handlers.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/help/messages.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/help/messages.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,17 +106,7 @@
       <list>
         <serviceView>
           <treeState>
-            <expand>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-              </path>
-              <path>
-                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
-                <item name="root:Blip Database" type="7427dc5b:ServiceModel$ServiceGroupNode" />
-                <item name="com.intellij.database.console.session.MessageBusSession@2393b404" type="9fbbdea:ServiceModel$ServiceNode" />
-              </path>
-            </expand>
+            <expand />
             <select />
           </treeState>
         </serviceView>
