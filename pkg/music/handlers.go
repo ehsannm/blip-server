@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	log "git.ronaksoftware.com/blip/server/internal/logger"
+	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/acr"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
@@ -268,6 +269,32 @@ MainLoop:
 	})
 }
 
+func SearchByBotHandler(ctx iris.Context) {
+	req := &SearchReq{}
+	err := ctx.ReadJSON(req)
+	if err != nil {
+		msg.WriteError(ctx, http.StatusBadRequest, msg.ErrCannotUnmarshalRequest)
+		return
+	}
+	req.Keyword = strings.Trim(req.Keyword, "\"")
+	searchCtx := StartSearch(tools.RandomID(32), req.Keyword)
+	indexedSongs, err := SearchLocalIndex(req.Keyword, 25)
+	if err != nil {
+		log.Warn("Error On LocalIndex", zap.Error(err))
+		msg.WriteError(ctx, http.StatusInternalServerError, msg.ErrLocalIndexFailure)
+		return
+	}
+	songs := make([]*Song, 0, len(indexedSongs))
+	for idx := range indexedSongs {
+		if searchCtx.ShouldSend(indexedSongs[idx].song.ID) {
+			songs = append(songs, indexedSongs[idx].song)
+		}
+	}
+
+	msg.WriteResponse(ctx, CSearchResult, &SearchResult{
+		Songs: songs,
+	})
+}
 // DownloadHandler is API handler
 // Http Method: GET /music/download/{bucket}/{downloadID}
 // Inputs:	URL

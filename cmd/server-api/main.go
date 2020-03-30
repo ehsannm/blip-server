@@ -126,6 +126,7 @@ func initServer() *iris.Application {
 	musicParty.Post("/search/sound", session.MustHaveSession, user.MustVasEnabled, music.SearchBySoundHandler)
 	musicParty.Post("/search/fingerprint", session.MustHaveSession, user.MustVasEnabled, music.SearchByFingerprintHandler)
 	musicParty.Post("/search/text", session.MustHaveSession, user.MustVasEnabled, music.SearchByTextHandler)
+	musicParty.Post("/search/bot", session.MustHaveSession, user.MustVasEnabled, music.SearchByBotHandler)
 	musicParty.Get("/search", session.MustHaveSession, user.MustVasEnabled, music.SearchByCursorHandler)
 	musicParty.Get("/download/{bucket}/{downloadID}", session.MustHaveSession, user.MustVasEnabled, music.DownloadHandler)
 
