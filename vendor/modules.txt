@@ -248,6 +248,7 @@ github.com/magiconair/properties
 ## explicit
 github.com/mailru/easyjson
 github.com/mailru/easyjson/buffer
+github.com/mailru/easyjson/gen
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 # github.com/mattn/go-colorable v0.1.4

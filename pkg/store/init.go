@@ -4,6 +4,7 @@ import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/internal/tools"
 	"git.ronaksoftware.com/blip/server/pkg/config"
+	"github.com/mailru/easyjson/gen"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -25,6 +26,7 @@ import (
 //go:generate rm -f *_easyjson.go
 //go:generate easyjson store.go messages.go
 var (
+	_          = gen.Generator{}
 	storeCol   *mongo.Collection
 	stores     map[int64]*Store
 	storeConns map[int64]*mongo.Client
