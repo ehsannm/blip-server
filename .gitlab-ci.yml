@@ -5,7 +5,7 @@ stages:
 variables:
   GIT_SUBMODULE_STRATEGY: recursive
   PROJECTS_TO_BUILD: ""
-
+  DOCKER_TLS_CERTDIR: ""
 
 build:
   stage: build
