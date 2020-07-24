@@ -9,7 +9,7 @@ variables:
 
 build:
   stage: build
-  image: registry.ronaksoftware.com/base/docker/golang:1.13.1
+  image: registry.ronaksoftware.com/base/docker/golang:1.14.6
   script:
     - cd $CI_PROJECT_DIR
     - go get -u github.com/mailru/easyjson/...
