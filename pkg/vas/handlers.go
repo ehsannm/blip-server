@@ -7,7 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
 
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"strings"
 	"time"

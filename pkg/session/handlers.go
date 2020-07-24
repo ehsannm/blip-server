@@ -3,7 +3,7 @@ package session
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
 	"git.ronaksoftware.com/blip/server/pkg/msg"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"go.uber.org/zap"
 	"net/http"
 )

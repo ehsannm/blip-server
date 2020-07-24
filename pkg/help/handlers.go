@@ -7,7 +7,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/user"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/rogpeppe/go-internal/semver"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"

@@ -10,7 +10,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/session"
 	"git.ronaksoftware.com/blip/server/pkg/store"
 	"git.ronaksoftware.com/blip/server/pkg/store/gridfs"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -295,6 +295,7 @@ func SearchByBotHandler(ctx iris.Context) {
 		Songs: songs,
 	})
 }
+
 // DownloadHandler is API handler
 // Http Method: GET /music/download/{bucket}/{downloadID}
 // Inputs:	URL

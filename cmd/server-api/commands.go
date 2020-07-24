@@ -2,7 +2,7 @@ package main
 
 import (
 	log "git.ronaksoftware.com/blip/server/internal/logger"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/spf13/cobra"
 )
 

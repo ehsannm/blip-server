@@ -17,8 +17,7 @@ import (
 	"git.ronaksoftware.com/blip/server/pkg/user"
 	"git.ronaksoftware.com/blip/server/pkg/vas"
 	"git.ronaksoftware.com/blip/server/pkg/vas/saba"
-	"github.com/kataras/iris"
-	"github.com/kataras/iris/middleware/pprof"
+	"github.com/kataras/iris/v12"
 	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -134,12 +133,6 @@ func initServer() *iris.Application {
 	vasParty := app.Party("/vas")
 	vasParty.Get("/mci/notify", vas.MCINotification)
 	vasParty.Get("/mci/mo", vas.MCIMo)
-
-	if config.GetBool(config.ProfilerEnabled) {
-		p := pprof.New()
-		app.Any("/debug/pprof", p)
-		app.Any("/debug/pprof/{action:path}", p)
-	}
 
 	// shopParty := app.Party("/shop")
 	// shopParty.Post("/sep/")

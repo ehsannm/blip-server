@@ -3,7 +3,7 @@ package device
 import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"net/http"

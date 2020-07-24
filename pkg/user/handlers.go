@@ -3,7 +3,7 @@ package user
 import (
 	"git.ronaksoftware.com/blip/server/pkg/msg"
 	"git.ronaksoftware.com/blip/server/pkg/session"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"net/http"
 )
 

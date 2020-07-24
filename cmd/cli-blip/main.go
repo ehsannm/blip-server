@@ -73,6 +73,7 @@ func completer(d prompt.Document) []prompt.Suggest {
 var RootCmd = &cobra.Command{
 	Use: "Root",
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		baseUrl = cmd.Flag(FlagServerUrl).Value.String()
 		if cmd.Flag(FlagServerUrl).Changed {
 			_ = ioutil.WriteFile(".blip-url", tools.StrToByte(cmd.Flag(FlagServerUrl).Value.String()), os.ModePerm)
 			baseUrl = cmd.Flag(FlagServerUrl).Value.String()
